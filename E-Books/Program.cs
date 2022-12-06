@@ -35,7 +35,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-AppDbInitializer.Seed(app);
+// AppDbInitializer.Seed(app);
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

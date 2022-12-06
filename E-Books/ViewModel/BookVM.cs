@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using E_Books.Models;
 
 namespace E_Books.ViewModel;
 public class BookVM
@@ -18,11 +14,11 @@ public class BookVM
     [Required]
     public double Price { get; set; }
     [Required]
-    public DateTime PublicationDate { get; set; }
-    [Required]
     public int PublisherId { get; set; }
     [Required]
     public int LanguagesId { get; set; }
+    
+    public int GenreId { get; set; }
     [Required]
     public ICollection<int> Authors { get; set; }
 
@@ -41,21 +37,18 @@ public class ReadBookVM
 
     public DateTime PublicationDate { get; set; }
 
-    public string PublisherName {get; set;}
-    public string LanguageName {get; set;}
+    public PublisherVM Publishers { get; set; }
+
+    public GenreVM Genres {get; set;}
     
-    public ICollection<int> Authors { get; set; }
+    public string Languages { get; set; }
+
+    public ICollection<AuthorVM> Authors { get; set; }
+
+    public ReadBookVM()
+    {
+        Authors = new Collection<AuthorVM>();
+    }
 }
 
-public class BooksAuthorsVM
-{
-    public int BookId { get; set; }
-    public BookVM Books { get; set; }
-    public int AuthorId { get; set; }
-    public AuthorVM Authors { get; set; }
-}
-
-public class UpdateBookVM : BookVM
-{
-    
-}
+public class UpdateBookVM : BookVM { }

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\USER\\Desktop\\Projects\\E-Books\\E-Books\\E-Books.csproj": {}
+    "C:\\Users\\USER\\Desktop\\E-Books\\E-Books\\E-Books.csproj": {}
   },
   "projects": {
-    "C:\\Users\\USER\\Desktop\\Projects\\E-Books\\E-Books\\E-Books.csproj": {
+    "C:\\Users\\USER\\Desktop\\E-Books\\E-Books\\E-Books.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\USER\\Desktop\\Projects\\E-Books\\E-Books\\E-Books.csproj",
+        "projectUniqueName": "C:\\Users\\USER\\Desktop\\E-Books\\E-Books\\E-Books.csproj",
         "projectName": "E-Books",
-        "projectPath": "C:\\Users\\USER\\Desktop\\Projects\\E-Books\\E-Books\\E-Books.csproj",
+        "projectPath": "C:\\Users\\USER\\Desktop\\E-Books\\E-Books\\E-Books.csproj",
         "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\USER\\Desktop\\Projects\\E-Books\\E-Books\\obj\\",
+        "outputPath": "C:\\Users\\USER\\Desktop\\E-Books\\E-Books\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -79,6 +79,10 @@
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",
               "version": "[6.25.0, )"
+            },
+            "X.PagedList.Mvc.Core": {
+              "target": "Package",
+              "version": "[8.4.3, )"
             }
           },
           "imports": [

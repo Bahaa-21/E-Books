@@ -14,5 +14,9 @@ public class BookLanguage
     [Required , MaxLength(35)]
     public string LanguageName { get; set; }
     public List<Book> Books {get; set;}
+    public BookLanguage()
+    {
+        Books = new List<Book>();
+    }
 
 }

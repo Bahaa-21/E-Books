@@ -22,13 +22,18 @@ public class Book
     public double Price { get; set; }
     public bool IsFree { get; set; }
     public DateTime PublicationDate { get; set; }
-    
+    [Required]
     public int PublisherId {get; set;}
     [ForeignKey("PublisherId")]
     public virtual Publisher Publishers {get; set;} 
+    [Required]
     public int LanguagesId {get; set;}
     [ForeignKey("LanguagesId")]
     public virtual BookLanguage Languages {get; set;} 
+
+    public int? GenreId { get; set; }
+    [ForeignKey("GenreId")]
+    public virtual Genre Genres {get; set;}
 
     public virtual ICollection<Book_Author> Authors { get; set; }
 

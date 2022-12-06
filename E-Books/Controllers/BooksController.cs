@@ -24,7 +24,7 @@ public class BooksController : ControllerBase
     [HttpGet("get-all-books")]
     public async Task<IActionResult> GetAllBookAsync()
     {
-        var books = await _service.Book.GetAllAsync<Book>(null, new[] { "Authors", "Publishers", "Languages" });
+        var books = await _service.Book.GetAllBookAsync();
 
         var response = _mapper.Map<IEnumerable<ReadBookVM>>(books);
         return Ok(response);
@@ -35,22 +35,13 @@ public class BooksController : ControllerBase
 
     public async Task<IActionResult> GetBookByIdAsync(int id)
     {
-        var book = await _service.Book.GetAsync<Book>(exp => exp.Id == id, new[] { "Authors", "Publishers", "Languages" });
-
+        var book = await _service.Book.GetBookAsync(id , true);
         if (book is null)
             return NotFound();
 
-        var bookVM = _mapper.Map<Book, ReadBookVM>(book);
 
-        return Ok(bookVM);
-    }
-
-    [HttpGet("get-book-with-authors-by-id/{id:int}")]
-    public async Task<IActionResult> GetBooksWithAuthor(int id)
-    {
-        var booksAuthor = await _service.BookAuthor.GetAsync<Book_Author>(ex => ex.BookId == id, new[] { "Authors", "Books" });
-
-        return Ok(_mapper.Map<BooksAuthorsVM>(booksAuthor));
+        var response = _mapper.Map<Book, ReadBookVM>(book);
+        return Ok(response);
     }
 
 
@@ -61,7 +52,7 @@ public class BooksController : ControllerBase
             return BadRequest(ModelState);
 
         var book = _mapper.Map<BookVM, Book>(bookVM);
-
+        book.PublicationDate = DateTime.UtcNow;
         await _service.Book.AddAsync(book);
         await _service.SaveAsync();
 
@@ -72,13 +63,13 @@ public class BooksController : ControllerBase
 
 
     [HttpPut("update-book/{id:int}")]
-    public async Task<IActionResult> UpdateBookAsync(int id, [FromBody] UpdateBookVM updateBook)
+    public async Task<IActionResult> UpdateBookAsync(int id, [FromBody] BookVM updateBook)
     {
         if (!ModelState.IsValid)
             return BadRequest($"Submitted data is invalid ,{ModelState}");
 
         var book = await _service.Book.GetAsync<Book>(ex => ex.Id == id);
-
+        
         if (book is null)
             return NotFound();
 
@@ -90,4 +81,16 @@ public class BooksController : ControllerBase
 
         return NoContent();
     }
+
+   [HttpDelete("delete-book/{id:int}")]
+   public async Task<IActionResult> DeleteBookAsync(int id)
+   {
+        var book = await _service.Book.GetAsync<Book>(i => i.Id == id);
+
+        _service.Book.Delete<Book>(book);
+
+        await _service.SaveAsync();
+
+        return Ok();
+   }
 }

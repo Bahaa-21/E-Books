@@ -38,7 +38,7 @@ public class AppDbInitializer
                     new BookLanguage()
                     {
                         LanguageName = "Arabic"
-                    }, 
+                    },
                     new BookLanguage()
                     {
                         LanguageName = "France"
@@ -75,6 +75,7 @@ public class AppDbInitializer
                         PublicationDate = DateTime.UtcNow.AddMonths(4),
                         PublisherId = 1,
                         LanguagesId = 2,
+                        GenreId = 1
                     },
                     new Book()
                     {
@@ -86,6 +87,7 @@ public class AppDbInitializer
                         PublicationDate = DateTime.UtcNow.AddMonths(2),
                         PublisherId = 2,
                         LanguagesId = 1,
+                        GenreId = 2 
                     },
                     new Book()
                     {
@@ -97,7 +99,9 @@ public class AppDbInitializer
                         PublicationDate = DateTime.UtcNow.AddMonths(1),
                         PublisherId = 3,
                         LanguagesId = 1,
+                        GenreId = 3
                     });
+                
                 await context.SaveChangesAsync();
             }
             if (!context.BooksAuthors.Any())
@@ -120,6 +124,7 @@ public class AppDbInitializer
                     });
                 await context.SaveChangesAsync();
             }
+
         }
 
     }

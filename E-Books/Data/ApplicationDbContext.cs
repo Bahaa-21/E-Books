@@ -16,6 +16,23 @@ public class ApplicationDbContext : IdentityDbContext<UsersApp>
     {
         base.OnModelCreating(builder);
 
+        builder.Entity<Genre>().HasData(
+            new Genre()
+            {
+                Id = 1,
+                Name = "Genre1"
+            },
+            new Genre()
+            {
+                Id = 2,
+                Name = "Genre2"
+            },
+            new Genre()
+            {
+                Id = 3,
+                Name = "Genre3"
+            }
+        );
 
         builder.Entity<Book_Author>().HasKey(sec => new { sec.AuthorId, sec.BookId });
 
@@ -37,5 +54,6 @@ public class ApplicationDbContext : IdentityDbContext<UsersApp>
     public DbSet<BookLanguage> BooksLanguages {get; set;}
     public DbSet<Publisher> Publishers {get; set;}
     public DbSet<Book_Author> BooksAuthors {get; set;}
+    public DbSet<Genre> Genres {get; set;}
     
 }

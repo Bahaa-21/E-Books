@@ -45,7 +45,7 @@ public class BaseRepository : IBaseRepository
         return await query.AsNoTracking().ToListAsync();
     }
 
-    public async Task<T> GetAsync<T>(Expression<Func<T, bool>> expression = null, string[] includes = null) where T : class
+    public async Task<T> GetAsync<T>(Expression<Func<T, bool>> expression = null, string[] includes = null ) where T : class
     {
         IQueryable<T> query = _context.Set<T>();
         if (includes is not null)
@@ -53,6 +53,7 @@ public class BaseRepository : IBaseRepository
             foreach (var item in includes)
                 query = query.Include(item);
         }
+        
         return await query.AsNoTracking().FirstOrDefaultAsync(expression);
     }
     public void Delete<T>(T entity) where T : class => _context.Remove(entity);
@@ -62,30 +63,24 @@ public class BaseRepository : IBaseRepository
     {
         _context.Attach(entity);
         _context.Entry(entity).State = EntityState.Modified;
+
     }
 
-    public async Task<IList<BookVM>> GetAllBookAsync() => await _context.Books
-    .Select(sec => new BookVM()
+    public async Task<Book> GetBookAsync(int id, bool includes)
     {
-        Title = sec.Title,
-        Description = sec.Description,
-        Price = sec.Price,
-        NumberPages = sec.NumberPages,
-      
-        PublicationDate = sec.PublicationDate,
-        
-    }).AsNoTracking().ToListAsync();
+        if (!includes)
+            return await _context.Books.FindAsync(id);
 
-    public async Task<BookVM> GetBookAsync(int id ) => await _context.Books.Where(i => i.Id == id)
-    .Select(book => new BookVM()
-    {
-        Title = book.Title,
-        Description = book.Description,
-        Price = book.Price,
-        NumberPages = book.NumberPages,
-        
-        PublicationDate = book.PublicationDate,
-        
-    }).FirstOrDefaultAsync();
+        return await _context.Books.Include(a => a.Authors)
+                                    .ThenInclude(a => a.Authors)
+                                    .Include(l => l.Languages).Include(p => p.Publishers).Include(g => g.Genres)
+                                    .SingleOrDefaultAsync(bi => bi.Id == id);
+    }
+
+    public async Task<IEnumerable<Book>> GetAllBookAsync() =>
+        await _context.Books.Include(a => a.Authors)
+                                    .ThenInclude(a => a.Authors)
+                                    .Include(l => l.Languages).Include(p => p.Publishers).Include(g => g.Genres)
+                                    .ToListAsync();
 
 }
