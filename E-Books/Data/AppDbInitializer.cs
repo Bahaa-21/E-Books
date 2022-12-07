@@ -10,20 +10,62 @@ public class AppDbInitializer
         {
             var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
 
+            if(!context.Genres.Any())
+            {
+                await context.Genres.AddRangeAsync(
+                    new Genre()
+                    {
+                        Name = "Genre1"
+                    },
+                     new Genre()
+                    {
+                        Name = "Genre2"
+                    },
+                     new Genre()
+                    {
+                        Name = "Genre3"
+                    },
+                     new Genre()
+                    {
+                        Name = "Genre4"
+                    },
+                     new Genre()
+                    {
+                        Name = "Genre5"
+                    },
+                     new Genre()
+                    {
+                        Name = "Genre6"
+                    }
+                );
+            }
             if (!context.Publishers.Any())
             {
                 await context.Publishers.AddRangeAsync(
                     new Publisher()
                     {
-                        Name = "Dar Alnwar"
+                        Name = "Publisher1"
                     },
                     new Publisher()
                     {
-                        Name = "Kalemat"
+                        Name = "Publisher2"
                     },
                     new Publisher()
                     {
-                        Name = "Afkar"
+                        Name = "Publisher3"
+                    },
+                    new Publisher()
+                    {
+                        Name = "Publisher4"
+                    },new Publisher()
+                    {
+                        Name = "Publisher5"
+                    },new Publisher()
+                    {
+                        Name = "Publisher6"
+                    },new Publisher()
+                    {
+                        Name = "Publisher7"
                     }
                 );
                 await context.SaveChangesAsync();
@@ -67,7 +109,7 @@ public class AppDbInitializer
                 await context.AddRangeAsync(
                     new Book()
                     {
-                        Title = "ليطمئن قلبي",
+                        Title = "Book1",
                         Description = "Text ....",
                         NumberPages = 377,
                         Price = 15000,
@@ -96,11 +138,60 @@ public class AppDbInitializer
                         NumberPages = 189,
                         Price = 20000,
                         IsFree = false,
-                        PublicationDate = DateTime.UtcNow.AddMonths(1),
+                        PublicationDate = DateTime.UtcNow.AddDays(2),
                         PublisherId = 3,
                         LanguagesId = 1,
                         GenreId = 3
-                    });
+                    },
+                      new Book()
+                    {
+                        Title = "Book4",
+                        Description = "Text ....",
+                        NumberPages = 189,
+                        Price = 20000,
+                        IsFree = false,
+                        PublicationDate = DateTime.UtcNow.AddDays(2),
+                        PublisherId = 3,
+                        LanguagesId = 1,
+                        GenreId = 3
+                    },
+                      new Book()
+                    {
+                        Title = "Book5",
+                        Description = "Text ....",
+                        NumberPages = 189,
+                        Price = 20000,
+                        IsFree = false,
+                        PublicationDate = DateTime.UtcNow.AddDays(2),
+                        PublisherId = 7,
+                        LanguagesId = 1,
+                        GenreId = 6
+                    },
+                      new Book()
+                    {
+                        Title = "Book6",
+                        Description = "Text ....",
+                        NumberPages = 189,
+                        Price = 20000,
+                        IsFree = false,
+                        PublicationDate = DateTime.UtcNow.AddDays(2),
+                        PublisherId = 3,
+                        LanguagesId = 1,
+                        GenreId = 5
+                    },  new Book()
+                    {
+                        Title = "Book7",
+                        Description = "Text ....",
+                        NumberPages = 189,
+                        Price = 20000,
+                        IsFree = false,
+                        PublicationDate = DateTime.UtcNow.AddDays(2),
+                        PublisherId = 3,
+                        LanguagesId = 1,
+                        GenreId = 4
+                    }
+
+                    );
                 
                 await context.SaveChangesAsync();
             }
@@ -121,7 +212,21 @@ public class AppDbInitializer
                     {
                         BookId = 3,
                         AuthorId = 3,
-                    });
+                    },
+                     new Book_Author()
+                    {
+                        BookId = 4,
+                        AuthorId = 1,
+                    }, new Book_Author()
+                    {
+                        BookId = 6,
+                        AuthorId = 2,
+                    }, new Book_Author()
+                    {
+                        BookId = 7,
+                        AuthorId = 1,
+                    }
+                    );
                 await context.SaveChangesAsync();
             }
 

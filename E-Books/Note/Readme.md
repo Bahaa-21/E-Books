@@ -1,7 +1,7 @@
 # Project e-Books 
 ## BookController : 
-- ### Get all books with authors (done)
+- ### Get all books with Pagination(done)
 - ### Get book by Id (done)
-- ### Create book (done)
-- ### Update book (done)
-- ### Delete Book (done)
+- ### Create a book (done)
+- ### Update a book (done)
+- ### Delete a book (done)

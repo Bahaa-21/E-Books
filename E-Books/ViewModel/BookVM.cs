@@ -17,7 +17,7 @@ public class BookVM
     public int PublisherId { get; set; }
     [Required]
     public int LanguagesId { get; set; }
-    
+    [Required]
     public int GenreId { get; set; }
     [Required]
     public ICollection<int> Authors { get; set; }

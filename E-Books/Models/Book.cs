@@ -20,7 +20,7 @@ public class Book
     public int NumberPages { get; set; }
     [Required]
     public double Price { get; set; }
-    public bool IsFree { get; set; }
+    public bool IsFree {get; set;}
     public DateTime PublicationDate { get; set; }
     [Required]
     public int PublisherId {get; set;}

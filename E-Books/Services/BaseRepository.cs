@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using E_Books.Data;
 using E_Books.IService;
 using E_Books.Models;
 using E_Books.ViewModel;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList;
 
 namespace E_Books.Service;
 
@@ -44,6 +41,19 @@ public class BaseRepository : IBaseRepository
         }
         return await query.AsNoTracking().ToListAsync();
     }
+    public async Task<X.PagedList.IPagedList<T>> GetAllAsync<T>(RequestParams requestParams = null, string[] includes = null) where T : class
+    {
+        IQueryable<T> query = _context.Set<T>();
+
+        if (includes != null)
+        {
+            foreach (var item in includes)
+                query = query.Include(item);
+        }
+
+        return await query.AsNoTracking().ToPagedListAsync(requestParams.PageNumber, requestParams.PageSize);
+
+    }
 
     public async Task<T> GetAsync<T>(Expression<Func<T, bool>> expression = null, string[] includes = null ) where T : class
     {
@@ -73,14 +83,29 @@ public class BaseRepository : IBaseRepository
 
         return await _context.Books.Include(a => a.Authors)
                                     .ThenInclude(a => a.Authors)
-                                    .Include(l => l.Languages).Include(p => p.Publishers).Include(g => g.Genres)
+                                    .Include(l => l.Languages)
+                                    .Include(p => p.Publishers)
+                                    .Include(g => g.Genres)
                                     .SingleOrDefaultAsync(bi => bi.Id == id);
     }
 
     public async Task<IEnumerable<Book>> GetAllBookAsync() =>
-        await _context.Books.Include(a => a.Authors)
-                                    .ThenInclude(a => a.Authors)
-                                    .Include(l => l.Languages).Include(p => p.Publishers).Include(g => g.Genres)
-                                    .ToListAsync();
 
+        await _context.Books.Include(a => a.Authors)
+                            .ThenInclude(a => a.Authors)
+                            .Include(l => l.Languages)
+                            .Include(p => p.Publishers)
+                            .Include(g => g.Genres)
+                            .ToListAsync();
+
+
+    public async Task<IPagedList<Book>> GetAllBookAsync(RequestParams requestParams)
+    {
+           return await _context.Books.Include(a => a.Authors)
+                                .ThenInclude(a => a.Authors)
+                                .Include(l => l.Languages)
+                                .Include(p => p.Publishers)
+                                .Include(g => g.Genres)
+                                .ToPagedListAsync(requestParams.PageNumber , requestParams.PageSize);
+    }
 }

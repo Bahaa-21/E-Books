@@ -22,10 +22,10 @@ public class BooksController : ControllerBase
 
 
     [HttpGet("get-all-books")]
-    public async Task<IActionResult> GetAllBookAsync()
+    public async Task<IActionResult> GetAllBookAsync([FromQuery] RequestParams requestParams)  
     {
-        var books = await _service.Book.GetAllBookAsync();
-
+        var books = await _service.Book.GetAllBookAsync(requestParams);
+        
         var response = _mapper.Map<IEnumerable<ReadBookVM>>(books);
         return Ok(response);
     }
@@ -91,6 +91,6 @@ public class BooksController : ControllerBase
 
         await _service.SaveAsync();
 
-        return Ok();
+        return NoContent();
    }
 }

@@ -57,6 +57,8 @@ public class MapperProfile : Profile
             Id = a.Authors.Id,
             Name = a.Authors.Name
         }))).ReverseMap();
+
+        
         CreateMap<Book, UpdateBookVM>()
         .ReverseMap();
         #endregion

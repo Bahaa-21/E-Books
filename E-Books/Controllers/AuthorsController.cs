@@ -21,8 +21,7 @@ public class AuthorsController : ControllerBase
     [HttpGet("get-all-authors")]
     public async Task<IActionResult> GetAllAuthors()
     {
-        var authors = await _service.Author.GetAllAsync<Author>();
-
+        var authors = await _service.Author.GetAllAsync<Author>(expression: null);
         return Ok(_mapper.Map<IEnumerable<AuthorVM>>(authors));
     }
 
