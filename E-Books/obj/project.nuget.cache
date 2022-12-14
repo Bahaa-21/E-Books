@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "b4V2iCP3bYK22Q+NzmhQeLD1nsWjjnBGm7WUhWHUDkfV6L1LJLVF2xOWiJQc2yF03WSLDAqN8lXiPsS3XAcmUA==",
+  "dgSpecHash": "IF4eT9nwZK9BkONCNKD7BOZudg1WfJxi6CDdwmLPYX3gfo7czCvNP6RnO/hnblgmzE4wGi563agFrjGwI8MwNA==",
   "success": true,
   "projectFilePath": "C:\\Users\\USER\\Desktop\\E-Books\\E-Books\\E-Books.csproj",
   "expectedPackageFiles": [
@@ -68,11 +68,7 @@
     "C:\\Users\\USER\\.nuget\\packages\\system.text.json\\4.7.2\\system.text.json.4.7.2.nupkg.sha512",
     "C:\\Users\\USER\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512",
     "C:\\Users\\USER\\.nuget\\packages\\x.pagedlist\\8.4.3\\x.pagedlist.8.4.3.nupkg.sha512",
-    "C:\\Users\\USER\\.nuget\\packages\\x.pagedlist.mvc.core\\8.4.3\\x.pagedlist.mvc.core.8.4.3.nupkg.sha512",
-    "C:\\Users\\USER\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.11\\microsoft.aspnetcore.app.ref.6.0.11.nupkg.sha512",
-    "C:\\Users\\USER\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.11\\microsoft.netcore.app.host.win-x64.6.0.11.nupkg.sha512",
-    "C:\\Users\\USER\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.11\\microsoft.netcore.app.ref.6.0.11.nupkg.sha512",
-    "C:\\Users\\USER\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.11\\microsoft.windowsdesktop.app.ref.6.0.11.nupkg.sha512"
+    "C:\\Users\\USER\\.nuget\\packages\\x.pagedlist.mvc.core\\8.4.3\\x.pagedlist.mvc.core.8.4.3.nupkg.sha512"
   ],
   "logs": []
 }

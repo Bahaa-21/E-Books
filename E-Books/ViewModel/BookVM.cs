@@ -11,6 +11,7 @@ public class BookVM
     public string Description { get; set; }
     [Required]
     public int NumberPages { get; set; }
+    public IFormFile Image { get; set; }
     [Required]
     public double Price { get; set; }
     [Required]
@@ -34,10 +35,10 @@ public class ReadBookVM
     public int NumberPages { get; set; }
 
     public double Price { get; set; }
-
+    public byte[] Image { get; set; }
     public DateTime PublicationDate { get; set; }
 
-    public PublisherVM Publishers { get; set; }
+    public string Publishers { get; set; }
 
     public GenreVM Genres {get; set;}
     
@@ -51,4 +52,11 @@ public class ReadBookVM
     }
 }
 
-public class UpdateBookVM : BookVM { }
+public class SearchBookVM
+{
+    public int Id { get; set; }
+
+    public string Title { get; set; }
+
+    public ICollection<string> Authors { get; set; }
+}

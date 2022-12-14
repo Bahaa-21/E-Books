@@ -1,6 +1,8 @@
 using E_Books.Configurations;
 using E_Books.Data;
+using E_Books.IService;
 using E_Books.IServices;
+using E_Books.Service;
 using E_Books.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,7 +19,8 @@ builder.Services.AddControllers();
 
 // Add ConnectionStrings
 builder.Services.AddDbContext<ApplicationDbContext>(option => 
-option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") , 
+o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 //Add AutoMapper
@@ -35,13 +38,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// AppDbInitializer.Seed(app);
+AppDbInitializer.Seed(app);
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapDefaultControllerRoute();
 
 app.Run();
 

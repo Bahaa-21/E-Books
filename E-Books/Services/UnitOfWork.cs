@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using E_Books.Data;
 using E_Books.IService;
 using E_Books.IServices;
+using E_Books.Models;
 using E_Books.Service;
 
 namespace E_Books.Services
@@ -18,15 +15,17 @@ namespace E_Books.Services
             _context = context;
         }
 
-        private IBaseRepository _books;
-        private IBaseRepository _authors;
-        private IBaseRepository _booksauthors;
+        private IBaseRepository<Book> _books;
+        private IBaseRepository<Author> _authors;
+        private IBaseRepository<Book_Author> _booksauthors;
         
-        public IBaseRepository Book => _books??= new BaseRepository(_context);
+        public IBaseRepository<Book> Book => _books??= new BaseRepository<Book>(_context);
 
-        public IBaseRepository Author => _authors??= new BaseRepository(_context);
+        public IBaseRepository<Author> Author => _authors??= new BaseRepository<Author>(_context);
 
-        public IBaseRepository BookAuthor => _booksauthors??= new BaseRepository(_context);
+        public IBaseRepository<Book_Author> BookAuthor => _booksauthors??= new BaseRepository<Book_Author>(_context);
+
+        
 
         public void Dispose()
         {

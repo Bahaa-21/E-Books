@@ -25,15 +25,24 @@ public class MapperProfile : Profile
         CreateMap<Author, AuthorVM>().ReverseMap();
         #endregion
 
+        #region Language Mapping
+        CreateMap<BookLanguage, LanguageVM>().ReverseMap();
+        #endregion
+
         #region Book Mapping
         CreateMap<Book, BookVM>()
         .ForMember(d => d.Authors, opt => opt.MapFrom(sec => sec.Authors.Select(a => a.AuthorId)))
         .ReverseMap()
-        .ForMember(d => d.Id, opt => opt.Ignore())
-        .ForMember(b => b.Authors, opt => opt.Ignore())
-        .AfterMap((bv, b) =>
-        {
+        .BeforeMap(async (bv , b) => {
 
+           using var dataStream = new MemoryStream();
+           await bv.Image.CopyToAsync(dataStream);
+            b.Image = dataStream.ToArray();
+        })
+        .ForMember(d => d.Image , opt => opt.Ignore())
+        .ForMember(b => b.Authors, opt => opt.Ignore())
+        .AfterMap( (bv, b) =>
+        {
             //Remeve unselected Authors
             var removeAuthor = b.Authors.Where(b => !bv.Authors.Contains(b.AuthorId));
             foreach (var item in removeAuthor)
@@ -51,20 +60,22 @@ public class MapperProfile : Profile
         });
 
         CreateMap<Book, ReadBookVM>()
+        .ForMember(d => d.Publishers, opt => opt.MapFrom(sec => sec.Publishers.Name))
         .ForMember(d => d.Languages , opt => opt.MapFrom(sec => sec.Languages.LanguageName))
+        .ForMember(d => d.Authors , opt => opt.MapFrom(sec => sec.Authors))
         .ForMember(d => d.Authors, opt => opt.MapFrom(sec => sec.Authors.Select(a => new AuthorVM()
         {
             Id = a.Authors.Id,
             Name = a.Authors.Name
-        }))).ReverseMap();
+        })))
+        .ReverseMap();
 
-        
-        CreateMap<Book, UpdateBookVM>()
+
+        CreateMap<Book, SearchBookVM>()
+        .ForMember(d => d.Authors, opt => opt.MapFrom(sec => sec.Authors.Select(a => a.Authors.Name).ToList()))
         .ReverseMap();
         #endregion
 
-        #region LanguageMapping
-        CreateMap<BookLanguage, LanguageVM>().ReverseMap();
-        #endregion
+       
     }
 }

@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using E_Books.IServices;
 using E_Books.Models;
@@ -16,12 +12,13 @@ public class AuthorsController : ControllerBase
 {
     private readonly IUnitOfWork _service;
     private readonly IMapper _mapper;
+
     public AuthorsController(IUnitOfWork service, IMapper mapper) => (_service, _mapper) = (service, mapper);
 
     [HttpGet("get-all-authors")]
     public async Task<IActionResult> GetAllAuthors()
     {
-        var authors = await _service.Author.GetAllAsync<Author>(expression: null);
+        var authors = await _service.Author.GetAllAsync(expression: null);
         return Ok(_mapper.Map<IEnumerable<AuthorVM>>(authors));
     }
 
@@ -29,7 +26,7 @@ public class AuthorsController : ControllerBase
 
     public async Task<IActionResult> GetAuthorAsync(int id)
     {
-        var author = await _service.Author.GetAsync<Author>(p => p.Id == id);
+        var author = await _service.Author.GetAsync(expression : a => a.Id == id , null);
 
         if (author is null)
             return NotFound();
@@ -37,7 +34,6 @@ public class AuthorsController : ControllerBase
         var response = _mapper.Map<AuthorVM>(author);
 
         return Ok(response);
-
     }
 
 }

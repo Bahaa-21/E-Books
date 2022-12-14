@@ -20,8 +20,10 @@ public class Book
     public int NumberPages { get; set; }
     [Required]
     public double Price { get; set; }
-    public bool IsFree {get; set;}
     public DateTime PublicationDate { get; set; }
+    
+    public byte[] Image { get; set; } 
+
     [Required]
     public int PublisherId {get; set;}
     [ForeignKey("PublisherId")]
@@ -30,16 +32,18 @@ public class Book
     public int LanguagesId {get; set;}
     [ForeignKey("LanguagesId")]
     public virtual BookLanguage Languages {get; set;} 
-
+    
     public int? GenreId { get; set; }
     [ForeignKey("GenreId")]
     public virtual Genre Genres {get; set;}
 
+    public virtual ICollection<OrderItem> OrderItems { get; set; }
     public virtual ICollection<Book_Author> Authors { get; set; }
 
     public Book()
     {
         Authors = new Collection<Book_Author>();
+        OrderItems = new Collection<OrderItem>();
     }
     
 }

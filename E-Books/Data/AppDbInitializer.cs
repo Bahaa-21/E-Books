@@ -1,4 +1,5 @@
 ﻿using E_Books.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace E_Books.Data;
 
@@ -113,7 +114,6 @@ public class AppDbInitializer
                         Description = "Text ....",
                         NumberPages = 377,
                         Price = 15000,
-                        IsFree = false,
                         PublicationDate = DateTime.UtcNow.AddMonths(4),
                         PublisherId = 1,
                         LanguagesId = 2,
@@ -125,7 +125,6 @@ public class AppDbInitializer
                         Description = "Text ....",
                         NumberPages = 150,
                         Price = 22000,
-                        IsFree = false,
                         PublicationDate = DateTime.UtcNow.AddMonths(2),
                         PublisherId = 2,
                         LanguagesId = 1,
@@ -137,7 +136,6 @@ public class AppDbInitializer
                         Description = "Text ....",
                         NumberPages = 189,
                         Price = 20000,
-                        IsFree = false,
                         PublicationDate = DateTime.UtcNow.AddDays(2),
                         PublisherId = 3,
                         LanguagesId = 1,
@@ -149,7 +147,6 @@ public class AppDbInitializer
                         Description = "Text ....",
                         NumberPages = 189,
                         Price = 20000,
-                        IsFree = false,
                         PublicationDate = DateTime.UtcNow.AddDays(2),
                         PublisherId = 3,
                         LanguagesId = 1,
@@ -161,11 +158,10 @@ public class AppDbInitializer
                         Description = "Text ....",
                         NumberPages = 189,
                         Price = 20000,
-                        IsFree = false,
                         PublicationDate = DateTime.UtcNow.AddDays(2),
                         PublisherId = 7,
                         LanguagesId = 1,
-                        GenreId = 6
+                        GenreId = 2
                     },
                       new Book()
                     {
@@ -173,7 +169,6 @@ public class AppDbInitializer
                         Description = "Text ....",
                         NumberPages = 189,
                         Price = 20000,
-                        IsFree = false,
                         PublicationDate = DateTime.UtcNow.AddDays(2),
                         PublisherId = 3,
                         LanguagesId = 1,
@@ -184,11 +179,10 @@ public class AppDbInitializer
                         Description = "Text ....",
                         NumberPages = 189,
                         Price = 20000,
-                        IsFree = false,
                         PublicationDate = DateTime.UtcNow.AddDays(2),
                         PublisherId = 3,
                         LanguagesId = 1,
-                        GenreId = 4
+                        GenreId = 3
                     }
 
                     );
@@ -212,24 +206,19 @@ public class AppDbInitializer
                     {
                         BookId = 3,
                         AuthorId = 3,
-                    },
-                     new Book_Author()
-                    {
-                        BookId = 4,
-                        AuthorId = 1,
-                    }, new Book_Author()
-                    {
-                        BookId = 6,
-                        AuthorId = 2,
-                    }, new Book_Author()
-                    {
-                        BookId = 7,
-                        AuthorId = 1,
-                    }
-                    );
+                    });
                 await context.SaveChangesAsync();
             }
 
+            if (!context.Roles.Any())
+            {
+                await context.Roles.AddRangeAsync(
+                     new IdentityRole() { Name = "User", NormalizedName = "user".ToUpper() },
+                     new IdentityRole() { Name = "Admin", NormalizedName = "admin".ToUpper() },
+                     new IdentityRole() { Name = "Adminsitrator", NormalizedName = "adminsitrator".ToUpper() }
+                    );
+                await context.SaveChangesAsync();
+            }
         }
 
     }
