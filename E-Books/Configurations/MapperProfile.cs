@@ -34,7 +34,7 @@ public class MapperProfile : Profile
         .ForMember(d => d.Authors, opt => opt.MapFrom(sec => sec.Authors.Select(a => a.AuthorId)))
         .ReverseMap()
         .BeforeMap(async (bv , b) => {
-
+            
            using var dataStream = new MemoryStream();
            await bv.Image.CopyToAsync(dataStream);
             b.Image = dataStream.ToArray();

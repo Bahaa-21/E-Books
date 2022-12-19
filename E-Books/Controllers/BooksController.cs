@@ -14,7 +14,7 @@ using static System.Reflection.Metadata.BlobBuilder;
 namespace E_Books.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/[controller]/[action]")]
 public class BooksController : ControllerBase
 {
     private readonly IUnitOfWork _service;
@@ -25,7 +25,7 @@ public class BooksController : ControllerBase
     public BooksController(IUnitOfWork service, IMapper mapper) => (_service, _mapper) = (service, mapper);
 
 
-    [HttpGet("get-all-books")]
+    [HttpGet]
     public async Task<IActionResult> GetAllBookAsync([FromQuery] RequestParams requestParams)
     {
         var books = await _service.Book.GetAllAsync(requestParams, include: inc => inc.Include(a => a.Authors).ThenInclude(ab => ab.Authors)
@@ -39,15 +39,11 @@ public class BooksController : ControllerBase
     }
 
 
-    [HttpGet("get-book-by-id/{id:int}" , Name = "GetBookByIdAsync")]
+    [HttpGet("{id:int}" , Name = "GetBookByIdAsync")]
 
     public async Task<IActionResult> GetBookByIdAsync(int id)
     {
-        var book = await _service.Book.GetAsync(expression: b => b.Id == id,
-                                                   include: inc => inc.Include(a => a.Authors).ThenInclude(ab => ab.Authors)
-                                                   .Include(p => p.Publishers)
-                                                   .Include(l => l.Languages)
-                                                   .Include(g => g.Genres));
+        var book = await _service.Book.GetBookAsync(id , true);
         if (book is null)
             return NotFound();
 
@@ -56,14 +52,15 @@ public class BooksController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("get-book-by-genre/{id}")]
+    [HttpGet("{id:int}")]
     public async Task<IActionResult> GetBookByGenre(int id)
     {
         var books = await _service.Book.GetAllAsync(expression: g => g.GenreId == id,
-                                                      include: inc => inc.Include(a => a.Authors).ThenInclude(ab => ab.Authors)
-                                                   .Include(p => p.Publishers)
-                                                   .Include(l => l.Languages)
-                                                   .Include(g => g.Genres));
+                                                    include: inc => inc.Include(a => a.Authors)
+                                                    .ThenInclude(ab => ab.Authors)
+                                                    .Include(p => p.Publishers)
+                                                    .Include(l => l.Languages)
+                                                    .Include(g => g.Genres));
         if (books is null)
             return NotFound();
 
@@ -71,7 +68,7 @@ public class BooksController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("search-of-book")]
+    [HttpGet]
     public async Task<IActionResult> SearchAsync(string title)
     {
         var book = await _service.Book.GetAllAsync(expression: book => book.Title.Contains(title),
@@ -85,7 +82,7 @@ public class BooksController : ControllerBase
         return Ok(response);
     }
 
-    [HttpPost("add-book")]
+    [HttpPost]
     public async Task<IActionResult> AddBookAsync([FromForm] BookVM bookVM)
     {
         if (!ModelState.IsValid)
@@ -98,16 +95,13 @@ public class BooksController : ControllerBase
             return BadRequest("Max allowed size for Image book is 1MB!");
 
         var book = _mapper.Map<BookVM, Book>(bookVM);
+
         book.PublicationDate = DateTime.UtcNow;
 
         await _service.Book.AddAsync(book);
         await _service.SaveAsync();
 
-        var readBook = await _service.Book.GetAsync(expression: b => b.Id == book.Id,
-                                                    include: inc => inc.Include(a => a.Authors).ThenInclude(ab => ab.Authors)
-                                                    .Include(p => p.Publishers)
-                                                    .Include(l => l.Languages)
-                                                    .Include(g => g.Genres));
+        var readBook = await _service.Book.GetBookAsync(book.Id , true);
 
         var response = _mapper.Map<ReadBookVM>(readBook);
 
@@ -115,7 +109,7 @@ public class BooksController : ControllerBase
     }
 
 
-    [HttpPut("update-book/{id:int}")]
+    [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateBookAsync(int id, [FromBody] BookVM updateBook)
     {
         if (!ModelState.IsValid)
@@ -131,14 +125,13 @@ public class BooksController : ControllerBase
         _service.Book.Update(book);
 
         await _service.SaveAsync();
-
         return NoContent();
     }
 
-    [HttpDelete("delete-book/{id:int}")]
+    [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteBookAsync(int id)
     {
-        var book = await _service.Book.GetAsync(expression: b => b.Id == id, null);
+        var book = await _service.Book.GetAsync(expression: b => b.Id == id,include : null);
 
         _service.Book.Delete(book);
 

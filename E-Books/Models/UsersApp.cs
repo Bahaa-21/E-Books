@@ -9,4 +9,5 @@ public class UsersApp : IdentityUser
     public string FirstName {get; set;}
     [Required , StringLength(50)]
     public string LastName {get; set;}
+    public List<RefreshToken> RefreshTokens { get; set;}
 }
