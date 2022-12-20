@@ -98,16 +98,16 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
             return await query.AsNoTracking().FirstOrDefaultAsync();
     }
 
-    public async Task<IEnumerable<Book>> GetAllBookAsync()
+    public CountsVM GetCount()
     {
-        var books = await _context.Books.Include(a => a.Authors)
-                                       .ThenInclude(ab => ab.Authors)
-                                       .Include(p => p.Publishers)
-                                       .Include(p => p.Languages)
-                                       .Include(p => p.Genres)
-                                       .ToListAsync();
-        return books;
+        var counts = new CountsVM(){
+            CountOfBooks =  _context.Books.Count(),
+            CountOfAuthors =  _context.Authors.Count(),
+            CountOfPublishers =  _context.Publishers.Count(),
+            CountOfUser = _context.Users.Count()
+        };
 
+        return counts;
     }
 
     public async Task<IPagedList<Book>> GetAllBookAsync(RequestParams requestParams)

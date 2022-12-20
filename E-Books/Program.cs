@@ -15,23 +15,25 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
-// builder.Services.AddControllers().AddNewtonsoftJson(op =>
-//         op.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-//Add CORS
+//Addind a CORS
 builder.Services.AddCors();
 
-// Add ConnectionStrings
+builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
+
+//Adding a ConnectionStrings
 builder.Services.AddDbContext<ApplicationDbContext>(option => 
 option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") , 
 o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
-//Adding AutoMapper
+
+builder.Services.AddScoped<IAuthService , AuthService>();
+//Adding an AutoMapper
 builder.Services.AddAutoMapper(typeof(MapperProfile));
 
-//Confiuration for Identity
+//Confiure the Identity
 builder.Services.ConfigrureIdentity();
-//Configuration for JWT
+//Configure the JWT
 builder.Services.ConfigureJWT(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();

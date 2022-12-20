@@ -27,7 +27,7 @@ public interface IBaseRepository<T> where T : class
 
     Task<Book> GetBookAsync(int id, bool includes);
 
-    Task<IEnumerable<Book>> GetAllBookAsync();
+     CountsVM GetCount();
     Task<IEnumerable<Book>> GetBookByGenre(int id);
     Task<IPagedList<Book>> GetAllBookAsync(RequestParams requestParams);
 }
