@@ -3,6 +3,8 @@ using E_Books.Data;
 using E_Books.IService;
 using E_Books.Models;
 using E_Books.ViewModel;
+using E_Books.ViewModel.ToView;
+using E_Books.ViewModel.FromView;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using X.PagedList;
@@ -65,7 +67,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
             query = include(query);
         }
 
-        return await query.AsNoTracking().FirstAsync(expression);
+        return await query.AsNoTracking().FirstOrDefaultAsync(expression);
     }
     public void Delete(T entity) => _context.Remove(entity);
 

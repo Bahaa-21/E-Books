@@ -29,17 +29,15 @@ public class AuthService : IAuthService
     {
         if(await _userManager.FindByEmailAsync(model.Email) is not null)
         return new AuthModel {Masseage = "Email is already registered!"};
-        
-        if(await _userManager.FindByNameAsync(model.UserName) is not null)
-        return new AuthModel {Masseage = "UserName is already registered!"};
 
         var user = new UsersApp()
         {
             Email = model.Email,
             FirstName = model.FirstName,
-            LastName = model.LastName
+            LastName = model.LastName,
+            UserName = model.FirstName + model.LastName.Substring(0 , 3)
         };
-
+       
         var resutl = await _userManager.CreateAsync(user , model.Password);
 
         if(!resutl.Succeeded)
@@ -48,7 +46,7 @@ public class AuthService : IAuthService
             foreach(var error in resutl.Errors)
             errors += $"{error.Description},";
 
-            return new AuthModel{Masseage = errors};
+            return new AuthModel{ Masseage = errors };
         }
 
         await _userManager.AddToRoleAsync(user , "User");
@@ -80,7 +78,7 @@ public class AuthService : IAuthService
 
         authModel.IsAuthenticated = true;
         authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
-        authModel.UserName = user.UserName;
+        authModel.UserName = String.Format($"{user.FirstName} + ',' + {user.LastName}");
         authModel.Email = user.Email;
         authModel.Roles = roleList.ToList();
 

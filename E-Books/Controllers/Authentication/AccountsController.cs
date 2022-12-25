@@ -3,7 +3,7 @@ using E_Books.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace E_Books.Controllers;
+namespace E_Books.Controllers.Authentication;
 
 [Route("api/[controller]/[action]")]
 [ApiController]

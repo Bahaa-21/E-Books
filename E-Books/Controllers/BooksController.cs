@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using E_Books.Data;
 using E_Books.ViewModel;
+using E_Books.ViewModel.ToView;
+using E_Books.ViewModel.FromView;
 using E_Books.IServices;
 using E_Books.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -41,7 +43,10 @@ public class BooksController : ControllerBase
 
     public async Task<IActionResult> GetBookByIdAsync(int id)
     {
-        var book = await _service.Book.GetBookAsync(id , true);
+        var book = await _service.Book.GetAsync(expression: bi => bi.Id == id,include: inc => inc.Include(a => a.Authors).ThenInclude(ab => ab.Authors)
+                                                   .Include(p => p.Publishers)
+                                                   .Include(l => l.Languages)
+                                                   .Include(g => g.Genres));
         if (book is null)
             return NotFound();
 

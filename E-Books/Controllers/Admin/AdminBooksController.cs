@@ -2,6 +2,8 @@ using AutoMapper;
 using E_Books.IServices;
 using E_Books.Models;
 using E_Books.ViewModel;
+using E_Books.ViewModel.ToView;
+using E_Books.ViewModel.FromView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,14 +12,14 @@ namespace E_Books.Controllers.Admin;
 
 [ApiController]
 [Route("api/[controller]/[action]")]
-public class AdminsController : ControllerBase
+public class AdminBooksController : ControllerBase
 {
     private readonly IUnitOfWork _service;
     private readonly IMapper _mapper;
 
     private long _maxSizeImage = 1048576;
     private List<string> _allowedExtensions = new() { ".png", ".jpg" };
-    public AdminsController(IUnitOfWork service, IMapper mapper) => (_service, _mapper) = (service, mapper);
+    public AdminBooksController(IUnitOfWork service, IMapper mapper) => (_service, _mapper) = (service, mapper);
 
     [HttpGet]
     public async Task<IActionResult> GetAllBookAsync([FromQuery] RequestParams requestParams)

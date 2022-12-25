@@ -1,6 +1,8 @@
 using System.Linq.Expressions;
 using E_Books.Models;
 using E_Books.ViewModel;
+using E_Books.ViewModel.ToView;
+using E_Books.ViewModel.FromView;
 using Microsoft.EntityFrameworkCore.Query;
 using X.PagedList;
 

@@ -22,7 +22,7 @@ public class Book
     public double Price { get; set; }
     public DateTime PublicationDate { get; set; }
     
-    public byte[] Image { get; set; } 
+    public byte[]? Image { get; set; }
 
     [Required]
     public int PublisherId {get; set;}
