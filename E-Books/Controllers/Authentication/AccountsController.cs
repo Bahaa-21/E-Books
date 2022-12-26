@@ -44,7 +44,7 @@ public class AccountsController : ControllerBase
             if (!string.IsNullOrEmpty(result.RefreshToken))
                 SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
 
-            return Ok(new { token = result.Token });
+            return Ok(new { token = result.Token , first_name = result.FirstName , last_name = result.LastName , email = result.Email , status = StatusCodes.Status200OK});
         }
 
 

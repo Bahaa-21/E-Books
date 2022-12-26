@@ -76,6 +76,8 @@ public class AuthService : IAuthService
         authModel.IsAuthenticated = true;
         authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
         authModel.Email = user.Email;
+        authModel.FirstName = user.FirstName;
+        authModel.LastName = user.LastName;
         authModel.Roles = roleList.ToList();
 
         if(user.RefreshTokens.Any(t => t.IsActive))
