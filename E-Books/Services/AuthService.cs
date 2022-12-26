@@ -18,12 +18,8 @@ public class AuthService : IAuthService
      private readonly UserManager<UsersApp> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly JWT _jwt;
-    public AuthService(UserManager<UsersApp> userManager, IOptions<JWT> jwt , RoleManager<IdentityRole> roleManager)
-    {
-        _userManager = userManager;
-        _roleManager = roleManager;
-        _jwt = jwt.Value;
-    }
+    public AuthService(UserManager<UsersApp> userManager, IOptions<JWT> jwt , RoleManager<IdentityRole> roleManager) => (_userManager , _roleManager , _jwt) = (userManager, roleManager , jwt.Value);
+    
 
     public async Task<AuthModel> RegisterAsync(RegisterModel model)
     {
@@ -33,9 +29,9 @@ public class AuthService : IAuthService
         var user = new UsersApp()
         {
             Email = model.Email,
+            UserName = model.FirstName + model.LastName.Substring(0 , 3),
             FirstName = model.FirstName,
             LastName = model.LastName,
-            UserName = model.FirstName + model.LastName.Substring(0 , 3)
         };
        
         var resutl = await _userManager.CreateAsync(user , model.Password);
@@ -59,7 +55,8 @@ public class AuthService : IAuthService
             IsAuthenticated = true,
             Roles = new List<string> { "User" },
             Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
-            UserName = user.UserName
+            FirstName = user.FirstName,
+            LastName = user.LastName,
         };
     }
 
@@ -78,7 +75,6 @@ public class AuthService : IAuthService
 
         authModel.IsAuthenticated = true;
         authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
-        authModel.UserName = String.Format($"{user.FirstName} + ',' + {user.LastName}");
         authModel.Email = user.Email;
         authModel.Roles = roleList.ToList();
 
@@ -115,36 +111,6 @@ public class AuthService : IAuthService
 
     }
 
-    private async Task<JwtSecurityToken> CreateJwtToken(UsersApp user)
-    {
-        var userClaims = await _userManager.GetClaimsAsync(user);
-        var roles = await _userManager.GetRolesAsync(user);
-        var roleClaims = new List<Claim>();
-
-        foreach (var role in roles)
-            roleClaims.Add(new Claim("roles", role));
-
-        var claim = new[]
-        {
-            new Claim(JwtRegisteredClaimNames.Sub , user.UserName),
-            new Claim(JwtRegisteredClaimNames.Jti , Guid.NewGuid().ToString()),
-            new Claim(JwtRegisteredClaimNames.Email , user.Email),
-        }
-        .Union(roleClaims)
-        .Union(userClaims);
-
-        var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.key));
-        var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
-
-        var jwtSecurrityToken = new JwtSecurityToken(
-            issuer: _jwt.Issuer,
-            audience: _jwt.Audinece,
-            claims: claim,
-            signingCredentials: signingCredentials
-            );
-
-        return jwtSecurrityToken;
-    }
 
     public async Task<AuthModel> RefreshTokenAsync(string token)
     {
@@ -182,6 +148,36 @@ public class AuthService : IAuthService
         authModel.RefreshTokenExpiration = newRefreshToken.ExpiresOn;
 
         return authModel;
+    }
+    private async Task<JwtSecurityToken> CreateJwtToken(UsersApp user)
+    {
+        var userClaims = await _userManager.GetClaimsAsync(user);
+        var roles = await _userManager.GetRolesAsync(user);
+        var roleClaims = new List<Claim>();
+
+        foreach (var role in roles)
+            roleClaims.Add(new Claim("roles", role));
+
+        var claim = new[]
+        {
+            new Claim(JwtRegisteredClaimNames.Sub , user.UserName),
+            new Claim(JwtRegisteredClaimNames.Jti , Guid.NewGuid().ToString()),
+            new Claim(JwtRegisteredClaimNames.Email , user.Email),
+        }
+        .Union(roleClaims)
+        .Union(userClaims);
+
+        var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.key));
+        var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
+
+        var jwtSecurrityToken = new JwtSecurityToken(
+            issuer: _jwt.Issuer,
+            audience: _jwt.Audinece,
+            claims: claim,
+            signingCredentials: signingCredentials
+            );
+
+        return jwtSecurrityToken;
     }
     private RefreshToken GenerateRefreshToken()
     {

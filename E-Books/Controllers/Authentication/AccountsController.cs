@@ -17,7 +17,7 @@ public class AccountsController : ControllerBase
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterAsync([FromBody] RegisterModel model)
+        public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -27,7 +27,7 @@ public class AccountsController : ControllerBase
             if (!result.IsAuthenticated)
                 return BadRequest(result.Masseage);
 
-            return Ok(new {token = result.Token , role = result.Roles});
+            return Ok(new {token = result.Token , role = result.Roles , result.FirstName , result.LastName});
         }
 
         [HttpPost("login")]
