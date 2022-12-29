@@ -1,5 +1,5 @@
 ﻿using E_Books.IServices;
-using E_Books.ViewModel;
+using E_Books.ViewModel.FromView;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,8 +27,15 @@ public class AccountsController : ControllerBase
             if (!result.IsAuthenticated)
                 return BadRequest(result.Masseage);
 
-            return Ok(new {token = result.Token , role = result.Roles , result.FirstName , result.LastName});
-        }
+        return Accepted(new
+        {
+            token = result.Token,
+            role = result.Roles,
+            result.FirstName,
+            result.LastName,
+            status = StatusCodes.Status202Accepted
+        });
+    }
 
         [HttpPost("login")]
         public async Task<IActionResult> LoginAsync([FromBody] TokenRequestModel model)
@@ -44,8 +51,15 @@ public class AccountsController : ControllerBase
             if (!string.IsNullOrEmpty(result.RefreshToken))
                 SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
 
-            return Ok(new { token = result.Token , first_name = result.FirstName , last_name = result.LastName , email = result.Email , status = StatusCodes.Status200OK});
-        }
+        return Accepted(new
+        {
+            token = result.Token,
+            first_name = result.FirstName,
+            last_name = result.LastName,
+            email = result.Email,
+            status = StatusCodes.Status202Accepted
+        });
+    }
 
 
         [HttpPost("addrole")]

@@ -4,12 +4,13 @@ using System.Text;
 using E_Books.IServices;
 using E_Books.Models;
 using E_Books.Settings;
-using E_Books.ViewModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
+using E_Books.ViewModel.FromView;
+using E_Books.ViewModel.ToView;
 
 namespace E_Books.Services;
 

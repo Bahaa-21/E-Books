@@ -1,6 +1,5 @@
 using AutoMapper;
 using E_Books.Models;
-using E_Books.ViewModel;
 using E_Books.ViewModel.ToView;
 using E_Books.ViewModel.FromView;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +19,24 @@ public class MapperProfile : Profile
         #endregion
 
         #region Author Mapping
-        CreateMap<Author, AuthorVM>().ReverseMap();
+        CreateMap<Author, AuthorVM>()
+        .ForMember(d => d.AuthorName , act => act.MapFrom(sec => sec.Name))
+        .ReverseMap();
+        
+        CreateMap<Author, ReadAuthorVM>()
+        .ForMember(d => d.AuthorName , act => act.MapFrom(sec => sec.Name))
+        .ReverseMap();
+
+
+        CreateMap<Author, BooksAuthorVM>()
+        .ForMember(d => d.BookTitle, opt => opt.MapFrom(sec => sec.Books))
+        .ForMember(d => d.BookTitle, opt => opt.MapFrom(sec => sec.Books.Select(b => new
+        {
+            Id = b.Books.Id,
+            Title = b.Books.Title
+        }).ToList()))
+        .ReverseMap();
+
 
         CreateMap<Author , UpdateAuthorVM>()
         .ForMember(d => d.Books , opt => opt.MapFrom(sec => sec.Books.Select(b => b.BookId)))
@@ -42,14 +58,6 @@ public class MapperProfile : Profile
             a.Books.Add(item);
 
         });
-        CreateMap<Author, BooksAuthorVM>()
-        .ForMember(d => d.Books, opt => opt.MapFrom(sec => sec.Books))
-        .ForMember(d => d.Books, opt => opt.MapFrom(sec => sec.Books.Select(b => new
-        {
-            Id = b.Books.Id,
-            Title = b.Books.Title
-        }).ToList()))
-        .ReverseMap();
         #endregion
 
         #region Language Mapping

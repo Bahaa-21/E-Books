@@ -34,7 +34,7 @@ public class AdminBooksController : ControllerBase
 
         return Ok(response);
     }
-    [HttpGet]
+    [HttpGet] 
     public IActionResult GetCounts() => Ok(_service.Book.GetCount());
 
     [HttpPost]

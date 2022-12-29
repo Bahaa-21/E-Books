@@ -4,12 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace E_Books.ViewModel
+namespace E_Books.ViewModel.ToView
 {
-    public class LanguageVM
+    public class PublisherVM
     {
         public int Id { get; set; }
-        [Required, MaxLength(35)]
-        public string LanguageName { get; set; }
+
+        [Required, MaxLength(50)]
+        public string Name { get; set; }
     }
 }

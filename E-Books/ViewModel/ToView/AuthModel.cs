@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace E_Books.ViewModel;
+namespace E_Books.ViewModel.ToView;
 
 public class AuthModel
 {

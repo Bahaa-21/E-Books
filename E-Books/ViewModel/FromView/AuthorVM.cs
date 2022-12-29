@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations;
 namespace E_Books.ViewModel.FromView;
 public class AuthorVM
 {
-    [Required , StringLength(50)]
-     public string Name { get; set; }
+    [Required , StringLength(30) , MinLength(10)]
+     public string AuthorName { get; set; }
 }
 public class UpdateAuthorVM : AuthorVM
 {

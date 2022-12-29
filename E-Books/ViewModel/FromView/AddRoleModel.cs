@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace E_Books.ViewModel;
+namespace E_Books.ViewModel.FromView;
 
 public class AddRoleModel
 {

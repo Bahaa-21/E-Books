@@ -1,13 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace E_Books.ViewModel;
+namespace E_Books.ViewModel.FromView;
 
 public class RegisterModel
 {
-    [Required, StringLength(100)]
+    [Required, StringLength(30), MinLength(10)]
     public string FirstName { get; set; }
-    [Required, StringLength(100)]
-
+    [Required, StringLength(30), MinLength(10)]
     public string LastName { get; set; }
     [Required, StringLength(50)]
     public string Email { get; set; }
