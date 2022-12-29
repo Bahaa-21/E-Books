@@ -10,9 +10,7 @@ public class MapperProfile : Profile
 {
     public MapperProfile()
     {
-        #region Publisher Mapping
-        CreateMap<Publisher, PublisherVM>().ReverseMap();
-        #endregion
+        
 
         #region Genre Mapping
         CreateMap<Genre, GenreVM>().ReverseMap();
@@ -37,27 +35,6 @@ public class MapperProfile : Profile
         }).ToList()))
         .ReverseMap();
 
-
-        CreateMap<Author , UpdateAuthorVM>()
-        .ForMember(d => d.Books , opt => opt.MapFrom(sec => sec.Books.Select(b => b.BookId)))
-        .ReverseMap()
-        .ForMember(d => d.Books , opt => opt.Ignore())
-        .AfterMap((av , a)=>
-        {
-            //Remeve unselected Authors
-            var RemoveAuthor = a.Books.Where(id => !av.Books.Contains(id.AuthorId));
-            foreach(var item in RemoveAuthor)
-            a.Books.Remove(item);
-
-            //Add new Books
-            var addBooks = av.Books.Where(id => !a.Books.Any(a => a.AuthorId == id)).Select(id => new Book_Author()
-            {
-                BookId = id
-            });
-            foreach(var item in addBooks)
-            a.Books.Add(item);
-
-        });
         #endregion
 
         #region Language Mapping

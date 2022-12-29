@@ -94,19 +94,19 @@ public class AdminAuthorsController : ControllerBase
     }
 
 
-    [HttpPut("update-author")]
+    [HttpPut("update-author/{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateAuthor([FromBody] UpdateAuthorVM authorVM)
+    public async Task<IActionResult> UpdateAuthor( int id ,[FromBody] AuthorVM authorVM)
     {
         if (!ModelState.IsValid)
             return BadRequest($"Submitted data is invalid ,{ModelState}");
-        var author = await _service.Author.GetAsync(expression: id => id.Id == authorVM.Id, null);
+        var author = await _service.Author.GetAsync(expression: idauth => idauth.Id == id, null);
 
         if (author is null)
             return NotFound();
-
+     
         _mapper.Map(authorVM, author);
         _service.Author.Update(author);
         await _service.SaveAsync();
