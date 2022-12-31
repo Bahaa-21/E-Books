@@ -33,6 +33,7 @@ public class AuthService : IAuthService
             UserName = model.FirstName + model.LastName.Substring(0 , 3),
             FirstName = model.FirstName,
             LastName = model.LastName,
+            Gender = model.Gender
         };
        
         var resutl = await _userManager.CreateAsync(user , model.Password);
