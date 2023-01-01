@@ -20,8 +20,8 @@ public class AuthService : IAuthService
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly JWT _jwt;
     public AuthService(UserManager<UsersApp> userManager, IOptions<JWT> jwt , RoleManager<IdentityRole> roleManager) => (_userManager , _roleManager , _jwt) = (userManager, roleManager , jwt.Value);
-    
 
+    
     public async Task<AuthModel> RegisterAsync(RegisterModel model)
     {
         if(await _userManager.FindByEmailAsync(model.Email) is not null)

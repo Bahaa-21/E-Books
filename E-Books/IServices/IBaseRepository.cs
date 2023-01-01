@@ -26,6 +26,7 @@ public interface IBaseRepository<T> where T : class
 
     void Update(T entity);
     void Delete(T entity);
+    Task<IPagedList<T>> Search( RequestParams requestParams = null , Expression<Func<T, bool>> expression = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null);
 
     Task<Book> GetBookAsync(int id, bool includes);
 

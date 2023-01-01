@@ -27,8 +27,6 @@ public class BooksController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllBookAsync([FromQuery] RequestParams requestParams)
     {
-        requestParams.PageSize = 20;
-
         var books = await _service.Book.GetAllAsync(requestParams, include: inc => inc.Include(a => a.Authors).ThenInclude(ab => ab.Authors)
                                                    .Include(p => p.Publishers)
                                                    .Include(l => l.Languages)
@@ -72,11 +70,10 @@ public class BooksController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> SearchAsync(string title)
+    public async Task<IActionResult> SearchAsync(string title, [FromQuery] RequestParams requestParams)
     {
-        var book = await _service.Book.GetAllAsync(expression: book => book.Title.Contains(title),
-                                                    include: inc => inc.Include(a => a.Authors).ThenInclude(ab => ab.Authors));
-
+        var book = await _service.Book.Search(requestParams, expression: book => book.Title.Contains(title),
+                                                                include: inc => inc.Include(author => author.Authors).ThenInclude(bookAuthor => bookAuthor.Authors));
         if (book.Count == 0)
             return NotFound($"Sorry, this title : {title}, does't exist, Please try agin");
 

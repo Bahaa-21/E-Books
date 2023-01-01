@@ -24,7 +24,6 @@ public class AdminBooksController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllBookAsync([FromQuery] RequestParams requestParams)
     {
-
         var books = await _service.Book.GetAllAsync(requestParams, include: inc => inc.Include(a => a.Authors).ThenInclude(ab => ab.Authors)
                                                    .Include(p => p.Publishers)
                                                    .Include(l => l.Languages)

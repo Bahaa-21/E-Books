@@ -142,5 +142,19 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         throw new NotImplementedException();
     }
 
-   
+    public Task<IPagedList<T>> Search(RequestParams requestParams = null, Expression<Func<T, bool>> expression = null , Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
+    {
+        IQueryable<T> query = _context.Set<T>();
+
+        if (include is not null)
+        {
+            query = include(query);
+        }
+
+        if (expression is not null)
+        {
+            query = query.Where(expression);
+        }
+        return query.AsNoTracking().ToPagedListAsync(pageNumber: requestParams.PageNumber, pageSize: requestParams.PageSize);
+    }
 }
