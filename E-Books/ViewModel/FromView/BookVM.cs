@@ -14,11 +14,11 @@ public class BookVM
     [Required]
     public double Price { get; set; }
     [Required]
-    public int PublisherId { get; set; }
+    public string PublisherId { get; set; }
     [Required]
-    public int LanguagesId { get; set; }
+    public string LanguagesId { get; set; }
     [Required]
-    public int GenreId { get; set; }
+    public string GenreId { get; set; }
     [Required]
     public ICollection<int> Authors { get; set; }
 

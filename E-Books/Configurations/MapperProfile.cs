@@ -54,6 +54,11 @@ public class MapperProfile : Profile
         .ReverseMap()
         .BeforeMap(async (bv , b) => {
             
+            b.PublisherId = Convert.ToInt32(bv.PublisherId);
+            b.LanguagesId = Convert.ToInt32(bv.LanguagesId);
+            b.GenreId = Convert.ToInt32(bv.GenreId);
+
+            
            using var dataStream = new MemoryStream();
            await bv.Image.CopyToAsync(dataStream);
             b.Image = dataStream.ToArray();
