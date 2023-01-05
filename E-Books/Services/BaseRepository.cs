@@ -16,15 +16,9 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     private readonly ApplicationDbContext _context;
 
 
-    public BaseRepository(ApplicationDbContext context)
-    {
-        _context = context;
-    }
+    public BaseRepository(ApplicationDbContext context) => _context = context;
 
-    public async Task AddAsync(T entity)
-    {
-        await _context.AddAsync(entity);
-    }
+    public async Task AddAsync(T entity) => await _context.AddAsync(entity);
 
 
     public async Task AddRangeAsync(List<T> entity) => await _context.AddRangeAsync(entity);

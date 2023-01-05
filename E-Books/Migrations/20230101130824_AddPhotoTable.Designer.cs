@@ -4,6 +4,7 @@ using E_Books.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_Books.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230101130824_AddPhotoTable")]
+    partial class AddPhotoTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -210,8 +212,7 @@ namespace E_Books.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UsersAppId")
-                        .IsUnique();
+                    b.HasIndex("UsersAppId");
 
                     b.ToTable("Photos");
                 });
@@ -513,8 +514,8 @@ namespace E_Books.Migrations
             modelBuilder.Entity("E_Books.Models.Photo", b =>
                 {
                     b.HasOne("E_Books.Models.UsersApp", "Users")
-                        .WithOne("Photos")
-                        .HasForeignKey("E_Books.Models.Photo", "UsersAppId")
+                        .WithMany("Photos")
+                        .HasForeignKey("UsersAppId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -643,8 +644,7 @@ namespace E_Books.Migrations
 
             modelBuilder.Entity("E_Books.Models.UsersApp", b =>
                 {
-                    b.Navigation("Photos")
-                        .IsRequired();
+                    b.Navigation("Photos");
                 });
 #pragma warning restore 612, 618
         }

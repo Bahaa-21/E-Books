@@ -33,8 +33,43 @@ public class AdminBooksController : ControllerBase
 
         return Ok(response);
     }
-    [HttpGet] 
+
+
+
+    [HttpGet]
     public IActionResult GetCounts() => Ok(_service.Book.GetCount());
+
+
+
+    [HttpGet("get-publishers")]
+    public async Task<IActionResult> GetAllPublishers()
+    {
+        var publishers = await _service.Publisher.GetAllAsync(expression: null);
+        var response = _mapper.Map<IEnumerable<PublisherVM>>(publishers);
+        return Ok(response);
+    }
+
+
+
+    [HttpGet("get-languages")]
+    public async Task<IActionResult> GetAllLanguages()
+    {
+        var languages = await _service.Language.GetAllAsync(expression: null);
+        var response = _mapper.Map<IEnumerable<LanguageVM>>(languages);
+        return Ok(response);
+    }
+
+
+
+    [HttpGet("get-genres")]
+    public async Task<IActionResult> GetAllGenres()
+    {
+        var genres = await _service.Genre.GetAllAsync(expression: null);
+        var response = _mapper.Map<IEnumerable<GenreVM>>(genres);
+        return Ok(response);
+    }
+
+
 
     [HttpPost]
     public async Task<IActionResult> AddBookAsync([FromForm] BookVM bookVM)
@@ -63,6 +98,7 @@ public class AdminBooksController : ControllerBase
     }
 
 
+
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateBookAsync(int id, [FromBody] BookVM updateBook)
     {
@@ -81,6 +117,9 @@ public class AdminBooksController : ControllerBase
         await _service.SaveAsync();
         return NoContent();
     }
+
+
+
 
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteBookAsync(int id)

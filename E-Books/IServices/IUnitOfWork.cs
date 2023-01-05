@@ -8,7 +8,10 @@ namespace E_Books.IServices
     {
         IBaseRepository<Book> Book { get; } 
         IBaseRepository<Author> Author { get; } 
-        IBaseRepository<Book_Author> BookAuthor { get; } 
+        IBaseRepository<Publisher> Publisher { get; } 
+        IBaseRepository<BookLanguage> Language { get; }
+        IBaseRepository<Genre> Genre { get; }
+        IBaseRepository<Book_Author> BookAuthor { get; }
 
         Task SaveAsync();
     }

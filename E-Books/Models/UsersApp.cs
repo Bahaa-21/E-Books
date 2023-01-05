@@ -11,6 +11,7 @@ public class UsersApp : IdentityUser
     [Required , StringLength(50)]
     public string LastName {get; set;}
     [Required]
+    public Photo Photos {get; set;}
     public Gender Gender{get; set;} 
     public List<RefreshToken> RefreshTokens { get; set;}
 }

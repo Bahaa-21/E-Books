@@ -10,17 +10,21 @@ public class MapperProfile : Profile
 {
     public MapperProfile()
     {
-        
+        #region Publisher Map
+        CreateMap<Publisher, PublisherVM>();
+        #endregion
 
-        #region Genre Mapping
+
+        #region Genre Map
         CreateMap<Genre, GenreVM>().ReverseMap();
         #endregion
 
-        #region Author Mapping
+
+        #region Author Map
         CreateMap<Author, AuthorVM>()
         .ForMember(d => d.AuthorName , act => act.MapFrom(sec => sec.Name))
         .ReverseMap();
-        
+
         CreateMap<Author, ReadAuthorVM>()
         .ForMember(d => d.AuthorName , act => act.MapFrom(sec => sec.Name))
         .ReverseMap();
@@ -37,11 +41,14 @@ public class MapperProfile : Profile
 
         #endregion
 
-        #region Language Mapping
+
+        #region Language Map
         CreateMap<BookLanguage, LanguageVM>().ReverseMap();
         #endregion
 
-        #region Book Mapping
+
+        #region Book Map
+
         CreateMap<Book, BookVM>()
         .ForMember(d => d.Authors, opt => opt.MapFrom(sec => sec.Authors.Select(a => a.AuthorId)))
         .ReverseMap()
@@ -87,5 +94,19 @@ public class MapperProfile : Profile
         .ForMember(d => d.Authors, opt => opt.MapFrom(sec => sec.Authors.Select(a => a.Authors.Name).ToList()))
         .ReverseMap();
         #endregion 
+
+
+
+        #region Photo Map
+        CreateMap<PhotoVM , Photo>();
+        #endregion
+
+
+        #region Admin Map
+        CreateMap<UsersApp , AdminProfileVM>()
+        .ForMember(d => d.Photos , opt => opt.MapFrom(sec => sec.Photos))
+        .ForMember(d => d.Photos , opt => opt.MapFrom(sec => sec.Photos.ProfilePhto))
+        .ReverseMap();
+        #endregion
     }
 }
