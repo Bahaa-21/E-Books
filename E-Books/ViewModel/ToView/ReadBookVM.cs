@@ -12,15 +12,15 @@ public class ReadBookVM
     public int NumberPages { get; set; }
 
     public double Price { get; set; }
-    public byte[] Image { get; set; }
+    public string? Image { get; set; }
     public DateTime PublicationDate { get; set; }
 
     public string Publishers { get; set; }
 
-    public GenreVM Genres {get; set;}
+    public string GenreType {get; set;}
     
-    public string Languages { get; set; }
+    public string Language { get; set; }
 
-    public IList<object> Authors { get; set; }
+    public List<string> Authors { get; set; }
 
 }

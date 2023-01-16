@@ -18,7 +18,7 @@ public class AdminBooksController : ControllerBase
     private readonly IMapper _mapper;
 
     private long _maxSizeImage = 1048576;
-    private List<string> _allowedExtensions = new() { ".png", ".jpg" };
+    private List<string> _allowedExtensions = new() { ".png", ".jpg" ,".jpeg" };
     public AdminBooksController(IUnitOfWork service, IMapper mapper) => (_service, _mapper) = (service, mapper);
 
     [HttpGet]
@@ -71,35 +71,41 @@ public class AdminBooksController : ControllerBase
 
 
 
+
     [HttpPost]
-    public async Task<IActionResult> AddBookAsync([FromForm] BookVM bookVM)
+    public async Task<IActionResult> AddBookAsync([FromBody] BookVM bookVM)
     {
+            
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        if (!_allowedExtensions.Contains(Path.GetExtension(bookVM.Image.FileName).ToLower()))
-            return BadRequest("Only .png and jpg images are allowed!");
+        // if (!_allowedExtensions.Contains(Path.GetExtension().ToLower()))
+        //    return BadRequest("Only .png,.jpg and .jpeg images are allowed!");
 
-        if (bookVM.Image.Length > _maxSizeImage)
+        var img = Convert.FromBase64String(bookVM.Image);
+
+        if (img.Length > _maxSizeImage)
             return BadRequest("Max allowed size for Image book is 1MB!");
 
-        var book = _mapper.Map<BookVM, Book>(bookVM);
+        var book = _mapper.Map<Book>(bookVM);
 
+        book.Image = img;
         book.PublicationDate = DateTime.UtcNow;
 
         await _service.Book.AddAsync(book);
         await _service.SaveAsync();
 
-        var readBook = await _service.Book.GetBookAsync(book.Id, true);
-
-        var response = _mapper.Map<ReadBookVM>(readBook);
-
-        return Created(nameof(AddBookAsync), response);
+        var getBook = await _service.Book.GetBookAsync(book.Id, true);
+        var response = _mapper.Map<ReadBookVM>(getBook);
+        
+        return Created(nameof(AddBookAsync) , response);
     }
 
 
 
-    [HttpPut("{id:int}")]
+
+
+    [HttpPatch("{id:int}")]
     public async Task<IActionResult> UpdateBookAsync(int id, [FromBody] BookVM updateBook)
     {
         if (!ModelState.IsValid)
@@ -117,6 +123,7 @@ public class AdminBooksController : ControllerBase
         await _service.SaveAsync();
         return NoContent();
     }
+
 
 
 

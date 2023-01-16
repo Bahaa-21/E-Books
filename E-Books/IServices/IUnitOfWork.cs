@@ -11,6 +11,8 @@ namespace E_Books.IServices
         IBaseRepository<Publisher> Publisher { get; } 
         IBaseRepository<BookLanguage> Language { get; }
         IBaseRepository<Genre> Genre { get; }
+        IBaseRepository<Photo> Photo { get; }
+
         IBaseRepository<Book_Author> BookAuthor { get; }
 
         Task SaveAsync();

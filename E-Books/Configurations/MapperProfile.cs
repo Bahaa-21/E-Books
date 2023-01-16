@@ -48,22 +48,10 @@ public class MapperProfile : Profile
 
 
         #region Book Map
-
         CreateMap<Book, BookVM>()
         .ForMember(d => d.Authors, opt => opt.MapFrom(sec => sec.Authors.Select(a => a.AuthorId)))
         .ReverseMap()
-        .BeforeMap(async (bv , b) => {
-            
-            b.PublisherId = Convert.ToInt32(bv.PublisherId);
-            b.LanguagesId = Convert.ToInt32(bv.LanguagesId);
-            b.GenreId = Convert.ToInt32(bv.GenreId);
-
-            
-           using var dataStream = new MemoryStream();
-           await bv.Image.CopyToAsync(dataStream);
-            b.Image = dataStream.ToArray();
-        })
-        .ForMember(d => d.Image , opt => opt.Ignore())
+        .ForMember(d => d.Image ,opt => opt.Ignore())
         .ForMember(b => b.Authors, opt => opt.Ignore())
         .AfterMap( (bv, b) =>
         {
@@ -85,21 +73,16 @@ public class MapperProfile : Profile
 
         CreateMap<Book, ReadBookVM>()
         .ForMember(d => d.Publishers, opt => opt.MapFrom(sec => sec.Publishers.Name))
-        .ForMember(d => d.Languages , opt => opt.MapFrom(sec => sec.Languages.LanguageName))
+        .ForMember(d => d.Language , opt => opt.MapFrom(sec => sec.Languages.LanguageName))
+        .ForMember(d => d.GenreType , opt => opt.MapFrom(sec => sec.Genres.Name))
         .ForMember(d => d.Authors , opt => opt.MapFrom(sec => sec.Authors))
-        .ForMember(d => d.Authors, opt => opt.MapFrom(sec => sec.Authors.Select(a => new
-        {
-            Id = a.Authors.Id,
-            Name = a.Authors.Name
-        }).ToList()))
+        .ForMember(d => d.Authors, opt => opt.MapFrom(sec => sec.Authors.Select(author => author.Authors.Name).ToList()))
         .ReverseMap();
-
-
+       
         CreateMap<Book, SearchBookVM>()
         .ForMember(d => d.Authors, opt => opt.MapFrom(sec => sec.Authors.Select(a => a.Authors.Name).ToList()))
         .ReverseMap();
         #endregion 
-
 
 
         #region Photo Map
@@ -109,8 +92,8 @@ public class MapperProfile : Profile
 
         #region Admin Map
         CreateMap<UsersApp , AdminProfileVM>()
-        .ForMember(d => d.Photos , opt => opt.MapFrom(sec => sec.Photos))
-        .ForMember(d => d.Photos , opt => opt.MapFrom(sec => sec.Photos.ProfilePhto))
+        .ForMember(d => d.ProfilePhoto , opt => opt.MapFrom(sec => sec.Photos))
+        .ForMember(d => d.ProfilePhoto , opt => opt.MapFrom(sec => sec.Photos.ProfilePhoto))
         .ReverseMap();
         #endregion
     }

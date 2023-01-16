@@ -20,6 +20,7 @@ namespace E_Books.Services
         private IBaseRepository<Publisher> _publishers;
         private IBaseRepository<BookLanguage> _languages;
         private IBaseRepository<Genre> _genres;
+        private IBaseRepository<Photo> _photo;
         private IBaseRepository<Book_Author> _booksauthors;
         
         public IBaseRepository<Book> Book => _books??= new BaseRepository<Book>(_context);
@@ -33,6 +34,7 @@ namespace E_Books.Services
         public IBaseRepository<BookLanguage> Language => _languages??= new BaseRepository<BookLanguage>(_context);
 
         public IBaseRepository<Genre> Genre => _genres??= new BaseRepository<Genre>(_context);
+        public IBaseRepository<Photo> Photo => _photo??= new BaseRepository<Photo>(_context);
 
         public void Dispose()
         {

@@ -122,7 +122,6 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
             return await _context.Books.FindAsync(id);
 
         var books = await _context.Books.Include(a => a.Authors).ThenInclude(a => a.Authors).SingleAsync(bi => bi.Id == id);
-
         _context.Entry(books).Reference(g => g.Genres).Load();
         _context.Entry(books).Reference(p => p.Publishers).Load();
         _context.Entry(books).Reference(l => l.Languages).Load();

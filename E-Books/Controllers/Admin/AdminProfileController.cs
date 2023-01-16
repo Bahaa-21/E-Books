@@ -17,31 +17,40 @@ public class AdminProfileController : ControllerBase
     private readonly IMapper _mapper;
     public AdminProfileController(UserManager<UsersApp> userManager, IUnitOfWork service , IMapper mapper) => (_userManager, _service , _mapper) = (userManager, service , mapper);
 
-    [HttpGet]
+
+
+
+    [HttpGet("{id}")]
     public async Task<IActionResult> GetAdminProfile(string id)
     {
         var admin = await _userManager.FindByIdAsync(id);
-        
         var response = _mapper.Map<UsersApp , AdminProfileVM>(admin);
-
         return Ok(response);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> AddImage(string id,[FromForm] PhotoVM photoVM)
+
+
+    [HttpPost("{id}")]
+    public async Task<IActionResult> UploadImage(string id,[FromBody] PhotoVM photoVM)
     {
         var user = await _userManager.FindByIdAsync(id);
         
         if(user is null)
         return NotFound();
 
-        using var dataStream = new MemoryStream();
-        await photoVM.ProfilePhto.CopyToAsync(dataStream);
+        var img = Convert.FromBase64String(photoVM.ProfilePhto);
 
-         
-        var photo = _mapper.Map<PhotoVM , Photo>(photoVM);
-        photo.AddedOn = DateTime.UtcNow;
-        photo.ProfilePhto = dataStream.ToArray();
-        return Ok();
+        var photo = new Photo()
+        {
+        ProfilePhoto = img,
+        AddedOn = DateTime.UtcNow,
+        UsersAppId = user.Id
+        };
+
+        await _service.Photo.AddAsync(photo);
+        await _service.SaveAsync();
+
+
+        return Created(nameof(UploadImage) , photo);
     }
 }

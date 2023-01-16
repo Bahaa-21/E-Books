@@ -4,7 +4,7 @@ namespace E_Books.Models;
 public class Photo
 {
     public int Id { get; set; }
-    public byte[]? ProfilePhto {get; set;} = null;
+    public byte[]? ProfilePhoto {get; set;}
     public DateTime AddedOn {get;set;}
     public string UsersAppId{get; set;}
 

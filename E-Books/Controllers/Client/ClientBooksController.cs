@@ -13,18 +13,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using static System.Reflection.Metadata.BlobBuilder;
 
-namespace E_Books.Controllers.Customer;
+namespace E_Books.Controllers.Client;
 
 [ApiController]
-[Route("api/[controller]/[action]")]
-public class BooksController : ControllerBase
+[Route("api/[controller]")]
+public class ClientBooksController : ControllerBase
 {
     private readonly IUnitOfWork _service;
     private readonly IMapper _mapper;
-    public BooksController(IUnitOfWork service, IMapper mapper) => (_service, _mapper) = (service, mapper);
+    public ClientBooksController(IUnitOfWork service, IMapper mapper) => (_service, _mapper) = (service, mapper);
 
 
-    [HttpGet]
+    [HttpGet("get-all-books")]
     public async Task<IActionResult> GetAllBookAsync([FromQuery] RequestParams requestParams)
     {
         var books = await _service.Book.GetAllAsync(requestParams, include: inc => inc.Include(a => a.Authors).ThenInclude(ab => ab.Authors)
@@ -38,13 +38,13 @@ public class BooksController : ControllerBase
     }
 
 
-    [HttpGet("{id:int}", Name = "GetBookByIdAsync")]
+    [HttpGet("get-book-by-id/{id:int}")]
     public async Task<IActionResult> GetBookByIdAsync(int id)
     {
-        var book = await _service.Book.GetAsync(expression: bi => bi.Id == id, include: inc => inc.Include(a => a.Authors).ThenInclude(ab => ab.Authors)
-                                                   .Include(p => p.Publishers)
-                                                   .Include(l => l.Languages)
-                                                   .Include(g => g.Genres));
+        var book = await _service.Book.GetAsync(expression: bookId => bookId.Id == id, include: inc => inc.Include(a => a.Authors).ThenInclude(ab => ab.Authors)
+                                                        .Include(p => p.Publishers)
+                                                        .Include(l => l.Languages)
+                                                        .Include(g => g.Genres));
         if (book is null)
             return NotFound();
 
@@ -54,7 +54,7 @@ public class BooksController : ControllerBase
     }
 
 
-    [HttpGet("{id:int}")]
+    [HttpGet("get-book-by-genre/{id:int}")]
     public async Task<IActionResult> GetBookByGenre(int id)
     {
         var books = await _service.Book.GetAllAsync(expression: g => g.GenreId == id,
@@ -71,7 +71,7 @@ public class BooksController : ControllerBase
     }
 
 
-    [HttpGet]
+    [HttpGet("search-of-books")]
     public async Task<IActionResult> SearchAsync(string title, [FromQuery] RequestParams requestParams)
     {
         var book = await _service.Book.Search(requestParams, expression: book => book.Title.Contains(title),

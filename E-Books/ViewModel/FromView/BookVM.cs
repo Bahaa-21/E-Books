@@ -10,15 +10,15 @@ public class BookVM
     public string Description { get; set; }
     [Required]
     public int NumberPages { get; set; }
-    public IFormFile Image { get; set; }
+    public string Image { get; set; }
     [Required]
     public double Price { get; set; }
     [Required]
-    public string PublisherId { get; set; }
+    public int PublisherId { get; set; }
     [Required]
-    public string LanguagesId { get; set; }
+    public int LanguagesId { get; set; }
     [Required]
-    public string GenreId { get; set; }
+    public int GenreId { get; set; }
     [Required]
     public ICollection<int> Authors { get; set; }
 
