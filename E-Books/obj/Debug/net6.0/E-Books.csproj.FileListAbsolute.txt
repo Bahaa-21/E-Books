@@ -153,3 +153,7 @@ C:\Users\USER\Desktop\E-Books\E-Books\obj\Debug\net6.0\refint\E-Books.dll
 C:\Users\USER\Desktop\E-Books\E-Books\obj\Debug\net6.0\E-Books.pdb
 C:\Users\USER\Desktop\E-Books\E-Books\obj\Debug\net6.0\E-Books.genruntimeconfig.cache
 C:\Users\USER\Desktop\E-Books\E-Books\obj\Debug\net6.0\ref\E-Books.dll
+C:\Users\USER\Desktop\E-Books\E-Books\bin\Debug\net6.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\USER\Desktop\E-Books\E-Books\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\USER\Desktop\E-Books\E-Books\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\USER\Desktop\E-Books\E-Books\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll

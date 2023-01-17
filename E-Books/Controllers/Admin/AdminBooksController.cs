@@ -18,7 +18,6 @@ public class AdminBooksController : ControllerBase
     private readonly IMapper _mapper;
 
     private long _maxSizeImage = 1048576;
-    private List<string> _allowedExtensions = new() { ".png", ".jpg" ,".jpeg" };
     public AdminBooksController(IUnitOfWork service, IMapper mapper) => (_service, _mapper) = (service, mapper);
 
     [HttpGet]
@@ -79,24 +78,17 @@ public class AdminBooksController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        // if (!_allowedExtensions.Contains(Path.GetExtension().ToLower()))
-        //    return BadRequest("Only .png,.jpg and .jpeg images are allowed!");
-
-        var img = Convert.FromBase64String(bookVM.Image);
-
-        if (img.Length > _maxSizeImage)
+        if (bookVM.Image.Length > _maxSizeImage)
             return BadRequest("Max allowed size for Image book is 1MB!");
 
         var book = _mapper.Map<Book>(bookVM);
-
-        book.Image = img;
         book.PublicationDate = DateTime.UtcNow;
 
         await _service.Book.AddAsync(book);
         await _service.SaveAsync();
-
-        var getBook = await _service.Book.GetBookAsync(book.Id, true);
-        var response = _mapper.Map<ReadBookVM>(getBook);
+        
+        var readBook = await _service.Book.GetBookAsync(book.Id , true);
+        var response = _mapper.Map<ReadBookVM>(readBook);
         
         return Created(nameof(AddBookAsync) , response);
     }

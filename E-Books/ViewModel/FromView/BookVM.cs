@@ -10,6 +10,7 @@ public class BookVM
     public string Description { get; set; }
     [Required]
     public int NumberPages { get; set; }
+    [Required]
     public string Image { get; set; }
     [Required]
     public double Price { get; set; }

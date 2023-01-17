@@ -12,7 +12,7 @@ public class ReadBookVM
     public int NumberPages { get; set; }
 
     public double Price { get; set; }
-    public string? Image { get; set; }
+    public string Image { get; set; }
     public DateTime PublicationDate { get; set; }
 
     public string Publishers { get; set; }

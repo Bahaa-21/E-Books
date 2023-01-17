@@ -18,6 +18,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
+builder.Services.AddControllers().AddNewtonsoftJson(op =>
+        op.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
 //Addind a CORS
 builder.Services.AddCors();
 
@@ -58,7 +61,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-AppDbInitializer.Seed(app);
+// AppDbInitializer.Seed(app);
 
 app.UseHttpsRedirection();
 

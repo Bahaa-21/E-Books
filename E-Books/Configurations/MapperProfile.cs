@@ -51,7 +51,6 @@ public class MapperProfile : Profile
         CreateMap<Book, BookVM>()
         .ForMember(d => d.Authors, opt => opt.MapFrom(sec => sec.Authors.Select(a => a.AuthorId)))
         .ReverseMap()
-        .ForMember(d => d.Image ,opt => opt.Ignore())
         .ForMember(b => b.Authors, opt => opt.Ignore())
         .AfterMap( (bv, b) =>
         {
