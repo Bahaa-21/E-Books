@@ -28,9 +28,11 @@ public class AdminBooksController : ControllerBase
                                                    .Include(l => l.Languages)
                                                    .Include(g => g.Genres));
 
+        int  pageNumber = _service.Book.PageNumber(books.Count());
+
         var response = _mapper.Map<IEnumerable<ReadBookVM>>(books);
 
-        return Ok(response);
+        return Ok(new {response , pageNumber });
     }
 
 
@@ -43,7 +45,7 @@ public class AdminBooksController : ControllerBase
     [HttpGet("get-publishers")]
     public async Task<IActionResult> GetAllPublishers()
     {
-        var publishers = await _service.Publisher.GetAllAsync(expression: null);
+        var publishers = await _service.Publisher.GetAllAsync(expression : null);
         var response = _mapper.Map<IEnumerable<PublisherVM>>(publishers);
         return Ok(response);
     }
@@ -81,6 +83,8 @@ public class AdminBooksController : ControllerBase
         if (bookVM.Image.Length > _maxSizeImage)
             return BadRequest("Max allowed size for Image book is 1MB!");
 
+        
+
         var book = _mapper.Map<Book>(bookVM);
         book.PublicationDate = DateTime.UtcNow;
 
@@ -97,18 +101,18 @@ public class AdminBooksController : ControllerBase
 
 
 
-    [HttpPatch("{id:int}")]
-    public async Task<IActionResult> UpdateBookAsync(int id, [FromBody] BookVM updateBook)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateBookAsync(int id ,[FromBody] BookVM updateBook)
     {
         if (!ModelState.IsValid)
             return BadRequest($"Submitted data is invalid ,{ModelState}");
 
-        var book = await _service.Book.GetAsync(expression: b => b.Id == id, null);
+        var book = await _service.Book.GetAsync(expression : book => book.Id == id , include: inc => inc.Include(author => author.Authors));
 
         if (book is null)
             return NotFound();
 
-        _mapper.Map(updateBook, book);
+        _mapper.Map<BookVM , Book>(updateBook, book);
 
         _service.Book.Update(book);
 
@@ -118,7 +122,7 @@ public class AdminBooksController : ControllerBase
 
 
 
-
+    
 
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteBookAsync(int id)

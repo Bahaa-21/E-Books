@@ -38,19 +38,6 @@ public class AdminProfileController : ControllerBase
         if(user is null)
         return NotFound();
 
-        var img = Convert.FromBase64String(photoVM.ProfilePhto);
-
-        var photo = new Photo()
-        {
-        ProfilePhoto = img,
-        AddedOn = DateTime.UtcNow,
-        UsersAppId = user.Id
-        };
-
-        await _service.Photo.AddAsync(photo);
-        await _service.SaveAsync();
-
-
-        return Created(nameof(UploadImage) , photo);
+        return Ok();
     }
 }

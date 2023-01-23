@@ -33,4 +33,6 @@ public interface IBaseRepository<T> where T : class
      CountsVM GetCount();
     Task<IEnumerable<Book>> GetBookByGenre(int id);
     Task<IPagedList<Book>> GetAllBookAsync(RequestParams requestParams);
+
+    int PageNumber(int number);
 }

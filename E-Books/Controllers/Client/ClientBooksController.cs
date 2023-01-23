@@ -32,9 +32,11 @@ public class ClientBooksController : ControllerBase
                                                    .Include(l => l.Languages)
                                                    .Include(g => g.Genres));
 
+        int  pageNumber = _service.Book.PageNumber(books.Count());
+
         var response = _mapper.Map<IEnumerable<ReadBookVM>>(books);
 
-        return Ok(response);
+        return Ok(new{response , pageNumber});
     }
 
 

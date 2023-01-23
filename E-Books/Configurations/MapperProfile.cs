@@ -51,13 +51,14 @@ public class MapperProfile : Profile
         CreateMap<Book, BookVM>()
         .ForMember(d => d.Authors, opt => opt.MapFrom(sec => sec.Authors.Select(a => a.AuthorId)))
         .ReverseMap()
-        .ForMember(b => b.Authors, opt => opt.Ignore())
+        .ForMember(b => b.Authors, opt => opt.Ignore ())
         .AfterMap( (bv, b) =>
         {
             //Remeve unselected Authors
             var removeAuthor = b.Authors.Where(b => !bv.Authors.Contains(b.AuthorId));
-            foreach (var item in removeAuthor)
+            foreach (var item in removeAuthor.ToList())
                 b.Authors.Remove(item);
+            
 
             //Add new Authors
             var addedAuthors = bv.Authors.Where(id => !b.Authors.Any(a => a.AuthorId == id)).Select(id => new Book_Author

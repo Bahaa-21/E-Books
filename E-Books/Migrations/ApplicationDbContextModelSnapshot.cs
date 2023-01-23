@@ -36,7 +36,7 @@ namespace E_Books.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors");
+                    b.ToTable("Authors", (string)null);
                 });
 
             modelBuilder.Entity("E_Books.Models.Book", b =>
@@ -87,7 +87,7 @@ namespace E_Books.Migrations
 
                     b.HasIndex("PublisherId");
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", (string)null);
                 });
 
             modelBuilder.Entity("E_Books.Models.Book_Author", b =>
@@ -102,7 +102,7 @@ namespace E_Books.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("BooksAuthors");
+                    b.ToTable("BooksAuthors", (string)null);
                 });
 
             modelBuilder.Entity("E_Books.Models.BookLanguage", b =>
@@ -120,7 +120,7 @@ namespace E_Books.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BooksLanguages");
+                    b.ToTable("BooksLanguages", (string)null);
                 });
 
             modelBuilder.Entity("E_Books.Models.Genre", b =>
@@ -137,7 +137,7 @@ namespace E_Books.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres");
+                    b.ToTable("Genres", (string)null);
                 });
 
             modelBuilder.Entity("E_Books.Models.Order", b =>
@@ -158,7 +158,7 @@ namespace E_Books.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Order");
+                    b.ToTable("Order", (string)null);
                 });
 
             modelBuilder.Entity("E_Books.Models.OrderItem", b =>
@@ -187,7 +187,7 @@ namespace E_Books.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderItem");
+                    b.ToTable("OrderItem", (string)null);
                 });
 
             modelBuilder.Entity("E_Books.Models.Photo", b =>
@@ -213,7 +213,7 @@ namespace E_Books.Migrations
                     b.HasIndex("UsersAppId")
                         .IsUnique();
 
-                    b.ToTable("Photos");
+                    b.ToTable("Photos", (string)null);
                 });
 
             modelBuilder.Entity("E_Books.Models.Publisher", b =>
@@ -231,7 +231,7 @@ namespace E_Books.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Publishers");
+                    b.ToTable("Publishers", (string)null);
                 });
 
             modelBuilder.Entity("E_Books.Models.UsersApp", b =>
@@ -523,7 +523,7 @@ namespace E_Books.Migrations
 
             modelBuilder.Entity("E_Books.Models.UsersApp", b =>
                 {
-                    b.OwnsMany("E_Books.Models.RefreshToken", "RefreshTokens", b1 =>
+                    b.OwnsMany("E_Books.Models.UsersApp.RefreshTokens#E_Books.Models.RefreshToken", "RefreshTokens", b1 =>
                         {
                             b1.Property<string>("UsersAppId")
                                 .HasColumnType("nvarchar(450)");
@@ -549,7 +549,7 @@ namespace E_Books.Migrations
 
                             b1.HasKey("UsersAppId", "Id");
 
-                            b1.ToTable("RefreshToken");
+                            b1.ToTable("RefreshToken", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("UsersAppId");

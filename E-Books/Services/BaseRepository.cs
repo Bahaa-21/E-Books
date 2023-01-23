@@ -150,4 +150,6 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         }
         return query.AsNoTracking().ToPagedListAsync(pageNumber: requestParams.PageNumber, pageSize: requestParams.PageSize);
     }
+
+    public int PageNumber(int number) => number / 30 == 0 ? 1 : number;
 }
