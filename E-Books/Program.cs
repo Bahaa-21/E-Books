@@ -1,10 +1,8 @@
+using E_Books.BusinessLogicLayer.Abstract;
+using E_Books.BusinessLogicLayer.Concrete;
 using E_Books.Configurations;
 using E_Books.Data;
-using E_Books.IService;
-using E_Books.IServices;
-using E_Books.Models;
-using E_Books.Service;
-using E_Books.Services;
+using E_Books.DataAccessLayer.Models;
 using E_Books.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

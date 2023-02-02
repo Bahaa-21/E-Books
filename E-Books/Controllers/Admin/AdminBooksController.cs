@@ -1,12 +1,12 @@
 using AutoMapper;
-using E_Books.IServices;
-using E_Books.Models;
 using E_Books.ViewModel;
 using E_Books.ViewModel.ToView;
 using E_Books.ViewModel.FromView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using E_Books.BusinessLogicLayer.Abstract;
+using E_Books.DataAccessLayer.Models;
 
 namespace E_Books.Controllers.Admin;
 
@@ -45,7 +45,7 @@ public class AdminBooksController : ControllerBase
     [HttpGet("get-publishers")]
     public async Task<IActionResult> GetAllPublishers()
     {
-        var publishers = await _service.Publisher.GetAllAsync(expression : null);
+        var publishers = await _service.Publisher.GetAllAsync(predicate  : null);
         var response = _mapper.Map<IEnumerable<PublisherVM>>(publishers);
         return Ok(response);
     }
@@ -55,7 +55,7 @@ public class AdminBooksController : ControllerBase
     [HttpGet("get-languages")]
     public async Task<IActionResult> GetAllLanguages()
     {
-        var languages = await _service.Language.GetAllAsync(expression: null);
+        var languages = await _service.Language.GetAllAsync(predicate : null);
         var response = _mapper.Map<IEnumerable<LanguageVM>>(languages);
         return Ok(response);
     }
@@ -65,7 +65,7 @@ public class AdminBooksController : ControllerBase
     [HttpGet("get-genres")]
     public async Task<IActionResult> GetAllGenres()
     {
-        var genres = await _service.Genre.GetAllAsync(expression: null);
+        var genres = await _service.Genre.GetAllAsync(predicate : null);
         var response = _mapper.Map<IEnumerable<GenreVM>>(genres);
         return Ok(response);
     }
@@ -86,11 +86,11 @@ public class AdminBooksController : ControllerBase
         
 
         var book = _mapper.Map<Book>(bookVM);
-        book.PublicationDate = DateTime.UtcNow;
+        
 
         await _service.Book.AddAsync(book);
         await _service.SaveAsync();
-        
+    
         var readBook = await _service.Book.GetBookAsync(book.Id , true);
         var response = _mapper.Map<ReadBookVM>(readBook);
         
@@ -107,16 +107,17 @@ public class AdminBooksController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest($"Submitted data is invalid ,{ModelState}");
 
-        var book = await _service.Book.GetAsync(expression : book => book.Id == id , include: inc => inc.Include(author => author.Authors));
+        var book = await _service.Book.GetAsync(predicate  : book => book.Id == id , include: inc => inc.Include(author => author.Authors));
 
         if (book is null)
             return NotFound();
 
         _mapper.Map<BookVM , Book>(updateBook, book);
 
-        _service.Book.Update(book);
+         _service.Book.Update(book);
 
         await _service.SaveAsync();
+
         return NoContent();
     }
 
@@ -127,7 +128,7 @@ public class AdminBooksController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteBookAsync(int id)
     {
-        var book = await _service.Book.GetAsync(expression: b => b.Id == id, include: null);
+        var book = await _service.Book.GetAsync(predicate : b => b.Id == id, include: null);
 
         _service.Book.Delete(book);
 

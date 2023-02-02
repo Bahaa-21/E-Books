@@ -15,6 +15,8 @@ public class BookVM
     [Required]
     public double Price { get; set; }
     [Required]
+    public DateTime PublicationDate { get; set; }
+    [Required]
     public int PublisherId { get; set; }
     [Required]
     public int LanguagesId { get; set; }

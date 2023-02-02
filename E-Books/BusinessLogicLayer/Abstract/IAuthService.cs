@@ -1,7 +1,8 @@
-﻿using E_Books.ViewModel.FromView;
+﻿using E_Books.DataAccessLayer.Models;
+using E_Books.ViewModel.FromView;
 using E_Books.ViewModel.ToView;
 
-namespace E_Books.IServices;
+namespace E_Books.BusinessLogicLayer.Abstract;
 
 public interface IAuthService
 {

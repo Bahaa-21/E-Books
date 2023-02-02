@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace E_Books.Models;
+namespace E_Books.DataAccessLayer.Models;
 [Owned]
 public class RefreshToken
 {

@@ -1,8 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using E_Books.IServices;
-using E_Books.Models;
 using E_Books.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -11,43 +9,47 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 using E_Books.ViewModel.FromView;
 using E_Books.ViewModel.ToView;
+using E_Books.BusinessLogicLayer.Abstract;
+using E_Books.DataAccessLayer.Models;
+using E_Books.Data;
 
-namespace E_Books.Services;
+namespace E_Books.BusinessLogicLayer.Concrete;
 
 public class AuthService : IAuthService
 {
-     private readonly UserManager<UsersApp> _userManager;
+    private readonly UserManager<UsersApp> _userManager;
+    private readonly ApplicationDbContext _context;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly JWT _jwt;
-    public AuthService(UserManager<UsersApp> userManager, IOptions<JWT> jwt , RoleManager<IdentityRole> roleManager) => (_userManager , _roleManager , _jwt) = (userManager, roleManager , jwt.Value);
+    public AuthService(UserManager<UsersApp> userManager, IOptions<JWT> jwt, RoleManager<IdentityRole> roleManager) => (_userManager, _roleManager, _jwt) = (userManager, roleManager, jwt.Value);
 
-    
+
     public async Task<AuthModel> RegisterAsync(RegisterModel model)
     {
-        if(await _userManager.FindByEmailAsync(model.Email) is not null)
-        return new AuthModel {Masseage = "Email is already registered!"};
+        if (await _userManager.FindByEmailAsync(model.Email) is not null)
+            return new AuthModel { Masseage = "Email is already registered!" };
 
         var user = new UsersApp()
         {
             Email = model.Email,
-            UserName = model.FirstName + model.LastName.Substring(0 , 3),
+            UserName = model.FirstName + model.LastName.Substring(0, 3),
             FirstName = model.FirstName,
             LastName = model.LastName,
             Gender = model.Gender
         };
-       
-        var resutl = await _userManager.CreateAsync(user , model.Password);
 
-        if(!resutl.Succeeded)
+        var resutl = await _userManager.CreateAsync(user, model.Password);
+
+        if (!resutl.Succeeded)
         {
             string errors = string.Empty;
-            foreach(var error in resutl.Errors)
-            errors += $"{error.Description},";
+            foreach (var error in resutl.Errors)
+                errors += $"{error.Description},";
 
-            return new AuthModel{ Masseage = errors };
+            return new AuthModel { Masseage = errors };
         }
 
-        await _userManager.AddToRoleAsync(user , "User");
+        await _userManager.AddToRoleAsync(user, "User");
 
         var jwtSecurityToken = await CreateJwtToken(user);
 
@@ -66,7 +68,7 @@ public class AuthService : IAuthService
     {
         var authModel = new AuthModel();
         var user = await _userManager.FindByEmailAsync(model.Email);
-        if(user is null || !await _userManager.CheckPasswordAsync(user , model.Password))
+        if (user is null || !await _userManager.CheckPasswordAsync(user, model.Password))
         {
             authModel.Masseage = "Email or Password is incorrect";
             return authModel;
@@ -82,7 +84,7 @@ public class AuthService : IAuthService
         authModel.LastName = user.LastName;
         authModel.Roles = roleList.ToList();
 
-        if(user.RefreshTokens.Any(t => t.IsActive))
+        if (user.RefreshTokens.Any(t => t.IsActive))
         {
             var activeRefreshToken = user.RefreshTokens.FirstOrDefault(t => t.IsActive);
             authModel.RefreshToken = activeRefreshToken.Token;
@@ -109,7 +111,7 @@ public class AuthService : IAuthService
         if (await _userManager.IsInRoleAsync(user, model.Role))
             return "User is already assigned to this role";
 
-        var result = await _userManager.AddToRoleAsync(user ,model.Role);
+        var result = await _userManager.AddToRoleAsync(user, model.Role);
 
         return result.Succeeded ? string.Empty : "Something went wrong";
 
@@ -122,14 +124,16 @@ public class AuthService : IAuthService
 
         var user = await _userManager.Users.SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == token));
 
-        if(user is null){
-            authModel.Masseage ="Invalid token";
+        if (user is null)
+        {
+            authModel.Masseage = "Invalid token";
             return authModel;
         }
 
         var refreshToken = user.RefreshTokens.Single(t => t.Token == token);
 
-        if(!refreshToken.IsActive){
+        if (!refreshToken.IsActive)
+        {
             authModel.Masseage = "Inactive token";
             return authModel;
         }
@@ -153,6 +157,9 @@ public class AuthService : IAuthService
 
         return authModel;
     }
+
+
+    #region Create JWT Token
     private async Task<JwtSecurityToken> CreateJwtToken(UsersApp user)
     {
         var userClaims = await _userManager.GetClaimsAsync(user);
@@ -183,6 +190,10 @@ public class AuthService : IAuthService
 
         return jwtSecurrityToken;
     }
+    #endregion
+
+
+    #region Generate Refresh Token
     private RefreshToken GenerateRefreshToken()
     {
         var randomNumber = new byte[32];
@@ -197,4 +208,5 @@ public class AuthService : IAuthService
         };
 
     }
+    #endregion
 }

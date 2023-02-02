@@ -1,8 +1,8 @@
 using AutoMapper;
-using E_Books.Models;
 using E_Books.ViewModel.ToView;
 using E_Books.ViewModel.FromView;
 using Microsoft.EntityFrameworkCore;
+using E_Books.DataAccessLayer.Models;
 
 namespace E_Books.Configurations;
 
@@ -85,15 +85,10 @@ public class MapperProfile : Profile
         #endregion 
 
 
-        #region Photo Map
-        CreateMap<PhotoVM , Photo>();
-        #endregion
-
-
         #region Admin Map
         CreateMap<UsersApp , AdminProfileVM>()
-        .ForMember(d => d.ProfilePhoto , opt => opt.MapFrom(sec => sec.Photos))
-        .ForMember(d => d.ProfilePhoto , opt => opt.MapFrom(sec => sec.Photos.ProfilePhoto))
+        .ForMember(des => des.Gender , opt => opt.MapFrom(sec => sec.Gender))
+        .ForMember(des => des.ProfilePhoto , opt => opt.MapFrom(sec => sec.Photos.Image))
         .ReverseMap();
         #endregion
     }

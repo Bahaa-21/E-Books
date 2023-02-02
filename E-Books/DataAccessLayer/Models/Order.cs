@@ -1,4 +1,4 @@
-namespace E_Books.Models;
+namespace E_Books.DataAccessLayer.Models;
 
 public class Order
 {

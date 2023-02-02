@@ -1,5 +1,5 @@
 ﻿using E_Books.Data;
-using E_Books.Models;
+using E_Books.DataAccessLayer.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;

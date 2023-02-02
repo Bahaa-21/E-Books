@@ -1,4 +1,4 @@
-using E_Books.Models;
+using E_Books.DataAccessLayer.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,5 +32,5 @@ public class ApplicationDbContext : IdentityDbContext<UsersApp>
     public DbSet<Publisher> Publishers {get; set;}
     public DbSet<Book_Author> BooksAuthors {get; set;}
     public DbSet<Genre> Genres {get; set;}
-    public DbSet<Photo> Photos {get; set;}
+    
 }

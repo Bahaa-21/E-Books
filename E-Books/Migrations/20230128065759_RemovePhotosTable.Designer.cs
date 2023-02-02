@@ -4,6 +4,7 @@ using E_Books.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_Books.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230128065759_RemovePhotosTable")]
+    partial class RemovePhotosTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -189,32 +191,6 @@ namespace E_Books.Migrations
                     b.HasIndex("OrderId");
 
                     b.ToTable("OrderItem");
-                });
-
-            modelBuilder.Entity("E_Books.Models.Photo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("AddedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Photo");
                 });
 
             modelBuilder.Entity("E_Books.Models.Publisher", b =>
@@ -511,17 +487,6 @@ namespace E_Books.Migrations
                     b.Navigation("Orders");
                 });
 
-            modelBuilder.Entity("E_Books.Models.Photo", b =>
-                {
-                    b.HasOne("E_Books.Models.UsersApp", "Users")
-                        .WithOne("Photos")
-                        .HasForeignKey("E_Books.Models.Photo", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Users");
-                });
-
             modelBuilder.Entity("E_Books.Models.UsersApp", b =>
                 {
                     b.OwnsMany("E_Books.Models.RefreshToken", "RefreshTokens", b1 =>
@@ -640,12 +605,6 @@ namespace E_Books.Migrations
             modelBuilder.Entity("E_Books.Models.Publisher", b =>
                 {
                     b.Navigation("Books");
-                });
-
-            modelBuilder.Entity("E_Books.Models.UsersApp", b =>
-                {
-                    b.Navigation("Photos")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
