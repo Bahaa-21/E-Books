@@ -58,7 +58,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+//Seed Data
 // AppDbInitializer.Seed(app);
 
 app.UseHttpsRedirection();
@@ -69,6 +69,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseRouting();
+
+//Exception Handling
+app.ConfigureExceptionHandler();
 
 app.MapControllers();
 

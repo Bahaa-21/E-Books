@@ -209,4 +209,23 @@ public class AuthService : IAuthService
 
     }
     #endregion
+
+    public async Task<ResultException> UpdateProfile(UpdateProfileVM updateUser)
+    {
+        var resutl = new ResultException();
+        var user = await _userManager.FindByEmailAsync(updateUser.Email);
+        if (user is null)
+            return new ResultException()
+            {
+                Masseage = "Submitted data is invalid",
+                IsSucceeded = false
+            };
+
+        resutl.IsSucceeded = true;
+        user.PhoneNumber = updateUser.PhoneNumber;
+        await _userManager.UpdateAsync(user);
+
+        return resutl;
+    }
+
 }

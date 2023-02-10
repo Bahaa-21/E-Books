@@ -86,10 +86,11 @@ public class MapperProfile : Profile
 
 
         #region Admin Map
-        CreateMap<UsersApp , AdminProfileVM>()
-        .ForMember(des => des.Gender , opt => opt.MapFrom(sec => sec.Gender))
+        CreateMap<UsersApp , UserProfileVM>()
         .ForMember(des => des.ProfilePhoto , opt => opt.MapFrom(sec => sec.Photos.Image))
         .ReverseMap();
+        
+        CreateMap<UsersApp , UpdateProfileVM>().ReverseMap();
         #endregion
     }
 }

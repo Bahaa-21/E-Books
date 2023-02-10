@@ -16,50 +16,101 @@ public class AdminProfileController : ControllerBase
     private readonly UserManager<UsersApp> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IUnitOfWork _service;
+    private readonly IAuthService _authService;
     private readonly IMapper _mapper;
-    public AdminProfileController(UserManager<UsersApp> userManager,RoleManager<IdentityRole> roleManager , IUnitOfWork service , IMapper mapper) => (_userManager , _roleManager , _service  , _mapper) = (userManager , roleManager ,service , mapper);
+    public AdminProfileController(UserManager<UsersApp> userManager, RoleManager<IdentityRole> roleManager, IUnitOfWork service, IAuthService authService, IMapper mapper) =>
+    (_userManager, _roleManager, _service, _authService, _mapper) = (userManager, roleManager, service, authService, mapper);
 
 
 
 
     [HttpGet("get-profile-admin/{id}")]
-    public async Task<IActionResult> GetAdminProfile(string id)
+    public async Task<IActionResult> GetProfile(string id)
     {
         var admin = await _userManager.FindByIdAsync(id);
 
         if (admin is null || !await _userManager.IsInRoleAsync(admin, "Admin"))
-            return BadRequest("Data sent incorrectly");
+            return BadRequest($"Submitted data is invalid ,{ModelState}");
 
 
-        admin = await _service.Users.Include(predicate : userId => userId.Id == id , include => include.Include(photo => photo.Photos));
+        admin = await _service.Users.Include(userId => userId.Id == id, include => include.Include(ph => ph.Photos));
 
-        var response = _mapper.Map<UsersApp, AdminProfileVM>(admin);
+        var response = _mapper.Map<UsersApp, UserProfileVM>(admin);
 
         return Ok(response);
     }
 
 
 
+
     [HttpPost("upload-image/{id}")]
 
-    public async Task<IActionResult> UploadImage(string id,[FromBody] PhotoVM photoVM)
+    public async Task<IActionResult> UploadImage(string id, [FromBody] PhotoVM photoVM)
     {
         var user = await _userManager.FindByIdAsync(id);
-        
-        if(user is null)
-        return NotFound("This user not exiset");
-        
-        if(!ModelState.IsValid)
-        return BadRequest(ModelState);
-        
-        var photo = new Photo(){
-        Image = photoVM.ProfilePhoto,    
-        UserId = id
+
+        if (user is null)
+            return NotFound($"This user not exiset");
+
+        if (!ModelState.IsValid)
+            return BadRequest($"Submitted data is invalid ,{ModelState}");
+
+        var photo = new Photo()
+        {
+            Image = photoVM.ProfilePhoto,
+            UserId = id
         };
 
         await _service.Photo.AddAsync(photo);
         await _service.SaveAsync();
 
-        return Created(nameof(UploadImage) , new {photo.Id , photo.Image});
+        return Created(nameof(UploadImage), new { photo.Id, photo.Image });
+    }
+
+
+
+    [HttpDelete("remove-image/{id}")]
+    public async Task<IActionResult> RemoveImageAsync(int id)
+    {
+
+        var img = await _service.Photo.GetAsync(predicate: photo => photo.Id == id, null);
+
+        if (img is null)
+            return BadRequest();
+
+        _service.Photo.Delete(img);
+
+        await _service.SaveAsync();
+        return NoContent();
+    }
+
+
+
+
+    [HttpPatch("update-profile")]
+    public async Task<IActionResult> Update([FromBody] UpdateProfileVM adminProfileVM)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+
+        var user = await _userManager.FindByEmailAsync(adminProfileVM.Email);
+        if (user is null)
+            return NotFound();
+
+        _mapper.Map(adminProfileVM, user);
+
+        var result = await _userManager.UpdateAsync(user);
+
+        if (!result.Succeeded)
+        {
+            string errors = string.Empty;
+            foreach (var error in result.Errors)
+                errors += $"{error.Description} ,";
+
+            return BadRequest(errors);
+        }
+
+        return Ok();
     }
 }
