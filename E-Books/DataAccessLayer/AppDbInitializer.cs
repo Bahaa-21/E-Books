@@ -139,6 +139,7 @@ public class AppDbInitializer
                     {
                         Title = "Book1",
                         Description = "Text ....",
+                        Quantity = 100,
                         NumberPages = 377,
                         Image = "String.......",
                         Price = 15000,
@@ -151,6 +152,7 @@ public class AppDbInitializer
                     {
                         Title = "Alkhemyaee",
                         Description = "Text ....",
+                        Quantity = 100,
                         NumberPages = 150,
                         Image = "String.......",
                         Price = 22000,
@@ -163,6 +165,7 @@ public class AppDbInitializer
                     {
                         Title = "The Grapes of wrath",
                         Description = "Text ....",
+                        Quantity = 100,
                         NumberPages = 189,
                         Price = 20000,
                         PublicationDate = DateTime.UtcNow.AddDays(1),
@@ -174,6 +177,7 @@ public class AppDbInitializer
                       {
                           Title = "Book4",
                           Description = "Text ....",
+                          Quantity = 100,
                           NumberPages = 189,
                           Image = "String.......",
                           Price = 20000,
@@ -186,6 +190,7 @@ public class AppDbInitializer
                       {
                           Title = "Book5",
                           Description = "Text ....",
+                          Quantity = 100,
                           NumberPages = 189,
                           Image = "String.......",
                           Price = 20000,
@@ -198,6 +203,7 @@ public class AppDbInitializer
                       {
                           Title = "Book6",
                           Description = "Text ....",
+                          Quantity = 100,
                           NumberPages = 189,
                           Image = "String.......",
                           Price = 20000,
@@ -209,6 +215,7 @@ public class AppDbInitializer
                       {
                           Title = "Book7",
                           Description = "Text ....",
+                          Quantity = 100,
                           NumberPages = 189,
                           Image = "String.......",
                           Price = 20000,
@@ -279,8 +286,8 @@ public class AppDbInitializer
                 await context.SaveChangesAsync();
             }
             #endregion
-           
-           #region User Table
+
+            #region User Table
             // if(!context.Users.Any())
             // {
             //     await context.Users.AddRangeAsync

@@ -22,7 +22,7 @@ namespace E_Books.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("E_Books.Models.Author", b =>
+            modelBuilder.Entity("E_Books.DataAccessLayer.Models.Author", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -39,7 +39,7 @@ namespace E_Books.Migrations
                     b.ToTable("Authors");
                 });
 
-            modelBuilder.Entity("E_Books.Models.Book", b =>
+            modelBuilder.Entity("E_Books.DataAccessLayer.Models.Book", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -53,11 +53,9 @@ namespace E_Books.Migrations
                         .HasColumnType("nvarchar(150)");
 
                     b.Property<int?>("GenreId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("LanguagesId")
@@ -73,6 +71,9 @@ namespace E_Books.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("PublisherId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -91,7 +92,7 @@ namespace E_Books.Migrations
                     b.ToTable("Books");
                 });
 
-            modelBuilder.Entity("E_Books.Models.Book_Author", b =>
+            modelBuilder.Entity("E_Books.DataAccessLayer.Models.Book_Author", b =>
                 {
                     b.Property<int>("AuthorId")
                         .HasColumnType("int");
@@ -106,7 +107,7 @@ namespace E_Books.Migrations
                     b.ToTable("BooksAuthors");
                 });
 
-            modelBuilder.Entity("E_Books.Models.BookLanguage", b =>
+            modelBuilder.Entity("E_Books.DataAccessLayer.Models.BookLanguage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -124,7 +125,7 @@ namespace E_Books.Migrations
                     b.ToTable("BooksLanguages");
                 });
 
-            modelBuilder.Entity("E_Books.Models.Genre", b =>
+            modelBuilder.Entity("E_Books.DataAccessLayer.Models.Genre", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -133,7 +134,6 @@ namespace E_Books.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -141,7 +141,7 @@ namespace E_Books.Migrations
                     b.ToTable("Genres");
                 });
 
-            modelBuilder.Entity("E_Books.Models.Order", b =>
+            modelBuilder.Entity("E_Books.DataAccessLayer.Models.Order", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -150,11 +150,9 @@ namespace E_Books.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -162,7 +160,7 @@ namespace E_Books.Migrations
                     b.ToTable("Order");
                 });
 
-            modelBuilder.Entity("E_Books.Models.OrderItem", b =>
+            modelBuilder.Entity("E_Books.DataAccessLayer.Models.OrderItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -191,7 +189,7 @@ namespace E_Books.Migrations
                     b.ToTable("OrderItem");
                 });
 
-            modelBuilder.Entity("E_Books.Models.Photo", b =>
+            modelBuilder.Entity("E_Books.DataAccessLayer.Models.Photo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -217,7 +215,7 @@ namespace E_Books.Migrations
                     b.ToTable("Photo");
                 });
 
-            modelBuilder.Entity("E_Books.Models.Publisher", b =>
+            modelBuilder.Entity("E_Books.DataAccessLayer.Models.Publisher", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -235,7 +233,7 @@ namespace E_Books.Migrations
                     b.ToTable("Publishers");
                 });
 
-            modelBuilder.Entity("E_Books.Models.UsersApp", b =>
+            modelBuilder.Entity("E_Books.DataAccessLayer.Models.UsersApp", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -446,21 +444,19 @@ namespace E_Books.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("E_Books.Models.Book", b =>
+            modelBuilder.Entity("E_Books.DataAccessLayer.Models.Book", b =>
                 {
-                    b.HasOne("E_Books.Models.Genre", "Genres")
+                    b.HasOne("E_Books.DataAccessLayer.Models.Genre", "Genres")
                         .WithMany("Books")
-                        .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("GenreId");
 
-                    b.HasOne("E_Books.Models.BookLanguage", "Languages")
+                    b.HasOne("E_Books.DataAccessLayer.Models.BookLanguage", "Languages")
                         .WithMany("Books")
                         .HasForeignKey("LanguagesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("E_Books.Models.Publisher", "Publishers")
+                    b.HasOne("E_Books.DataAccessLayer.Models.Publisher", "Publishers")
                         .WithMany("Books")
                         .HasForeignKey("PublisherId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -473,15 +469,15 @@ namespace E_Books.Migrations
                     b.Navigation("Publishers");
                 });
 
-            modelBuilder.Entity("E_Books.Models.Book_Author", b =>
+            modelBuilder.Entity("E_Books.DataAccessLayer.Models.Book_Author", b =>
                 {
-                    b.HasOne("E_Books.Models.Author", "Authors")
+                    b.HasOne("E_Books.DataAccessLayer.Models.Author", "Authors")
                         .WithMany("Books")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("E_Books.Models.Book", "Books")
+                    b.HasOne("E_Books.DataAccessLayer.Models.Book", "Books")
                         .WithMany("Authors")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -492,15 +488,15 @@ namespace E_Books.Migrations
                     b.Navigation("Books");
                 });
 
-            modelBuilder.Entity("E_Books.Models.OrderItem", b =>
+            modelBuilder.Entity("E_Books.DataAccessLayer.Models.OrderItem", b =>
                 {
-                    b.HasOne("E_Books.Models.Book", "Books")
+                    b.HasOne("E_Books.DataAccessLayer.Models.Book", "Books")
                         .WithMany("OrderItems")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("E_Books.Models.Order", "Orders")
+                    b.HasOne("E_Books.DataAccessLayer.Models.Order", "Orders")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -511,20 +507,20 @@ namespace E_Books.Migrations
                     b.Navigation("Orders");
                 });
 
-            modelBuilder.Entity("E_Books.Models.Photo", b =>
+            modelBuilder.Entity("E_Books.DataAccessLayer.Models.Photo", b =>
                 {
-                    b.HasOne("E_Books.Models.UsersApp", "Users")
+                    b.HasOne("E_Books.DataAccessLayer.Models.UsersApp", "Users")
                         .WithOne("Photos")
-                        .HasForeignKey("E_Books.Models.Photo", "UserId")
+                        .HasForeignKey("E_Books.DataAccessLayer.Models.Photo", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("E_Books.Models.UsersApp", b =>
+            modelBuilder.Entity("E_Books.DataAccessLayer.Models.UsersApp", b =>
                 {
-                    b.OwnsMany("E_Books.Models.RefreshToken", "RefreshTokens", b1 =>
+                    b.OwnsMany("E_Books.DataAccessLayer.Models.RefreshToken", "RefreshTokens", b1 =>
                         {
                             b1.Property<string>("UsersAppId")
                                 .HasColumnType("nvarchar(450)");
@@ -545,7 +541,6 @@ namespace E_Books.Migrations
                                 .HasColumnType("datetime2");
 
                             b1.Property<string>("Token")
-                                .IsRequired()
                                 .HasColumnType("nvarchar(max)");
 
                             b1.HasKey("UsersAppId", "Id");
@@ -570,7 +565,7 @@ namespace E_Books.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("E_Books.Models.UsersApp", null)
+                    b.HasOne("E_Books.DataAccessLayer.Models.UsersApp", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -579,7 +574,7 @@ namespace E_Books.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("E_Books.Models.UsersApp", null)
+                    b.HasOne("E_Books.DataAccessLayer.Models.UsersApp", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -594,7 +589,7 @@ namespace E_Books.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("E_Books.Models.UsersApp", null)
+                    b.HasOne("E_Books.DataAccessLayer.Models.UsersApp", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -603,49 +598,48 @@ namespace E_Books.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("E_Books.Models.UsersApp", null)
+                    b.HasOne("E_Books.DataAccessLayer.Models.UsersApp", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("E_Books.Models.Author", b =>
+            modelBuilder.Entity("E_Books.DataAccessLayer.Models.Author", b =>
                 {
                     b.Navigation("Books");
                 });
 
-            modelBuilder.Entity("E_Books.Models.Book", b =>
+            modelBuilder.Entity("E_Books.DataAccessLayer.Models.Book", b =>
                 {
                     b.Navigation("Authors");
 
                     b.Navigation("OrderItems");
                 });
 
-            modelBuilder.Entity("E_Books.Models.BookLanguage", b =>
+            modelBuilder.Entity("E_Books.DataAccessLayer.Models.BookLanguage", b =>
                 {
                     b.Navigation("Books");
                 });
 
-            modelBuilder.Entity("E_Books.Models.Genre", b =>
+            modelBuilder.Entity("E_Books.DataAccessLayer.Models.Genre", b =>
                 {
                     b.Navigation("Books");
                 });
 
-            modelBuilder.Entity("E_Books.Models.Order", b =>
+            modelBuilder.Entity("E_Books.DataAccessLayer.Models.Order", b =>
                 {
                     b.Navigation("OrderItems");
                 });
 
-            modelBuilder.Entity("E_Books.Models.Publisher", b =>
+            modelBuilder.Entity("E_Books.DataAccessLayer.Models.Publisher", b =>
                 {
                     b.Navigation("Books");
                 });
 
-            modelBuilder.Entity("E_Books.Models.UsersApp", b =>
+            modelBuilder.Entity("E_Books.DataAccessLayer.Models.UsersApp", b =>
                 {
-                    b.Navigation("Photos")
-                        .IsRequired();
+                    b.Navigation("Photos");
                 });
 #pragma warning restore 612, 618
         }

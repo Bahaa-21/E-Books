@@ -11,6 +11,7 @@ public interface IAuthService
     Task<AuthModel> GetTokenAsync(TokenRequestModel model);
     Task<string> AddRoleAsync(AddRoleModel model);
     Task<AuthModel> RefreshTokenAsync(string token);
-    Task<ResultException> UpdateProfile(UpdateProfileVM user);
+    
+    
     // Task<bool> RevokeTokenAsync(string token);
 }

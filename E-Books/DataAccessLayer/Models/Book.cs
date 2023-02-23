@@ -17,6 +17,8 @@ public class Book
     [Required, MaxLength(150)]
     public string Description { get; set; }
     [Required]
+    public int Quantity { get; set; }
+    [Required]
     public int NumberPages { get; set; }
     [Required]
     public double Price { get; set; }

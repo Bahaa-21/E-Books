@@ -3,6 +3,7 @@ using E_Books.BusinessLogicLayer.Abstract;
 using E_Books.DataAccessLayer.Models;
 using E_Books.ViewModel.FromView;
 using E_Books.ViewModel.ToView;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,7 @@ namespace E_Books.Controllers.Admin;
 
 [ApiController]
 [Route("api/[controller]/[action]")]
+[Authorize(Roles = "Admin")]
 public class AdminAuthorsController : ControllerBase
 {
     private readonly IUnitOfWork _service;

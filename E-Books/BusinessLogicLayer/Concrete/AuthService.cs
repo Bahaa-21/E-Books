@@ -17,12 +17,16 @@ namespace E_Books.BusinessLogicLayer.Concrete;
 
 public class AuthService : IAuthService
 {
+    private readonly RoleManager<IdentityRole> _roleManager;
     private readonly UserManager<UsersApp> _userManager;
     private readonly ApplicationDbContext _context;
-    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly IHttpContextAccessor _httpContext;
     private readonly JWT _jwt;
-    public AuthService(UserManager<UsersApp> userManager, IOptions<JWT> jwt, RoleManager<IdentityRole> roleManager) => (_userManager, _roleManager, _jwt) = (userManager, roleManager, jwt.Value);
 
+    public AuthService(IHttpContextAccessor httpContext, UserManager<UsersApp> userManager, IOptions<JWT> jwt, RoleManager<IdentityRole> roleManager)
+    {
+        (_httpContext, _userManager, _roleManager, _jwt) = (httpContext, userManager, roleManager, jwt.Value);
+    }
 
     public async Task<AuthModel> RegisterAsync(RegisterModel model)
     {
@@ -32,7 +36,7 @@ public class AuthService : IAuthService
         var user = new UsersApp()
         {
             Email = model.Email,
-            UserName = model.FirstName + model.LastName.Substring(0, 3),
+            UserName = string.Concat(model.FirstName, model.LastName.Substring(0 , 4)),
             FirstName = model.FirstName,
             LastName = model.LastName,
             Gender = model.Gender
@@ -51,16 +55,23 @@ public class AuthService : IAuthService
 
         await _userManager.AddToRoleAsync(user, "User");
 
-        var jwtSecurityToken = await CreateJwtToken(user);
+        var jwtToken = await CreateJwtToken(user);
+
+        var refreshToken = GenerateRefreshToken();
+        user.RefreshTokens?.Add(refreshToken);
+        await _userManager.UpdateAsync(user);
 
         return new AuthModel
         {
             Email = user.Email,
+            ExpiresOn = jwtToken.ValidTo,
             IsAuthenticated = true,
             Roles = new List<string> { "User" },
-            Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+            Token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
             FirstName = user.FirstName,
             LastName = user.LastName,
+            RefreshToken = refreshToken.Token,
+            RefreshTokenExpiration = refreshToken.ExpiresOn
         };
     }
 
@@ -146,6 +157,7 @@ public class AuthService : IAuthService
 
         //Create and return JwtToken
         var jwtToken = await CreateJwtToken(user);
+
         authModel.IsAuthenticated = true;
         authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
         var roles = await _userManager.GetRolesAsync(user);
@@ -153,6 +165,7 @@ public class AuthService : IAuthService
         authModel.UserName = user.UserName;
         authModel.Roles = roles.ToList();
         authModel.RefreshToken = newRefreshToken.Token;
+        authModel.ExpiresOn = jwtToken.ValidTo;
         authModel.RefreshTokenExpiration = newRefreshToken.ExpiresOn;
 
         return authModel;
@@ -171,7 +184,8 @@ public class AuthService : IAuthService
 
         var claim = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub , user.UserName),
+            new Claim(JwtRegisteredClaimNames.Sub , user.Id),
+            new Claim(JwtRegisteredClaimNames.Name , user.UserName),
             new Claim(JwtRegisteredClaimNames.Jti , Guid.NewGuid().ToString()),
             new Claim(JwtRegisteredClaimNames.Email , user.Email),
         }
@@ -184,6 +198,7 @@ public class AuthService : IAuthService
         var jwtSecurrityToken = new JwtSecurityToken(
             issuer: _jwt.Issuer,
             audience: _jwt.Audinece,
+            expires: DateTime.UtcNow.AddHours(_jwt.DurationInHours),
             claims: claim,
             signingCredentials: signingCredentials
             );
@@ -203,29 +218,10 @@ public class AuthService : IAuthService
         return new RefreshToken
         {
             Token = Convert.ToBase64String(randomNumber),
-            ExpiresOn = DateTime.UtcNow.AddDays(10),
+            ExpiresOn = DateTime.UtcNow.AddDays(5), 
             CreatedOn = DateTime.UtcNow
         };
 
     }
     #endregion
-
-    public async Task<ResultException> UpdateProfile(UpdateProfileVM updateUser)
-    {
-        var resutl = new ResultException();
-        var user = await _userManager.FindByEmailAsync(updateUser.Email);
-        if (user is null)
-            return new ResultException()
-            {
-                Masseage = "Submitted data is invalid",
-                IsSucceeded = false
-            };
-
-        resutl.IsSucceeded = true;
-        user.PhoneNumber = updateUser.PhoneNumber;
-        await _userManager.UpdateAsync(user);
-
-        return resutl;
-    }
-
 }

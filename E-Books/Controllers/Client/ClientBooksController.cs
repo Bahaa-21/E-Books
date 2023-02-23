@@ -12,41 +12,45 @@ using Microsoft.EntityFrameworkCore;
 using static System.Reflection.Metadata.BlobBuilder;
 using E_Books.BusinessLogicLayer.Abstract;
 using E_Books.DataAccessLayer.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace E_Books.Controllers.Client;
 
 [ApiController]
 [Route("api/[controller]")]
+
 public class ClientBooksController : ControllerBase
 {
     private readonly IUnitOfWork _service;
+    private readonly UserManager<UsersApp> _userManager;
+    private readonly IBookService _bookService;
+    private readonly IAuthService _authService;
+    private readonly IUserService _userService;
+
     private readonly IMapper _mapper;
-    public ClientBooksController(IUnitOfWork service, IMapper mapper) => (_service, _mapper) = (service, mapper);
+    public ClientBooksController(IUnitOfWork service, IBookService bookService, IMapper mapper, IAuthService authService, UserManager<UsersApp> userManager, IUserService userService) =>
+    (_service, _bookService, _mapper, _authService, _userManager ,_userService) = (service, bookService, mapper, authService, userManager,userService);
 
 
     [HttpGet("get-all-books")]
     public async Task<IActionResult> GetAllBookAsync([FromQuery] RequestParams requestParams)
     {
-        var books = await _service.Book.GetAllAsync(requestParams, include: inc => inc.Include(a => a.Authors).ThenInclude(ab => ab.Authors)
-                                                   .Include(p => p.Publishers)
-                                                   .Include(l => l.Languages)
-                                                   .Include(g => g.Genres));
+        var books = await _bookService.GetAllBookAsync(requestParams);
 
-        int  pageNumber = _service.Book.PageNumber(books.Count());
+        int tatalPage = books.PageCount;
 
         var response = _mapper.Map<IEnumerable<ReadBookVM>>(books);
 
-        return Ok(new{response , pageNumber });
+        return Ok(new { response, tatalPage });
     }
 
 
     [HttpGet("get-book-by-id/{id:int}")]
     public async Task<IActionResult> GetBookByIdAsync(int id)
     {
-        var book = await _service.Book.GetAsync(predicate : bookId => bookId.Id == id, include: inc => inc.Include(a => a.Authors).ThenInclude(ab => ab.Authors)
-                                                        .Include(p => p.Publishers)
-                                                        .Include(l => l.Languages)
-                                                        .Include(g => g.Genres));
+        var book = await _bookService.GetBookAsync(id, true);
+
         if (book is null)
             return NotFound();
 
@@ -56,15 +60,11 @@ public class ClientBooksController : ControllerBase
     }
 
 
-    [HttpGet("get-book-by-genre/{id:int}")]
+    [HttpGet("get-book-by-genre/{id}")]
     public async Task<IActionResult> GetBookByGenre(int id)
     {
-        var books = await _service.Book.GetAllAsync(predicate : g => g.GenreId == id,
-                                                    include: inc => inc.Include(author => author.Authors)
-                                                    .ThenInclude(ab => ab.Authors)
-                                                    .Include(publisher => publisher.Publishers)
-                                                    .Include(language => language.Languages)
-                                                    .Include(genre => genre.Genres));
+        var books = await _bookService.GetBookGenre(id);
+
         if (books is null)
             return NotFound();
 
@@ -76,12 +76,55 @@ public class ClientBooksController : ControllerBase
     [HttpGet("search-of-books")]
     public async Task<IActionResult> SearchAsync(string title, [FromQuery] RequestParams requestParams)
     {
-        var book = await _service.Book.Search(requestParams, predicate : book => book.Title.Contains(title),
+        var book = await _service.Book.Search(requestParams, predicate: book => book.Title.Contains(title),
                                                                 include: inc => inc.Include(author => author.Authors).ThenInclude(bookAuthor => bookAuthor.Authors));
         if (book.Count == 0)
             return NotFound($"Sorry, this title : {title}, does't exist, Please try agin");
 
         var response = _mapper.Map<IEnumerable<SearchBookVM>>(book);
+
+        return Ok(response);
+    }
+
+
+
+    [Authorize(Roles = "User")]
+    [HttpGet("get-user-profile")]
+    public async Task<IActionResult> GetUserProfile()
+    {
+        var userProfile = await _userService.GetUserProfile();
+
+        var response = _mapper.Map<UserProfileVM>(userProfile);
+
+        return Ok(response);
+    }
+
+
+
+
+    [Authorize(Roles = "User")]
+    [HttpPatch("update-user-profile")]
+    public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileVM model)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+
+        var user = await _userService.GetUserProfile();
+
+        if (user is null)
+            return Unauthorized();
+
+        _mapper.Map(model, user);
+
+        var result = await _userService.UpdateProfile(user);
+
+        if (!result)
+            return BadRequest(user);
+
+        var response = _mapper.Map<UpdateProfileVM>(user); 
 
         return Ok(response);
     }

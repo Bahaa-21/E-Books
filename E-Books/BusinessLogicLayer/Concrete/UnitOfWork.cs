@@ -7,15 +7,15 @@ namespace E_Books.BusinessLogicLayer.Concrete
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _context;
-        
+      
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
             
         }
 
+        private IBaseRepository<Author> _authors; 
         private IBaseRepository<Book> _books;
-        private IBaseRepository<Author> _authors;
         private IBaseRepository<Publisher> _publishers;
         private IBaseRepository<BookLanguage> _languages;
         private IBaseRepository<Genre> _genres;

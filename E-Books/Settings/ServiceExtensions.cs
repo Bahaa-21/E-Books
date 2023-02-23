@@ -14,6 +14,7 @@ namespace E_Books.Settings;
 
 public static class ServiceExtensions
 {
+
     public static void ConfigrureIdentity(this IServiceCollection services)
     {
         var builder = services.AddIdentityCore<UsersApp>(opt =>
@@ -22,6 +23,8 @@ public static class ServiceExtensions
             opt.Password.RequiredLength = 8;
             opt.Password.RequireUppercase = false;
             opt.Password.RequiredUniqueChars = 0;
+            opt.Password.RequireDigit = false;
+
         });
 
         builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), services);
@@ -42,6 +45,8 @@ public static class ServiceExtensions
         })
          .AddJwtBearer(opt =>
          {
+             opt.RequireHttpsMetadata = false;
+             opt.SaveToken = false;
              opt.TokenValidationParameters = new TokenValidationParameters()
              {
                  ValidateIssuer = true,
@@ -49,10 +54,13 @@ public static class ServiceExtensions
                  ValidateIssuerSigningKey = true,
                  ValidateAudience = true,
                  ValidIssuer = jwtSettings.GetSection("Issuer").Value,
+                 ValidAudience = jwtSettings.GetSection("Audinece").Value,
                  IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+                 ClockSkew = TimeSpan.Zero
              };
          });
     }
+
 
 
     public static void ConfigureExceptionHandler(this IApplicationBuilder app)

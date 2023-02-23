@@ -12,27 +12,30 @@ namespace E_Books.Controllers.Admin;
 
 [ApiController]
 [Route("api/[controller]/[action]")]
+[Authorize(Roles = "Admin")]
 public class AdminBooksController : ControllerBase
 {
     private readonly IUnitOfWork _service;
     private readonly IMapper _mapper;
-
+    private readonly IBookService _bookService;
     private long _maxSizeImage = 1048576;
-    public AdminBooksController(IUnitOfWork service, IMapper mapper) => (_service, _mapper) = (service, mapper);
+    public AdminBooksController(IUnitOfWork service, IMapper mapper, IBookService bookService) => (_service, _mapper, _bookService) = (service, mapper, bookService);
+
+
+
 
     [HttpGet]
     public async Task<IActionResult> GetAllBookAsync([FromQuery] RequestParams requestParams)
     {
-        var books = await _service.Book.GetAllAsync(requestParams, include: inc => inc.Include(a => a.Authors).ThenInclude(ab => ab.Authors)
-                                                   .Include(p => p.Publishers)
-                                                   .Include(l => l.Languages)
-                                                   .Include(g => g.Genres));
 
-        int  pageNumber = _service.Book.PageNumber(books.Count());
+        var books = await _bookService.GetAllBookAsync(requestParams);
+
+
+        int tatalPage = books.PageCount;
 
         var response = _mapper.Map<IEnumerable<ReadBookVM>>(books);
 
-        return Ok(new {response , pageNumber });
+        return Ok(new { response, tatalPage });
     }
 
 
@@ -45,7 +48,7 @@ public class AdminBooksController : ControllerBase
     [HttpGet("get-publishers")]
     public async Task<IActionResult> GetAllPublishers()
     {
-        var publishers = await _service.Publisher.GetAllAsync(predicate  : null);
+        var publishers = await _service.Publisher.GetAllAsync(predicate: null);
         var response = _mapper.Map<IEnumerable<PublisherVM>>(publishers);
         return Ok(response);
     }
@@ -55,7 +58,7 @@ public class AdminBooksController : ControllerBase
     [HttpGet("get-languages")]
     public async Task<IActionResult> GetAllLanguages()
     {
-        var languages = await _service.Language.GetAllAsync(predicate : null);
+        var languages = await _service.Language.GetAllAsync(predicate: null);
         var response = _mapper.Map<IEnumerable<LanguageVM>>(languages);
         return Ok(response);
     }
@@ -65,56 +68,57 @@ public class AdminBooksController : ControllerBase
     [HttpGet("get-genres")]
     public async Task<IActionResult> GetAllGenres()
     {
-        var genres = await _service.Genre.GetAllAsync(predicate : null);
+        var genres = await _service.Genre.GetAllAsync(predicate: null);
         var response = _mapper.Map<IEnumerable<GenreVM>>(genres);
+
         return Ok(response);
     }
 
 
 
-
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> AddBookAsync([FromBody] BookVM bookVM)
     {
-            
+
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
         if (bookVM.Image.Length > _maxSizeImage)
             return BadRequest("Max allowed size for Image book is 1MB!");
 
-        
+
 
         var book = _mapper.Map<Book>(bookVM);
-        
+
 
         await _service.Book.AddAsync(book);
         await _service.SaveAsync();
-    
-        var readBook = await _service.Book.GetBookAsync(book.Id , true);
+
+        var readBook = await _bookService.GetBookAsync(book.Id, true);
         var response = _mapper.Map<ReadBookVM>(readBook);
-        
-        return Created(nameof(AddBookAsync) , response);
+
+        return Created(nameof(AddBookAsync), response);
     }
 
 
 
 
-
+    [Authorize(Roles ="Admin")]
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateBookAsync(int id ,[FromBody] BookVM updateBook)
+    public async Task<IActionResult> UpdateBookAsync(int id, [FromBody] BookVM updateBook)
     {
         if (!ModelState.IsValid)
-            return BadRequest($"Submitted data is invalid ,{ModelState}");
+            return BadRequest(ModelState);
 
-        var book = await _service.Book.GetAsync(predicate  : book => book.Id == id , include: inc => inc.Include(author => author.Authors));
+        var book = await _bookService.GetBookWithAuthor(id);
 
         if (book is null)
             return NotFound();
 
-        _mapper.Map<BookVM , Book>(updateBook, book);
+        _mapper.Map<BookVM, Book>(updateBook, book);
 
-         _service.Book.Update(book);
+        _service.Book.Update(book);
 
         await _service.SaveAsync();
 
@@ -123,12 +127,12 @@ public class AdminBooksController : ControllerBase
 
 
 
-    
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteBookAsync(int id)
     {
-        var book = await _service.Book.GetAsync(predicate : b => b.Id == id, include: null);
+        var book = await _service.Book.GetAsync(predicate: b => b.Id == id, include: null);
 
         _service.Book.Delete(book);
 

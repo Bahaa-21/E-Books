@@ -94,11 +94,11 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
             return await query.AsNoTracking().FirstAsync();
     }
-    public async Task<T> Include(Expression<Func<T, bool>> predicate  = null ,Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
+    public async Task<T> Include(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
     {
         IQueryable<T> query = _context.Set<T>();
 
-        if(predicate is not null)
+        if (predicate is not null)
             query = query.Where(predicate);
 
         if (include is not null)
@@ -120,30 +120,6 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return counts;
     }
 
-    public async Task<IPagedList<Book>> GetAllBookAsync(RequestParams requestParams)
-    {
-        return await _context.Books.Include(a => a.Authors)
-                             .ThenInclude(a => a.Authors)
-                             .Include(l => l.Languages)
-                             .Include(p => p.Publishers)
-                             .Include(g => g.Genres)
-                             .ToPagedListAsync(requestParams.PageNumber, requestParams.PageSize);
-    }
-
-    public async Task<Book> GetBookAsync(int id, bool includes)
-    {
-        if (!includes)
-            return await _context.Books.FindAsync(id);
-
-        var books = await _context.Books.Include(a => a.Authors).ThenInclude(a => a.Authors).SingleAsync(bi => bi.Id == id);
-        _context.Entry(books).Reference(g => g.Genres).Load();
-        _context.Entry(books).Reference(p => p.Publishers).Load();
-        _context.Entry(books).Reference(l => l.Languages).Load();
-
-        return books;
-
-    }
-
     public Task<IPagedList<T>> Search(RequestParams requestParams = null, Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
     {
         IQueryable<T> query = _context.Set<T>();
@@ -159,7 +135,4 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         }
         return query.AsNoTracking().ToPagedListAsync(pageNumber: requestParams.PageNumber, pageSize: requestParams.PageSize);
     }
-
-    public int PageNumber(int number) => number / 30 == 0 ? 1 : number;
-
 }

@@ -4,7 +4,7 @@ namespace E_Books.BusinessLogicLayer.Abstract
 {
     public interface IUnitOfWork : IDisposable
     {
-        IBaseRepository<Book> Book { get; }
+        IBaseRepository<Book> Book{get;}
         IBaseRepository<Author> Author { get; }
         IBaseRepository<Publisher> Publisher { get; }
         IBaseRepository<BookLanguage> Language { get; }
