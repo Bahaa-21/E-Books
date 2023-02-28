@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using E_Books.Data;
+using E_Books.DataAccessLayer;
 using E_Books.ViewModel;
 using E_Books.ViewModel.ToView;
 using E_Books.ViewModel.FromView;
@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using X.PagedList;
 using E_Books.BusinessLogicLayer.Abstract;
-using E_Books.DataAccessLayer.Models;
+using E_Books.DataAccessLayer;
 
 namespace E_Books.BusinessLogicLayer.Concrete;
 

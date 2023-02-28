@@ -1,8 +1,8 @@
-﻿using E_Books.Data;
+﻿using E_Books.DataAccessLayer;
 using E_Books.DataAccessLayer.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace E_Books.Data;
+namespace E_Books.DataAccessLayer;
 
 public class AppDbInitializer
 {

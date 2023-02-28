@@ -1,7 +1,7 @@
 using E_Books.BusinessLogicLayer.Abstract;
 using E_Books.BusinessLogicLayer.Concrete;
 using E_Books.Configurations;
-using E_Books.Data;
+using E_Books.DataAccessLayer;
 using E_Books.DataAccessLayer.Models;
 using E_Books.Settings;
 using Microsoft.AspNetCore.Identity;

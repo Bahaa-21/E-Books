@@ -10,5 +10,4 @@ public interface IBookService : IDisposable
     Task<Book> GetBookAsync(int bookId, bool includes);
     Task<IEnumerable<Book>> GetBookGenre(int genreId);
     Task<Book> GetBookWithAuthor(int bookId);
-
 }

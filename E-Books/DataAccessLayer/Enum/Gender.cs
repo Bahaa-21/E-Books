@@ -1,4 +1,4 @@
-namespace E_Books.Data.Enum
+namespace E_Books.DataAccessLayer.Enum
 {
     public enum Gender
     {

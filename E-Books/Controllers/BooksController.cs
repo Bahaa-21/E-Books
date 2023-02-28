@@ -1,0 +1,77 @@
+using AutoMapper;
+using E_Books.BusinessLogicLayer.Abstract;
+using E_Books.DataAccessLayer.Models;
+using E_Books.ViewModel.ToView;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace E_Books.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class BooksController : ControllerBase
+{
+    private readonly IBookService _bookService;
+    private readonly IMapper _mapper;
+    private readonly IUnitOfWork _service;
+    public BooksController(IUnitOfWork service, IBookService bookService, IMapper mapper)
+    {
+        this._service = service;
+        this._mapper = mapper;
+        this._bookService = bookService;
+    }
+
+
+    [HttpGet("get-all-books")]
+    public async Task<IActionResult> GetAllBookAsync([FromQuery] RequestParams requestParams)
+    {
+        var books = await _bookService.GetAllBookAsync(requestParams);
+
+        int tatalPage = books.PageCount;
+
+        var response = _mapper.Map<IEnumerable<ReadBookVM>>(books);
+
+        return Ok(new { response, tatalPage });
+    }
+
+
+    [HttpGet("get-book-by-id/{id:int}")]
+    public async Task<IActionResult> GetBookByIdAsync(int id)
+    {
+        var book = await _bookService.GetBookAsync(id, true);
+
+        if (book is null)
+            return NotFound();
+
+        var response = _mapper.Map<Book, ReadBookVM>(book);
+
+        return Ok(response);
+    }
+
+
+    [HttpGet("get-book-by-genre/{id}")]
+    public async Task<IActionResult> GetBookByGenre(int id)
+    {
+        var books = await _bookService.GetBookGenre(id);
+
+        if (books is null)
+            return NotFound();
+
+        var response = _mapper.Map<IEnumerable<ReadBookVM>>(books);
+        return Ok(response);
+    }
+
+
+    [HttpGet("search-of-books")]
+    public async Task<IActionResult> SearchAsync(string title, [FromQuery] RequestParams requestParams)
+    {
+        var book = await _service.Book.Search(requestParams, predicate: book => book.Title.Contains(title),
+                                                                include: inc => inc.Include(author => author.Authors).ThenInclude(bookAuthor => bookAuthor.Authors));
+        if (book.Count == 0)
+            return NotFound($"Sorry, this title : {title}, does't exist, Please try agin");
+
+        var response = _mapper.Map<IEnumerable<SearchBookVM>>(book);
+
+        return Ok(response);
+    }
+}

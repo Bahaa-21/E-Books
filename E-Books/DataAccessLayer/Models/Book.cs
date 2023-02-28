@@ -29,18 +29,18 @@ public class Book
     [Required]
     public int PublisherId { get; set; }
     [ForeignKey("PublisherId")]
-    public virtual Publisher Publishers { get; set; }
+    public Publisher Publishers {get; set;}
     [Required]
     public int LanguagesId { get; set; }
     [ForeignKey("LanguagesId")]
-    public virtual BookLanguage Languages { get; set; }
+    public  BookLanguage Languages { get; set; }
 
     public int? GenreId { get; set; }
     [ForeignKey("GenreId")]
-    public virtual Genre Genres { get; set; }
+    public  Genre Genres { get; set; }
 
-    public virtual ICollection<OrderItem> OrderItems { get; set; }
-    public virtual ICollection<Book_Author> Authors { get; set; }
+    public  ICollection<OrderItem> OrderItems { get; set; }
+    public  ICollection<Book_Author> Authors { get; set; }
 
     public Book()
     {

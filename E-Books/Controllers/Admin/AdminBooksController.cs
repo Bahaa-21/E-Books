@@ -11,7 +11,7 @@ using E_Books.DataAccessLayer.Models;
 namespace E_Books.Controllers.Admin;
 
 [ApiController]
-[Route("api/[controller]/[action]")]
+[Route("api/[controller]")]
 [Authorize(Roles = "Admin")]
 public class AdminBooksController : ControllerBase
 {
@@ -19,28 +19,14 @@ public class AdminBooksController : ControllerBase
     private readonly IMapper _mapper;
     private readonly IBookService _bookService;
     private long _maxSizeImage = 1048576;
-    public AdminBooksController(IUnitOfWork service, IMapper mapper, IBookService bookService) => (_service, _mapper, _bookService) = (service, mapper, bookService);
+    public AdminBooksController(IUnitOfWork service,
+                                IMapper mapper,
+                                IBookService bookService) => 
+                                (_service, _mapper, _bookService) = (service, mapper, bookService);
 
 
 
-
-    [HttpGet]
-    public async Task<IActionResult> GetAllBookAsync([FromQuery] RequestParams requestParams)
-    {
-
-        var books = await _bookService.GetAllBookAsync(requestParams);
-
-
-        int tatalPage = books.PageCount;
-
-        var response = _mapper.Map<IEnumerable<ReadBookVM>>(books);
-
-        return Ok(new { response, tatalPage });
-    }
-
-
-
-    [HttpGet]
+    [HttpGet("get-webApp-info")]
     public IActionResult GetCounts() => Ok(_service.Book.GetCount());
 
 
@@ -76,8 +62,8 @@ public class AdminBooksController : ControllerBase
 
 
 
-    [Authorize]
-    [HttpPost]
+    
+    [HttpPost("add-book")]
     public async Task<IActionResult> AddBookAsync([FromBody] BookVM bookVM)
     {
 
@@ -104,8 +90,8 @@ public class AdminBooksController : ControllerBase
 
 
 
-    [Authorize(Roles ="Admin")]
-    [HttpPut("{id}")]
+    
+    [HttpPut("update-book/{id}")]
     public async Task<IActionResult> UpdateBookAsync(int id, [FromBody] BookVM updateBook)
     {
         if (!ModelState.IsValid)
@@ -128,8 +114,8 @@ public class AdminBooksController : ControllerBase
 
 
 
-    [Authorize(Roles = "Admin")]
-    [HttpDelete("{id:int}")]
+    
+    [HttpDelete("delete-book/{id}")]
     public async Task<IActionResult> DeleteBookAsync(int id)
     {
         var book = await _service.Book.GetAsync(predicate: b => b.Id == id, include: null);

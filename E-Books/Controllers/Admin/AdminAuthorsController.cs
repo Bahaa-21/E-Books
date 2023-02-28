@@ -17,7 +17,8 @@ public class AdminAuthorsController : ControllerBase
     private readonly IUnitOfWork _service;
     private readonly IMapper _mapper;
 
-    public AdminAuthorsController(IUnitOfWork service, IMapper mapper) => (_service, _mapper) = (service, mapper);
+    public AdminAuthorsController(IUnitOfWork service,
+                                  IMapper mapper) => (_service, _mapper) = (service, mapper);
 
 
     [HttpGet("get-all-authors")]
@@ -26,9 +27,7 @@ public class AdminAuthorsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllAuthors()
     {
-        var authors = await _service.Author.GetAllAsync(predicate : null,
-                                                        include: inc => inc.Include(book => book.Books)
-                                                                            .ThenInclude(bookAuthor => bookAuthor.Books));
+        var authors = await _service.Author.GetAllAsync(predicate: null, include => include.Include(book => book.Books).ThenInclude(bookAuthor => bookAuthor.Books));
 
         return Ok(_mapper.Map<IEnumerable<BooksAuthorVM>>(authors));
     }
@@ -40,7 +39,7 @@ public class AdminAuthorsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAuthorAsync(int id)
     {
-        var author = await _service.Author.GetAsync(predicate : authorId => authorId.Id == id, null);
+        var author = await _service.Author.GetAsync(predicate: authorId => authorId.Id == id, null);
 
         if (author is null)
             return NotFound();
@@ -57,8 +56,7 @@ public class AdminAuthorsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAuthorWithBooks(int id)
     {
-        var author = await _service.Author.GetAsync(predicate : ai => ai.Id == id, include: inc => inc.Include(book => book.Books)
-        .ThenInclude(b => b.Books));
+        var author = await _service.Author.GetAsync(predicate: ai => ai.Id == id,include => include.Include(book => book.Books).ThenInclude(b => b.Books));
 
         if (author is null)
             return NotFound();
@@ -73,7 +71,7 @@ public class AdminAuthorsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllAuthorsWithBooks()
     {
-        var authors = await _service.Author.GetAllAsync(predicate : null, include: inc => inc.Include(b => b.Books).ThenInclude(ba => ba.Books));
+        var authors = await _service.Author.GetAllAsync(predicate: null, include: inc => inc.Include(b => b.Books).ThenInclude(ba => ba.Books));
 
         return Ok(_mapper.Map<IEnumerable<BooksAuthorVM>>(authors));
     }
@@ -92,7 +90,7 @@ public class AdminAuthorsController : ControllerBase
 
         var response = _mapper.Map<AuthorVM>(author);
 
-        return Created(nameof(AddAuthor),  new{ response , status = StatusCodes.Status201Created });
+        return Created(nameof(AddAuthor), new { response, status = StatusCodes.Status201Created });
     }
 
 
@@ -100,17 +98,18 @@ public class AdminAuthorsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateAuthor( int id ,[FromBody] AuthorVM authorVM)
+    public async Task<IActionResult> UpdateAuthor(int id, [FromBody] AuthorVM authorVM)
     {
         if (!ModelState.IsValid)
             return BadRequest($"Submitted data is invalid ,{ModelState}");
-        var author = await _service.Author.GetAsync(predicate : idauth => idauth.Id == id, null);
+        var author = await _service.Author.GetAsync(predicate: idauth => idauth.Id == id, null);
 
         if (author is null)
             return NotFound();
-     
+
         _mapper.Map(authorVM, author);
         _service.Author.Update(author);
+
         await _service.SaveAsync();
 
         return NoContent();
@@ -123,7 +122,7 @@ public class AdminAuthorsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteAuthorAsync(int id)
     {
-        var author = await _service.Author.GetAsync(predicate : authorId => authorId.Id == id, null);
+        var author = await _service.Author.GetAsync(predicate: authorId => authorId.Id == id, null);
 
         _service.Author.Delete(author);
         await _service.SaveAsync();

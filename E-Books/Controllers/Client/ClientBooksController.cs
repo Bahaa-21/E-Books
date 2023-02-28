@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
-using E_Books.Data;
+using E_Books.DataAccessLayer;
 using E_Books.ViewModel;
 using E_Books.ViewModel.ToView;
 using E_Books.ViewModel.FromView;
@@ -19,7 +15,7 @@ namespace E_Books.Controllers.Client;
 
 [ApiController]
 [Route("api/[controller]")]
-
+[Authorize(Roles = "User")]
 public class ClientBooksController : ControllerBase
 {
     private readonly IUnitOfWork _service;
@@ -33,62 +29,8 @@ public class ClientBooksController : ControllerBase
     (_service, _bookService, _mapper, _authService, _userManager ,_userService) = (service, bookService, mapper, authService, userManager,userService);
 
 
-    [HttpGet("get-all-books")]
-    public async Task<IActionResult> GetAllBookAsync([FromQuery] RequestParams requestParams)
-    {
-        var books = await _bookService.GetAllBookAsync(requestParams);
-
-        int tatalPage = books.PageCount;
-
-        var response = _mapper.Map<IEnumerable<ReadBookVM>>(books);
-
-        return Ok(new { response, tatalPage });
-    }
 
 
-    [HttpGet("get-book-by-id/{id:int}")]
-    public async Task<IActionResult> GetBookByIdAsync(int id)
-    {
-        var book = await _bookService.GetBookAsync(id, true);
-
-        if (book is null)
-            return NotFound();
-
-        var response = _mapper.Map<Book, ReadBookVM>(book);
-
-        return Ok(response);
-    }
-
-
-    [HttpGet("get-book-by-genre/{id}")]
-    public async Task<IActionResult> GetBookByGenre(int id)
-    {
-        var books = await _bookService.GetBookGenre(id);
-
-        if (books is null)
-            return NotFound();
-
-        var response = _mapper.Map<IEnumerable<ReadBookVM>>(books);
-        return Ok(response);
-    }
-
-
-    [HttpGet("search-of-books")]
-    public async Task<IActionResult> SearchAsync(string title, [FromQuery] RequestParams requestParams)
-    {
-        var book = await _service.Book.Search(requestParams, predicate: book => book.Title.Contains(title),
-                                                                include: inc => inc.Include(author => author.Authors).ThenInclude(bookAuthor => bookAuthor.Authors));
-        if (book.Count == 0)
-            return NotFound($"Sorry, this title : {title}, does't exist, Please try agin");
-
-        var response = _mapper.Map<IEnumerable<SearchBookVM>>(book);
-
-        return Ok(response);
-    }
-
-
-
-    [Authorize(Roles = "User")]
     [HttpGet("get-user-profile")]
     public async Task<IActionResult> GetUserProfile()
     {
@@ -102,7 +44,32 @@ public class ClientBooksController : ControllerBase
 
 
 
-    [Authorize(Roles = "User")]
+    [HttpPost("upload-image")]
+    public async Task<IActionResult> UploadImage([FromBody] PhotoVM photoVM)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest($"Submitted data is invalid ,{ModelState}");
+
+
+        var user = await _userService.GetUserProfile();
+
+        if (user is null)
+            return NotFound($"This user not exiset");
+
+
+        var photo = new Photo()
+        {
+            Image = photoVM.ProfilePhoto,
+            UserId = user.Id
+        };
+
+        await _service.Photo.AddAsync(photo);
+        await _service.SaveAsync();
+
+        return Created(nameof(UploadImage), new { photo.Id, photo.Image });
+    }
+
+
     [HttpPatch("update-user-profile")]
     public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileVM model)
     {
@@ -128,5 +95,29 @@ public class ClientBooksController : ControllerBase
 
         return Ok(response);
     }
+
+
+
+    [HttpDelete("remove-image")]
+    public async Task<IActionResult> RemoveImageAsync()
+    {
+
+       var user = await _userService.GetUserProfile();
+
+        if (user is null)
+            return BadRequest();
+
+        var img = await _service.Photo.GetAsync(ph => ph.UserId == user.Id , null);
+
+        _service.Photo.Delete(img);
+
+        await _service.SaveAsync();
+        return NoContent();
+    }
+
+
+
+
+
 
 }

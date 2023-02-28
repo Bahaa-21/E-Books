@@ -2,16 +2,16 @@ using E_Books.DataAccessLayer.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace E_Books.Data;
+namespace E_Books.DataAccessLayer;
 
 public class ApplicationDbContext : IdentityDbContext<UsersApp>
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> option) : base(option){}
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> option) : base(option) { }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        
+
         builder.Entity<Book_Author>().HasKey(sec => new { sec.AuthorId, sec.BookId });
 
         builder.Entity<Book_Author>()
@@ -25,12 +25,15 @@ public class ApplicationDbContext : IdentityDbContext<UsersApp>
         .HasForeignKey(f => f.AuthorId);
     }
 
-    public DbSet<Book> Books {get; set;}
-    public DbSet<Author> Authors {get; set;}
-   
-    public DbSet<BookLanguage> BooksLanguages {get; set;}
-    public DbSet<Publisher> Publishers {get; set;}
-    public DbSet<Book_Author> BooksAuthors {get; set;}
-    public DbSet<Genre> Genres {get; set;}
-    
+    public DbSet<Book> Books { get; set; }
+    public DbSet<Author> Authors { get; set; }
+
+    public DbSet<BookLanguage> BooksLanguages { get; set; }
+    public DbSet<Publisher> Publishers { get; set; }
+    public DbSet<Book_Author> BooksAuthors { get; set; }
+    public DbSet<Genre> Genres { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderItem> OrderItems { get; set; }
+
+    public DbSet<ShoppingCartItems> ShoppingCartItems { get; set; }
 }

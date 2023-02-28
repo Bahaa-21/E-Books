@@ -23,7 +23,12 @@ public class AdminProfileController : ControllerBase
     private readonly IUserService _userService;
 
     private readonly IMapper _mapper;
-    public AdminProfileController(UserManager<UsersApp> userManager, RoleManager<IdentityRole> roleManager, IUnitOfWork service, IAuthService authService ,IUserService userService, IMapper mapper) =>
+    public AdminProfileController(UserManager<UsersApp> userManager,
+                                  RoleManager<IdentityRole> roleManager,
+                                  IUnitOfWork service,
+                                  IAuthService authService,
+                                  IUserService userService,
+                                  IMapper mapper) =>
     (_userManager, _roleManager, _service, _authService ,_userService , _mapper) = (userManager, roleManager, service, authService , userService, mapper);
 
 

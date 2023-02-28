@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using E_Books.Data.Enum;
+using E_Books.DataAccessLayer.Enum;
 
 namespace E_Books.ViewModel.FromView;
 
