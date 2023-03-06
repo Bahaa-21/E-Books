@@ -23,7 +23,7 @@ public class Book
     [Required]
     public double Price { get; set; }
     public DateTime PublicationDate { get; set; }
-
+    [Required]
     public string Image { get; set; }
 
     [Required]
@@ -39,14 +39,16 @@ public class Book
     [ForeignKey("GenreId")]
     public  Genre Genres { get; set; }
 
-    public  ICollection<OrderItem> OrderItems { get; set; }
+    public  List<OrderItem> OrderItems { get; set; }
     public  ICollection<Book_Author> Authors { get; set; }
+    public ICollection<CartBook> CartBooks { get; set; }
 
     public Book()
     {
         Authors = new Collection<Book_Author>();
-        OrderItems = new Collection<OrderItem>();
-
+        CartBooks = new Collection<CartBook>();
+        OrderItems = new List<OrderItem>();
+        this.Price.ToString("c");
     }
 
 }

@@ -27,11 +27,11 @@ public class BooksController : ControllerBase
     {
         var books = await _bookService.GetAllBookAsync(requestParams);
 
-        int tatalPage = books.PageCount;
+        int totalPage = books.PageCount;
 
         var response = _mapper.Map<IEnumerable<ReadBookVM>>(books);
 
-        return Ok(new { response, tatalPage });
+        return Ok(new { response, totalPage });
     }
 
 

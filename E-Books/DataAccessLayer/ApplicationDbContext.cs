@@ -23,6 +23,21 @@ public class ApplicationDbContext : IdentityDbContext<UsersApp>
         .HasOne(b => b.Authors)
         .WithMany(ba => ba.Books)
         .HasForeignKey(f => f.AuthorId);
+
+        builder.Entity<CartBook>().HasKey(sec => new {sec.BookId , sec.CartId});
+
+        builder.Entity<CartBook>()
+        .HasOne(book => book.Books)
+        .WithMany(carts => carts.CartBooks)
+        .HasForeignKey(fr => fr.BookId);
+
+         builder.Entity<CartBook>()
+        .HasOne(cart => cart.Carts)
+        .WithMany(carts => carts.CartBooks)
+        .HasForeignKey(fr => fr.CartId);
+
+        builder.Entity<CartBook>().Property(p => p.AddedOn).HasDefaultValue(DateTime.Now);
+        builder.Entity<CartBook>().Property(p => p.Amount).HasDefaultValue(1);
     }
 
     public DbSet<Book> Books { get; set; }
@@ -35,5 +50,5 @@ public class ApplicationDbContext : IdentityDbContext<UsersApp>
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
 
-    public DbSet<ShoppingCartItems> ShoppingCartItems { get; set; }
+    public DbSet<Carts> Carts { get; set; }
 }

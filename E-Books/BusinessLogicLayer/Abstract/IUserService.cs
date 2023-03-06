@@ -4,6 +4,6 @@ namespace E_Books.BusinessLogicLayer.Abstract;
 
 public interface IUserService
 {
-    Task<UsersApp> GetUserProfile();
+    Task<UsersApp> GetUser();
     Task<bool> UpdateProfile(UsersApp user);
 }

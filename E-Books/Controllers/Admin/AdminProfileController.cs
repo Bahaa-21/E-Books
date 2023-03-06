@@ -36,7 +36,7 @@ public class AdminProfileController : ControllerBase
     [HttpGet("get-profile-admin")]
     public async Task<IActionResult> GetProfile()
     {
-        var adminProfile = await _userService.GetUserProfile();
+        var adminProfile = await _userService.GetUser();
 
         if (adminProfile is null)
             return Unauthorized($"Unauthorized ,{ModelState}");
@@ -55,7 +55,7 @@ public class AdminProfileController : ControllerBase
             return BadRequest($"Submitted data is invalid ,{ModelState}");
 
 
-        var user = await _userService.GetUserProfile();
+        var user = await _userService.GetUser();
 
         if (user is null)
             return NotFound($"This user not exiset");
@@ -78,7 +78,7 @@ public class AdminProfileController : ControllerBase
     public async Task<IActionResult> RemoveImageAsync()
     {
 
-       var user = await _userService.GetUserProfile();
+       var user = await _userService.GetUser();
 
         if (user is null)
             return BadRequest();
@@ -100,7 +100,7 @@ public class AdminProfileController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var user = await _userService.GetUserProfile();
+        var user = await _userService.GetUser();
 
         if (user is null)
             return Unauthorized();

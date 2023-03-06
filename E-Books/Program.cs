@@ -24,7 +24,7 @@ builder.Services.AddControllers().AddNewtonsoftJson(op =>
 builder.Services.AddCors();
 
 builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
-
+    
 builder.Services.AddIdentity<UsersApp , IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 
 
@@ -46,6 +46,8 @@ builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 
 
 builder.Services.AddScoped<IAuthService , AuthService>();
+
+builder.Services.AddScoped<ICartService , CartService>();
 
 builder.Services.AddScoped<IBookService,BookService>();
 
@@ -106,6 +108,7 @@ app.UseAuthentication();
 app.UseRouting();
 
 app.UseAuthorization();
+
 
 app.MapDefaultControllerRoute();
 

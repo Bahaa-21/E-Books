@@ -184,7 +184,6 @@ public class AuthService : IAuthService
 
         var claim = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub , user.Id),
             new Claim(JwtRegisteredClaimNames.Name , user.UserName),
             new Claim(JwtRegisteredClaimNames.Jti , Guid.NewGuid().ToString()),
             new Claim(JwtRegisteredClaimNames.Email , user.Email),

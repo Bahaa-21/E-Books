@@ -16,7 +16,7 @@ public class UserService : IUserService
     public UserService(UserManager<UsersApp> userManager, ApplicationDbContext context, IHttpContextAccessor httpContext) => (_context, _userManager, _httpContext) = (context, userManager, httpContext);
 
 
-    public async Task<UsersApp> GetUserProfile()
+    public async Task<UsersApp> GetUser()
     {
         string email = string.Empty;
 
@@ -25,7 +25,7 @@ public class UserService : IUserService
 
         if (!string.IsNullOrEmpty(email))
         {
-            var userProfile = await _userManager.Users.Include(ph => ph.Photos).SingleOrDefaultAsync(userEmail => userEmail.Email == email);
+            var userProfile = await _userManager.Users.Include(ph => ph.Photos).SingleOrDefaultAsync(user => user.Email == email);
             return userProfile;
         }
         return null;

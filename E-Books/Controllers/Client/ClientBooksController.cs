@@ -15,7 +15,6 @@ namespace E_Books.Controllers.Client;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "User")]
 public class ClientBooksController : ControllerBase
 {
     private readonly IUnitOfWork _service;
@@ -30,11 +29,11 @@ public class ClientBooksController : ControllerBase
 
 
 
-
+    [Authorize(Roles ="User")]
     [HttpGet("get-user-profile")]
-    public async Task<IActionResult> GetUserProfile()
+    public async Task<IActionResult> GetUserProfle()
     {
-        var userProfile = await _userService.GetUserProfile();
+        var userProfile = await _userService.GetUser();
 
         var response = _mapper.Map<UserProfileVM>(userProfile);
 
@@ -51,7 +50,7 @@ public class ClientBooksController : ControllerBase
             return BadRequest($"Submitted data is invalid ,{ModelState}");
 
 
-        var user = await _userService.GetUserProfile();
+        var user = await _userService.GetUser();
 
         if (user is null)
             return NotFound($"This user not exiset");
@@ -79,7 +78,7 @@ public class ClientBooksController : ControllerBase
             return BadRequest(ModelState);
 
 
-        var user = await _userService.GetUserProfile();
+        var user = await _userService.GetUser();
 
         if (user is null)
             return Unauthorized();
@@ -102,7 +101,7 @@ public class ClientBooksController : ControllerBase
     public async Task<IActionResult> RemoveImageAsync()
     {
 
-       var user = await _userService.GetUserProfile();
+       var user = await _userService.GetUser();
 
         if (user is null)
             return BadRequest();

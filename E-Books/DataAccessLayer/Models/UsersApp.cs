@@ -14,4 +14,6 @@ public class UsersApp : IdentityUser
     public Gender Gender { get; set; }
     public Photo Photos { get; set; }
     public List<RefreshToken> RefreshTokens { get; set; }
+    public Carts Carts {get; set;}
+    public List<Order> Orders {get; set;}
 }

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Net;
 using System.Runtime.CompilerServices;
+using System.Security.Claims;
 using System.Text;
 
 namespace E_Books.Settings;
@@ -60,7 +61,6 @@ public static class ServiceExtensions
              };
          });
     }
-
 
 
     public static void ConfigureExceptionHandler(this IApplicationBuilder app)
