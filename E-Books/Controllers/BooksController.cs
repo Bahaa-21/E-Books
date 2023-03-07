@@ -27,11 +27,11 @@ public class BooksController : ControllerBase
     {
         var books = await _bookService.GetAllBookAsync(requestParams);
 
-        int totalPage = books.PageCount;
+        var metaData = new NewRecord(books.PageCount, books.PageNumber);
 
         var response = _mapper.Map<IEnumerable<ReadBookVM>>(books);
 
-        return Ok(new { response, totalPage });
+        return Ok(new { response , metaData });
     }
 
 
@@ -50,15 +50,17 @@ public class BooksController : ControllerBase
 
 
     [HttpGet("get-book-by-genre/{id}")]
-    public async Task<IActionResult> GetBookByGenre(int id)
+    public async Task<IActionResult> GetBookByGenre(int id , [FromQuery] RequestParams requestParams)
     {
-        var books = await _bookService.GetBookGenre(id);
+        var books = await _bookService.GetBookGenre(id , param : requestParams);
 
         if (books is null)
             return NotFound();
 
+        var metaData = new NewRecord(books.PageCount, books.PageNumber);
+
         var response = _mapper.Map<IEnumerable<ReadBookVM>>(books);
-        return Ok(response);
+        return Ok(new {response , metaData});
     }
 
 
@@ -75,3 +77,5 @@ public class BooksController : ControllerBase
         return Ok(response);
     }
 }
+
+internal record NewRecord(int TotalPage, int PageNumber);

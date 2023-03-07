@@ -8,6 +8,7 @@ public interface IBookService : IDisposable
 {
     Task<IPagedList<Book>> GetAllBookAsync(RequestParams requestParams);
     Task<Book> GetBookAsync(int bookId, bool includes);
-    Task<IEnumerable<Book>> GetBookGenre(int genreId);
+    Task<IPagedList<Book>> GetBookGenre(int genreId , RequestParams param);
     Task<Book> GetBookWithAuthor(int bookId);
+
 }

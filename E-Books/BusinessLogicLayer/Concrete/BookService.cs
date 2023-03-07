@@ -49,12 +49,12 @@ namespace E_Books.BusinessLogicLayer.Concrete
 
         }
 
-        public async Task<IEnumerable<Book>> GetBookGenre(int genreId) => await _context.Books.Where(genre => genre.GenreId == genreId)
+        public async Task<IPagedList<Book>> GetBookGenre(int genreId , RequestParams param) => await _context.Books.Where(genre => genre.GenreId == genreId)
                                             .Include(a => a.Authors).ThenInclude(a => a.Authors)
                                             .Include(genre => genre.Genres)
                                             .Include(publisher => publisher.Publishers)
                                             .Include(language => language.Languages)
-                                            .ToListAsync();
+                                            .ToPagedListAsync(pageNumber : param.PageNumber , pageSize:param.PageSize);
 
         public async Task<Book> GetBookWithAuthor(int bookId) => await _context.Books.Include(book => book.Authors).ThenInclude(bookAuthor => bookAuthor.Authors).SingleAsync(book => book.Id == bookId);
     }
