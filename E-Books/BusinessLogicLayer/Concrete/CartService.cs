@@ -13,9 +13,35 @@ public class CartService : ICartService
         _context = context;
     }
 
-    public async Task AddItemToCart(Book book , string userId)
+    public async Task<bool> AddItemToCart(int bookId , int amount = 1 , string userId)
     {
-        throw new NotImplementedException();
+        var addToCart = _context.Carts.Where(u => u.UserId == userId).SingleOrDefault();
+        
+        if(addToCart is null)
+        {
+            var cart = new Carts()
+            {
+                UserId = userId,
+            };
+            await _context.Carts.AddAsync(cart);
+            await  _context.SaveChangesAsync();
+
+            var cartBook = new CartBook(){
+                BookId = bookId,
+                CartId = cart.Id,
+                Amount = amount,
+            };
+            await _context.CartBooks.AddAsync(cartBook);
+            await _context.SaveChangesAsync();
+             return true;
+        }
+        else
+        {
+            var bookCart = _context.CartBooks.Where(b => b.BookId == bookId && b.CartId == addToCart.Id).SingleOrDefault();
+            bookCart.Amount += amount;
+             _context.SaveChanges();
+            return true;
+        }
     }
 
     public void Dispose()
@@ -24,12 +50,12 @@ public class CartService : ICartService
         GC.SuppressFinalize(this);
     }
 
-    public Task<List<CartBook>> GetShoppingCartItems()
+    public Task<List<CartBook>> GetCartItems(string userId)
     {
-        throw new NotImplementedException();
+       throw new NotImplementedException();
     }
 
-    public double GetShoppingCartTotal()
+    public double GetCartTotal()
     {
         throw new NotImplementedException();
     }

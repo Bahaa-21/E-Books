@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using E_Books.DataAccessLayer.Enum;
 using Microsoft.AspNetCore.Identity;
@@ -12,6 +13,8 @@ public class UsersApp : IdentityUser
     public string LastName { get; set; }
     [Required]
     public Gender Gender { get; set; }
+    [Required , MaxLength(50) ,DefaultValue("Damascus,Syria")]
+    public string Address {get; set;}
     public Photo Photos { get; set; }
     public List<RefreshToken> RefreshTokens { get; set; }
     public Carts Carts {get; set;}

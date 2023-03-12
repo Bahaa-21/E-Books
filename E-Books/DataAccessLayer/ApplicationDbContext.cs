@@ -1,4 +1,5 @@
 using E_Books.DataAccessLayer.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,7 @@ public class ApplicationDbContext : IdentityDbContext<UsersApp>
     {
         base.OnModelCreating(builder);
 
+        #region Relationships Many-to-Many
         builder.Entity<Book_Author>().HasKey(sec => new { sec.AuthorId, sec.BookId });
 
         builder.Entity<Book_Author>()
@@ -24,6 +26,7 @@ public class ApplicationDbContext : IdentityDbContext<UsersApp>
         .WithMany(ba => ba.Books)
         .HasForeignKey(f => f.AuthorId);
 
+        
         builder.Entity<CartBook>().HasKey(sec => new {sec.BookId , sec.CartId});
 
         builder.Entity<CartBook>()
@@ -38,6 +41,17 @@ public class ApplicationDbContext : IdentityDbContext<UsersApp>
 
         builder.Entity<CartBook>().Property(p => p.AddedOn).HasDefaultValue(DateTime.Now);
         builder.Entity<CartBook>().Property(p => p.Amount).HasDefaultValue(1);
+        #endregion    
+
+        #region Rename Table
+        builder.Entity<UsersApp>().ToTable("Users");
+        builder.Entity<IdentityRole>().ToTable("Roles");
+        builder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
+        builder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
+        builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
+        builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
+        builder.Entity<IdentityUserToken<string>>().ToTable("tUserTokens");
+        #endregion
     }
 
     public DbSet<Book> Books { get; set; }
@@ -49,6 +63,6 @@ public class ApplicationDbContext : IdentityDbContext<UsersApp>
     public DbSet<Genre> Genres { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
-
     public DbSet<Carts> Carts { get; set; }
+    public DbSet<CartBook> CartBooks {get; set;}
 }

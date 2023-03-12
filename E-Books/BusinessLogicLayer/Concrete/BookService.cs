@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using E_Books.BusinessLogicLayer.Abstract;
 using E_Books.DataAccessLayer;
 using E_Books.DataAccessLayer.Models;
@@ -34,6 +30,7 @@ namespace E_Books.BusinessLogicLayer.Concrete
                                        .Include(g => g.Genres)
                                        .ToPagedListAsync(requestParams.PageNumber, requestParams.PageSize);
         }
+
 
         public async Task<Book> GetBookAsync(int bookId, bool includes)
         {

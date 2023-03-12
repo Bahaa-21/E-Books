@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.ObjectModel;
@@ -50,5 +46,4 @@ public class Book
         OrderItems = new List<OrderItem>();
         this.Price.ToString("c");
     }
-
 }

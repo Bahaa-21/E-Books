@@ -5,6 +5,7 @@ namespace E_Books.DataAccessLayer.Models;
 public class Photo
 {
     public int Id { get; set; }
+    [Required]
     public string Image { get; set; }
     public DateTime AddedOn { get; set; }
     [Required]

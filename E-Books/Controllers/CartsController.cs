@@ -1,4 +1,5 @@
 using E_Books.BusinessLogicLayer.Abstract;
+using E_Books.ViewModel.FromView;
 using E_Books.ViewModel.ToView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,13 +22,16 @@ namespace E_Books.Controllers
         }
 
         [Authorize(Roles = "User")]
-        [HttpPost("add-to-cart/{id}")]
-        public async Task<IActionResult> AddToCart(int id)
+        [HttpPost("add-to-cart")]
+        public async Task<IActionResult> AddToCart([FromQuery] ParamsVM param)
         {   
-            var book = await _service.Book.GetAsync(predicate : book => book.Id == id , include : null);
-            if(book is null)
-                return NotFound();
-                
+            var user = await _userService.GetUser();
+            if(user is null)
+                return Unauthorized();
+
+           var result = await _cartService.AddItemToCart(param.BookId  , param.Amount, user.Id);
+            if(!result)
+                return BadRequest();
             return Ok();
         }
 

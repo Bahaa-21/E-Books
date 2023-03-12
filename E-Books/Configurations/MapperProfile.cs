@@ -84,6 +84,14 @@ public class MapperProfile : Profile
         .ReverseMap();
         #endregion 
 
+        #region Cart Map
+        CreateMap<CartVM , Carts>()
+        .AfterMap((cartVM , cart) =>{
+            
+        });
+        #endregion    
+
+
 
         #region Admin Map
         CreateMap<UsersApp , UserProfileVM>()

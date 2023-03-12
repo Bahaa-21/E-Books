@@ -36,7 +36,7 @@ namespace E_Books.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors", (string)null);
+                    b.ToTable("Authors");
                 });
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.Book", b =>
@@ -90,7 +90,7 @@ namespace E_Books.Migrations
 
                     b.HasIndex("PublisherId");
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.Book_Author", b =>
@@ -105,7 +105,7 @@ namespace E_Books.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("BooksAuthors", (string)null);
+                    b.ToTable("BooksAuthors");
                 });
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.BookLanguage", b =>
@@ -123,7 +123,7 @@ namespace E_Books.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BooksLanguages", (string)null);
+                    b.ToTable("BooksLanguages");
                 });
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.CartBook", b =>
@@ -137,7 +137,7 @@ namespace E_Books.Migrations
                     b.Property<DateTime>("AddedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 3, 6, 18, 56, 48, 280, DateTimeKind.Local).AddTicks(6043));
+                        .HasDefaultValue(new DateTime(2023, 3, 12, 13, 21, 31, 745, DateTimeKind.Local).AddTicks(3749));
 
                     b.Property<int>("Amount")
                         .ValueGeneratedOnAdd()
@@ -148,7 +148,7 @@ namespace E_Books.Migrations
 
                     b.HasIndex("CartId");
 
-                    b.ToTable("CartBook", (string)null);
+                    b.ToTable("CartBooks");
                 });
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.Carts", b =>
@@ -159,21 +159,16 @@ namespace E_Books.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("BookId")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookId");
-
                     b.HasIndex("UserId")
                         .IsUnique()
                         .HasFilter("[UserId] IS NOT NULL");
 
-                    b.ToTable("Carts", (string)null);
+                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.Genre", b =>
@@ -189,7 +184,7 @@ namespace E_Books.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres", (string)null);
+                    b.ToTable("Genres");
                 });
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.Order", b =>
@@ -207,22 +202,15 @@ namespace E_Books.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UsersId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UsersId");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.OrderItem", b =>
@@ -251,7 +239,7 @@ namespace E_Books.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderItems", (string)null);
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.Photo", b =>
@@ -266,6 +254,7 @@ namespace E_Books.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Image")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
@@ -277,7 +266,7 @@ namespace E_Books.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Photo", (string)null);
+                    b.ToTable("Photo");
                 });
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.Publisher", b =>
@@ -295,7 +284,7 @@ namespace E_Books.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Publishers", (string)null);
+                    b.ToTable("Publishers");
                 });
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.UsersApp", b =>
@@ -306,8 +295,10 @@ namespace E_Books.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("CartId")
-                        .HasColumnType("int");
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -376,7 +367,7 @@ namespace E_Books.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers", (string)null);
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -403,7 +394,7 @@ namespace E_Books.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AspNetRoles", (string)null);
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -428,7 +419,7 @@ namespace E_Books.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims", (string)null);
+                    b.ToTable("RoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -453,7 +444,7 @@ namespace E_Books.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims", (string)null);
+                    b.ToTable("UserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -475,7 +466,7 @@ namespace E_Books.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins", (string)null);
+                    b.ToTable("UserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -490,7 +481,7 @@ namespace E_Books.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles", (string)null);
+                    b.ToTable("UserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -509,7 +500,7 @@ namespace E_Books.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens", (string)null);
+                    b.ToTable("tUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.Book", b =>
@@ -577,15 +568,9 @@ namespace E_Books.Migrations
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.Carts", b =>
                 {
-                    b.HasOne("E_Books.DataAccessLayer.Models.Book", "Book")
-                        .WithMany()
-                        .HasForeignKey("BookId");
-
                     b.HasOne("E_Books.DataAccessLayer.Models.UsersApp", "Users")
                         .WithOne("Carts")
                         .HasForeignKey("E_Books.DataAccessLayer.Models.Carts", "UserId");
-
-                    b.Navigation("Book");
 
                     b.Navigation("Users");
                 });
@@ -594,7 +579,9 @@ namespace E_Books.Migrations
                 {
                     b.HasOne("E_Books.DataAccessLayer.Models.UsersApp", "Users")
                         .WithMany("Orders")
-                        .HasForeignKey("UsersId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Users");
                 });
@@ -631,7 +618,7 @@ namespace E_Books.Migrations
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.UsersApp", b =>
                 {
-                    b.OwnsMany("E_Books.DataAccessLayer.Models.UsersApp.RefreshTokens#E_Books.DataAccessLayer.Models.RefreshToken", "RefreshTokens", b1 =>
+                    b.OwnsMany("E_Books.DataAccessLayer.Models.RefreshToken", "RefreshTokens", b1 =>
                         {
                             b1.Property<string>("UsersAppId")
                                 .HasColumnType("nvarchar(450)");
@@ -656,7 +643,7 @@ namespace E_Books.Migrations
 
                             b1.HasKey("UsersAppId", "Id");
 
-                            b1.ToTable("RefreshToken", (string)null);
+                            b1.ToTable("RefreshToken");
 
                             b1.WithOwner()
                                 .HasForeignKey("UsersAppId");

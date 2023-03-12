@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using X.PagedList;
 using E_Books.BusinessLogicLayer.Abstract;
-using E_Books.DataAccessLayer;
 
 namespace E_Books.BusinessLogicLayer.Concrete;
 

@@ -9,7 +9,6 @@ public class OrderItem
     public int BookId { get; set; }
     [ForeignKey("BookId")]
     public Book Books { get; set; }
-
     public int OrderId { get; set; }
     [ForeignKey("OrderId")]
     public Order Orders { get; set; }

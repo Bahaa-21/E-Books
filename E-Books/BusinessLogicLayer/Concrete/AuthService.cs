@@ -19,7 +19,6 @@ public class AuthService : IAuthService
 {
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly UserManager<UsersApp> _userManager;
-    private readonly ApplicationDbContext _context;
     private readonly IHttpContextAccessor _httpContext;
     private readonly JWT _jwt;
 

@@ -11,6 +11,7 @@ namespace E_Books.Controllers;
 [Route("api/[controller]")]
 public class BooksController : ControllerBase
 {
+    private record NewRecord(int TotalPage, int PageNumber);
     private readonly IBookService _bookService;
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _service;
@@ -49,6 +50,7 @@ public class BooksController : ControllerBase
     }
 
 
+
     [HttpGet("get-book-by-genre/{id}")]
     public async Task<IActionResult> GetBookByGenre(int id , [FromQuery] RequestParams requestParams)
     {
@@ -77,5 +79,3 @@ public class BooksController : ControllerBase
         return Ok(response);
     }
 }
-
-internal record NewRecord(int TotalPage, int PageNumber);
