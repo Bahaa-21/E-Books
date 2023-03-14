@@ -1,3 +1,4 @@
+using AutoMapper;
 using E_Books.BusinessLogicLayer.Abstract;
 using E_Books.ViewModel.FromView;
 using E_Books.ViewModel.ToView;
@@ -15,10 +16,11 @@ namespace E_Books.Controllers
         private readonly IUnitOfWork _service;
         private readonly IUserService _userService;
         private readonly ICartService _cartService;
+        private readonly IMapper _mapper;
 
-        public CartsController(ICartService cartService ,IUnitOfWork service, IBookService bookService ,IUserService userService )
+        public CartsController(ICartService cartService ,IUnitOfWork service, IBookService bookService ,IUserService userService,IMapper mapper )
         {
-            (_cartService ,_service,_bookService ,_userService) = (cartService,service, bookService,userService);  
+            (_cartService ,_service,_bookService ,_userService ,_mapper) = (cartService,service, bookService,userService,mapper);  
         }
 
         [Authorize(Roles = "User")]
@@ -29,27 +31,30 @@ namespace E_Books.Controllers
             if(user is null)
                 return Unauthorized();
 
-           var result = await _cartService.AddItemToCart(param.BookId  , param.Amount, user.Id);
+           var result = await _cartService.AddItemToCart(user.Id,param.BookId,param.Amount);
             if(!result)
                 return BadRequest();
+
+            await _service.SaveAsync();
             return Ok();
         }
 
 
+        [Authorize(Roles ="User")]
+        [HttpGet("get-cart-item")]
+        public async Task<IActionResult> GetShoppingCart()
+        {
+            var user = await _userService.GetUser();
+            if (user is null)
+                return Unauthorized();
 
-        // [HttpGet("get-shopping-cart-item")]
-        // public async Task<IActionResult> GetShoppingCart()
-        // {
-        //     var item = await _shoppingCart.GetShoppingCartItems();
-        //     _shoppingCart.ShoppingCartItems = item;
+            var cartUser = await _service.Carts.GetAsync(predicate: c => c.UserId == user.Id, null);
+            if (cartUser is null)
+                return NotFound();
 
-        //     var response = new ShoppingCartVM()
-        //     {
-        //         ShoppingCart = _shoppingCart,
-        //         ShoppingCartTotal = _shoppingCart.GetShoppingCartTotal()
-        //     };
-        //     return Ok(response);
-        // }
-        
+            var cart = await _service.CartBooks.GetAllAsync(predicate: c => c.CartId == cartUser.Id, inc => inc.Include(b => b.Books));
+
+            return Ok(_mapper.Map<IList<CartsVM>>(cart));
+        }
     }
 }

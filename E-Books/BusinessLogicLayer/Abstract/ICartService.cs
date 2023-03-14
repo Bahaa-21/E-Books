@@ -1,11 +1,12 @@
 using E_Books.DataAccessLayer.Models;
+using E_Books.ViewModel.ToView;
 
 namespace E_Books.BusinessLogicLayer.Abstract;
 
-public interface ICartService : IDisposable
+public interface ICartService :  IDisposable
 {
-    Task<List<CartBook>> GetCartItems(string userId);
+    Task<List<CartsVM>> GetCartItems(int cartId);
     double GetCartTotal();
-    Task<bool> AddItemToCart(int bookId , int amount = 1 , string userId);
+    Task<bool> AddItemToCart(string userId , int bookId , int amount = 1);
     Task RemoveItemFromCart(Book book);
 }

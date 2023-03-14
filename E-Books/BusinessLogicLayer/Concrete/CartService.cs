@@ -1,6 +1,7 @@
 using E_Books.BusinessLogicLayer.Abstract;
 using E_Books.DataAccessLayer;
 using E_Books.DataAccessLayer.Models;
+using E_Books.ViewModel.ToView;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_Books.BusinessLogicLayer.Concrete;
@@ -8,52 +9,53 @@ namespace E_Books.BusinessLogicLayer.Concrete;
 public class CartService : ICartService
 {
     private readonly ApplicationDbContext _context;
-    public CartService(ApplicationDbContext context)
-    {
-        _context = context;
-    }
+    public CartService(ApplicationDbContext context) => _context = context;
 
-    public async Task<bool> AddItemToCart(int bookId , int amount = 1 , string userId)
+
+
+    public async Task<bool> AddItemToCart(string userId, int bookId, int amount = 1)
     {
-        var addToCart = _context.Carts.Where(u => u.UserId == userId).SingleOrDefault();
-        
-        if(addToCart is null)
+        var cartUser = _context.Carts.Where(c => c.UserId == userId).Include(cb => cb.CartBooks).SingleOrDefault();
+
+        if (cartUser is null)
         {
-            var cart = new Carts()
+            cartUser = new Carts()
             {
-                UserId = userId,
+                UserId = userId
             };
-            await _context.Carts.AddAsync(cart);
-            await  _context.SaveChangesAsync();
 
-            var cartBook = new CartBook(){
-                BookId = bookId,
-                CartId = cart.Id,
-                Amount = amount,
-            };
-            await _context.CartBooks.AddAsync(cartBook);
-            await _context.SaveChangesAsync();
-             return true;
-        }
-        else
-        {
-            var bookCart = _context.CartBooks.Where(b => b.BookId == bookId && b.CartId == addToCart.Id).SingleOrDefault();
-            bookCart.Amount += amount;
-             _context.SaveChanges();
+            var cartBook = new CartBook() { BookId = bookId, Amount = amount };
+            cartUser.CartBooks.Add(cartBook);
+            await _context.Carts.AddAsync(cartUser);
             return true;
         }
+        if (!cartUser.CartBooks.Any(b => b.BookId == bookId))
+        {
+            var cartBook = new CartBook() { BookId = bookId, Amount = amount };
+            cartUser.CartBooks.Add(cartBook);
+            return true;
+        }
+
+        var addAmount = cartUser.CartBooks.Where(b => b.BookId == bookId).SingleOrDefault();
+        addAmount.Amount = amount;
+        return true;
     }
 
-    public void Dispose()
+
+    public async Task<List<CartsVM>> GetCartItems(int cartId)
     {
-        _context.Dispose();
-        GC.SuppressFinalize(this);
+        var cart = await _context.CartBooks.Where(c => c.CartId == cartId).Include(b => b.Books).Select(sec => new CartsVM()
+        {
+            BookName = sec.Books.Title,
+            Price = sec.Books.Price,
+            Amount = sec.Amount,
+            AddedOn = sec.AddedOn,
+        }).ToListAsync();
+
+        return cart;
     }
 
-    public Task<List<CartBook>> GetCartItems(string userId)
-    {
-       throw new NotImplementedException();
-    }
+
 
     public double GetCartTotal()
     {
@@ -63,5 +65,11 @@ public class CartService : ICartService
     public Task RemoveItemFromCart(Book book)
     {
         throw new NotImplementedException();
+    }
+
+    public void Dispose()
+    {
+        _context.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

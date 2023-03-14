@@ -44,6 +44,5 @@ public class Book
         Authors = new Collection<Book_Author>();
         CartBooks = new Collection<CartBook>();
         OrderItems = new List<OrderItem>();
-        this.Price.ToString("c");
     }
 }

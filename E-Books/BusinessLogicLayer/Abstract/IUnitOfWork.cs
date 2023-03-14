@@ -12,6 +12,8 @@ namespace E_Books.BusinessLogicLayer.Abstract
         IBaseRepository<Photo> Photo { get; }
         IBaseRepository<Book_Author> BookAuthor { get; }
         IBaseRepository<UsersApp> Users { get; }
+        IBaseRepository<Carts> Carts {get;}
+        IBaseRepository<CartBook> CartBooks {get;}
 
         Task SaveAsync();
     }

@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -10,4 +11,8 @@ public class Carts
     [ForeignKey("UserId")]
     public UsersApp Users {get; set;}
     public ICollection<CartBook> CartBooks { get; set; }
+    public Carts()
+    {
+        CartBooks = new Collection<CartBook>();
+    }
 }

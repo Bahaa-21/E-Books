@@ -22,6 +22,9 @@ namespace E_Books.BusinessLogicLayer.Concrete
         private IBaseRepository<Photo> _photo;
         private IBaseRepository<Book_Author> _booksauthors;
         private IBaseRepository<UsersApp> _users;
+        private IBaseRepository<Carts> _carts;
+        private IBaseRepository<CartBook> _cartBooks;
+
 
         public IBaseRepository<Book> Book => _books ??= new BaseRepository<Book>(_context);
 
@@ -36,6 +39,8 @@ namespace E_Books.BusinessLogicLayer.Concrete
         public IBaseRepository<Genre> Genre => _genres ??= new BaseRepository<Genre>(_context);
         public IBaseRepository<Photo> Photo => _photo ??= new BaseRepository<Photo>(_context);
         public IBaseRepository<UsersApp> Users => _users ??= new BaseRepository<UsersApp>(_context);
+        public IBaseRepository<Carts> Carts => _carts ??= new BaseRepository<Carts>(_context);
+        public IBaseRepository<CartBook> CartBooks => _cartBooks ??= new BaseRepository<CartBook>(_context);
 
         public void Dispose()
         {

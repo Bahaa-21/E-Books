@@ -52,22 +52,22 @@ public class MapperProfile : Profile
         .ForMember(d => d.Authors, opt => opt.MapFrom(sec => sec.Authors.Select(a => a.AuthorId)))
         .ReverseMap()
         .ForMember(b => b.Authors, opt => opt.Ignore ())
-        .AfterMap( (bv, b) =>
+        .AfterMap( (bookVm, book) =>
         {
             //Remeve unselected Authors
-            var removeAuthor = b.Authors.Where(b => !bv.Authors.Contains(b.AuthorId));
+            var removeAuthor = book.Authors.Where(book => !bookVm.Authors.Contains(book.AuthorId));
             foreach (var item in removeAuthor.ToList())
-                b.Authors.Remove(item);
+                book.Authors.Remove(item);
             
 
             //Add new Authors
-            var addedAuthors = bv.Authors.Where(id => !b.Authors.Any(a => a.AuthorId == id)).Select(id => new Book_Author
+            var addedAuthors = bookVm.Authors.Where(id => !book.Authors.Any(a => a.AuthorId == id)).Select(id => new Book_Author
             {
                 AuthorId = id
             });
 
             foreach (var authId in addedAuthors)
-                b.Authors.Add(authId);
+                book.Authors.Add(authId);
 
         });
 
@@ -84,14 +84,6 @@ public class MapperProfile : Profile
         .ReverseMap();
         #endregion 
 
-        #region Cart Map
-        CreateMap<CartVM , Carts>()
-        .AfterMap((cartVM , cart) =>{
-            
-        });
-        #endregion    
-
-
 
         #region Admin Map
         CreateMap<UsersApp , UserProfileVM>()
@@ -99,6 +91,15 @@ public class MapperProfile : Profile
         .ReverseMap();
         
         CreateMap<UsersApp , UpdateProfileVM>().ReverseMap();
+        #endregion
+
+
+        #region Cart Map
+        CreateMap<CartBook , CartsVM>()
+        .ForMember(d => d.BookName , opt => opt.MapFrom(sec => sec.Books.Title))
+        .ForMember(d => d.Price , opt => opt.MapFrom(sec => sec.Books.Price))
+        .ForMember(d => d.Amount , opt => opt.MapFrom(sec => sec.Amount))
+        .ForMember(d => d.AddedOn , opt => opt.MapFrom(sec => sec.AddedOn));
         #endregion
     }
 }
