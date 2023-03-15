@@ -19,10 +19,7 @@ public class CartService : ICartService
 
         if (cartUser is null)
         {
-            cartUser = new Carts()
-            {
-                UserId = userId
-            };
+            cartUser = new Carts(){ UserId = userId};
 
             var cartBook = new CartBook() { BookId = bookId, Amount = amount };
             cartUser.CartBooks.Add(cartBook);
@@ -42,29 +39,15 @@ public class CartService : ICartService
     }
 
 
-    public async Task<List<CartsVM>> GetCartItems(int cartId)
+    public double GetCartTotal(int cartId) =>
+     _context.CartBooks.Where(c => c.CartId == cartId).Select(c => c.Books.Price * c.Amount).Sum();
+    
+
+    public async Task<bool> RemoveItemFromCart(int bookId , int cartId)
     {
-        var cart = await _context.CartBooks.Where(c => c.CartId == cartId).Include(b => b.Books).Select(sec => new CartsVM()
-        {
-            BookName = sec.Books.Title,
-            Price = sec.Books.Price,
-            Amount = sec.Amount,
-            AddedOn = sec.AddedOn,
-        }).ToListAsync();
-
-        return cart;
-    }
-
-
-
-    public double GetCartTotal()
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task RemoveItemFromCart(Book book)
-    {
-        throw new NotImplementedException();
+        var removeItem = await _context.CartBooks.SingleOrDefaultAsync(c => c.CartId == cartId && c.BookId == bookId);
+         _context.CartBooks.Remove(removeItem);
+        return true;
     }
 
     public void Dispose()

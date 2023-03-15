@@ -96,6 +96,7 @@ public class MapperProfile : Profile
 
         #region Cart Map
         CreateMap<CartBook , CartsVM>()
+        .ForMember(d => d.BookId , opt => opt.MapFrom(sec => sec.Books.Id))
         .ForMember(d => d.BookName , opt => opt.MapFrom(sec => sec.Books.Title))
         .ForMember(d => d.Price , opt => opt.MapFrom(sec => sec.Books.Price))
         .ForMember(d => d.Amount , opt => opt.MapFrom(sec => sec.Amount))

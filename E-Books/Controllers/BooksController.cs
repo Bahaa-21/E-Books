@@ -11,7 +11,6 @@ namespace E_Books.Controllers;
 [Route("api/[controller]")]
 public class BooksController : ControllerBase
 {
-    private record NewRecord(int TotalPage, int PageNumber);
     private readonly IBookService _bookService;
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _service;
@@ -21,18 +20,17 @@ public class BooksController : ControllerBase
         this._mapper = mapper;
         this._bookService = bookService;
     }
-
-
+    
     [HttpGet("get-all-books")]
     public async Task<IActionResult> GetAllBookAsync([FromQuery] RequestParams requestParams)
     {
         var books = await _bookService.GetAllBookAsync(requestParams);
 
-        var metaData = new NewRecord(books.PageCount, books.PageNumber);
+        var metaData = new MetaData(books.PageCount, books.PageNumber);
 
         var response = _mapper.Map<IEnumerable<ReadBookVM>>(books);
 
-        return Ok(new { response , metaData });
+        return Ok(new { response, metaData });
     }
 
 
@@ -52,17 +50,17 @@ public class BooksController : ControllerBase
 
 
     [HttpGet("get-book-by-genre/{id}")]
-    public async Task<IActionResult> GetBookByGenre(int id , [FromQuery] RequestParams requestParams)
+    public async Task<IActionResult> GetBookByGenre(int id, [FromQuery] RequestParams requestParams)
     {
-        var books = await _bookService.GetBookGenre(id , param : requestParams);
+        var books = await _bookService.GetBookGenre(id, param: requestParams);
 
         if (books is null)
             return NotFound();
 
-        var metaData = new NewRecord(books.PageCount, books.PageNumber);
+        var metaData = new MetaData(books.PageCount, books.PageNumber);
 
         var response = _mapper.Map<IEnumerable<ReadBookVM>>(books);
-        return Ok(new {response , metaData});
+        return Ok(new { response, metaData });
     }
 
 
@@ -78,4 +76,6 @@ public class BooksController : ControllerBase
 
         return Ok(response);
     }
+
+    private record MetaData(int TotalPage, int PageNumber);
 }

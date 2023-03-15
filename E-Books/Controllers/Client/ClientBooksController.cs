@@ -1,6 +1,4 @@
 using AutoMapper;
-using E_Books.DataAccessLayer;
-using E_Books.ViewModel;
 using E_Books.ViewModel.ToView;
 using E_Books.ViewModel.FromView;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +8,6 @@ using E_Books.BusinessLogicLayer.Abstract;
 using E_Books.DataAccessLayer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using  Microsoft.AspNetCore.Hosting;
 namespace E_Books.Controllers.Client;
 
 [ApiController]
@@ -19,19 +16,14 @@ public class ClientBooksController : ControllerBase
 {
     private readonly IUnitOfWork _service;
     private readonly UserManager<UsersApp> _userManager;
-    private readonly IBookService _bookService;
-    private readonly IAuthService _authService;
     private readonly IUserService _userService;
-    
     private readonly IMapper _mapper;
     public ClientBooksController(IUnitOfWork service,
-                                 IBookService bookService,
                                  IMapper mapper,
-                                 IAuthService authService,
                                  UserManager<UsersApp> userManager,
                                  IUserService userService
                                 ) =>
-    (_service, _bookService, _mapper, _authService, _userManager, _userService) = (service, bookService, mapper, authService, userManager, userService);
+    (_service, _mapper, _userManager, _userService) = (service , mapper, userManager, userService);
 
 
 
