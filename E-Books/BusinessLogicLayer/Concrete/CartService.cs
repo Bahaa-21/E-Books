@@ -20,12 +20,9 @@ public class CartService : ICartService
         if (cartUser is null)
         {
             cartUser = new Carts(){ UserId = userId};
-
-            var cartBook = new CartBook() { BookId = bookId, Amount = amount };
-            cartUser.CartBooks.Add(cartBook);
             await _context.Carts.AddAsync(cartUser);
-            return true;
         }
+        
         if (!cartUser.CartBooks.Any(b => b.BookId == bookId))
         {
             var cartBook = new CartBook() { BookId = bookId, Amount = amount };

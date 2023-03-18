@@ -23,9 +23,7 @@ public static class ServiceExtensions
             opt.User.RequireUniqueEmail = true;
             opt.Password.RequiredLength = 8;
             opt.Password.RequireUppercase = false;
-            opt.Password.RequiredUniqueChars = 0;
             opt.Password.RequireDigit = false;
-
         });
 
         builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), services);

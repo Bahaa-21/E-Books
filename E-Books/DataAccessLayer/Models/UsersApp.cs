@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using E_Books.DataAccessLayer.Enum;
@@ -18,5 +19,9 @@ public class UsersApp : IdentityUser
     public Photo Photos { get; set; }
     public List<RefreshToken> RefreshTokens { get; set; }
     public Carts Carts {get; set;}
-    public List<Order> Orders {get; set;}
+    public ICollection<Order> Orders {get; set;}
+    public UsersApp()
+    {
+        Orders = new Collection<Order>();
+    }
 }

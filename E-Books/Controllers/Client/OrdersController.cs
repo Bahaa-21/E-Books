@@ -1,5 +1,6 @@
 using AutoMapper;
 using E_Books.BusinessLogicLayer.Abstract;
+using E_Books.DataAccessLayer.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Books.Controllers.Client;
@@ -20,6 +21,13 @@ public class OrdersController : ControllerBase
     public async Task<IActionResult> MakeOrder()
     {
         var user = await _userService.GetUser();
+        Order order = new()
+        {
+            UserId = user.Id,
+            Address = user.Address,
+        };
+        await _service.Orders.AddAsync(order);
+        
         return Ok();
     }
 }
