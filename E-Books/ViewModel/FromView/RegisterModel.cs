@@ -9,11 +9,11 @@ public class RegisterModel
     public string FirstName { get; set; }
     [Required, StringLength(30)]
     public string LastName { get; set; }
-    [Required, StringLength(50) ,DataType(DataType.EmailAddress)]
+    [Required, StringLength(50)]
     public string Email { get; set; }
-    [Required, StringLength(50) , DataType(DataType.Password)]
+    [Required, StringLength(50)]
     public string Password { get; set; }
-    [Required,StringLength(13) , DataType(DataType.PhoneNumber)]
+    [Required,StringLength(13)]
     public string PhoneNumber { get; set; }
     [Required]
     public Gender Gender { get; set; }

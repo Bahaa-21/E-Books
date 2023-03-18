@@ -71,9 +71,6 @@ public class ClientBooksController : ControllerBase
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
 
         var user = await _userService.GetUser();
 
@@ -82,10 +79,8 @@ public class ClientBooksController : ControllerBase
 
         _mapper.Map(model, user);
 
-        var result = await _userService.UpdateProfile(user);
-
-        if (!result)
-            return BadRequest(user);
+        _service.Users.Update(user);
+       await _service.SaveAsync();
 
         var response = _mapper.Map<UpdateProfileVM>(user); 
 

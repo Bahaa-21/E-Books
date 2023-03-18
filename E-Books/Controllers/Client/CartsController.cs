@@ -55,7 +55,7 @@ namespace E_Books.Controllers.Client
 
             var carts = await _service.CartBooks.GetAllAsync(predicate: c => c.CartId == cartUser.Id, inc => inc.Include(b => b.Books));
 
-            double totalPrice = cartUser.CartBooks.Sum(c => c.Books.Price * c.Amount);
+            double totalPrice = _cartService.GetCartTotal(cartUser.Id);
 
             var response = _mapper.Map<IList<CartsVM>>(carts);
 

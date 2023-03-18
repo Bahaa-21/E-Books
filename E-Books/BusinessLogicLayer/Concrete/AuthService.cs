@@ -11,7 +11,6 @@ using E_Books.ViewModel.FromView;
 using E_Books.ViewModel.ToView;
 using E_Books.BusinessLogicLayer.Abstract;
 using E_Books.DataAccessLayer.Models;
-using E_Books.DataAccessLayer;
 
 namespace E_Books.BusinessLogicLayer.Concrete;
 
@@ -38,6 +37,8 @@ public class AuthService : IAuthService
             UserName = string.Concat(model.FirstName, model.LastName.Substring(0 , 4)),
             FirstName = model.FirstName,
             LastName = model.LastName,
+            PhoneNumber = model.PhoneNumber,
+            Address = "Damascus,Syria",
             Gender = model.Gender
         };
 

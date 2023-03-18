@@ -14,6 +14,8 @@ namespace E_Books.BusinessLogicLayer.Abstract
         IBaseRepository<UsersApp> Users { get; }
         IBaseRepository<Carts> Carts {get;}
         IBaseRepository<CartBook> CartBooks {get;}
+        IBaseRepository<Order> Orders {get;}
+        IBaseRepository<OrderItem> OrderItems {get;}
 
         Task SaveAsync();
     }

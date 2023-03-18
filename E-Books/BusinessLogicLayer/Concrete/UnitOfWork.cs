@@ -24,6 +24,8 @@ namespace E_Books.BusinessLogicLayer.Concrete
         private IBaseRepository<UsersApp> _users;
         private IBaseRepository<Carts> _carts;
         private IBaseRepository<CartBook> _cartBooks;
+        private IBaseRepository<Order> _orders;
+        private IBaseRepository<OrderItem> _orderItems;
 
 
         public IBaseRepository<Book> Book => _books ??= new BaseRepository<Book>(_context);
@@ -41,6 +43,10 @@ namespace E_Books.BusinessLogicLayer.Concrete
         public IBaseRepository<UsersApp> Users => _users ??= new BaseRepository<UsersApp>(_context);
         public IBaseRepository<Carts> Carts => _carts ??= new BaseRepository<Carts>(_context);
         public IBaseRepository<CartBook> CartBooks => _cartBooks ??= new BaseRepository<CartBook>(_context);
+
+        public IBaseRepository<Order> Orders => _orders ??= new BaseRepository<Order>(_context);
+
+        public IBaseRepository<OrderItem> OrderItems => _orderItems ??= new BaseRepository<OrderItem>(_context);
 
         public void Dispose()
         {
