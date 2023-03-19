@@ -52,4 +52,10 @@ public class CartService : ICartService
         _context.Dispose();
         GC.SuppressFinalize(this);
     }
+
+    public async Task ClearCartUserItems(int cartId)
+    {
+        var cartItems =await _context.CartBooks.Where(c => c.CartId == cartId).ToListAsync();
+        _context.CartBooks.RemoveRange(cartItems);
+    }
 }

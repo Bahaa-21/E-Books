@@ -52,6 +52,7 @@ builder.Services.AddScoped<ICartService , CartService>();
 builder.Services.AddScoped<IBookService,BookService>();
 
 builder.Services.AddScoped<IUserService,UserService>();
+builder.Services.AddScoped<IOrdersService,OrdersService>();
 
 builder.Services.AddHttpContextAccessor();
 

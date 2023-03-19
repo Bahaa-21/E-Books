@@ -37,7 +37,7 @@ namespace E_Books.Controllers.Client
                 return BadRequest();
 
             await _service.SaveAsync();
-            return Ok();
+            return Created(nameof(AddToCart),"Added successfully");
         }
 
 
