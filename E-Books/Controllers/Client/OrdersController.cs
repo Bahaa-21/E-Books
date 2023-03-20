@@ -33,8 +33,9 @@ public class OrdersController : ControllerBase
        var order = await _service.Orders.GetAsync(or => or.UserId == user.Id , include : null);
 
        var orderItems = await _service.OrderItems.GetAllAsync(or => or.OrderId == order.Id , include : inc => inc.Include(b => b.Books));
-       var response = _mapper.Map<OrderItemsVM>(orderItems);
-       return Ok(response);
+       double totatPrice = orderItems.Select(s => s.Books.Price * s.Amount).Sum();
+       var response = _mapper.Map<IEnumerable<OrderItemsVM>>(orderItems);
+       return Ok(new{response , totatPrice });
     }
 
 

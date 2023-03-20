@@ -57,9 +57,9 @@ namespace E_Books.Controllers.Client
             if (carts.Count == 0)
                 return NotFound("You don't have prudoct in your cart");
 
-            double totalPrice = _cartService.GetCartTotal(cartUser.Id);
+            double totalPrice = carts.Select(c => c.Books.Price * c.Amount).Sum();
 
-            var response = _mapper.Map<IList<CartsVM>>(carts);
+            var response = _mapper.Map<IEnumerable<CartsVM>>(carts);
             
             return Ok(new { response, totalPrice });
         }
