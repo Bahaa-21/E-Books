@@ -102,5 +102,12 @@ public class MapperProfile : Profile
         .ForMember(d => d.Amount , opt => opt.MapFrom(sec => sec.Amount))
         .ForMember(d => d.AddedOn , opt => opt.MapFrom(sec => sec.AddedOn));
         #endregion
+
+        #region Order Map
+        CreateMap<OrderItem , OrderItemsVM>()
+        .ForMember(d => d.Qty , opt => opt.MapFrom(sec => sec.Amount))
+        .ForMember(d => d.BookName , opt => opt.MapFrom(sec => sec.Books.Title))
+        .ForMember(d => d.Price , opt => opt.MapFrom(sec => sec.Books.Price));
+        #endregion
     }
 }

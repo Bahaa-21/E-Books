@@ -1,6 +1,7 @@
 using AutoMapper;
 using E_Books.BusinessLogicLayer.Abstract;
 using E_Books.DataAccessLayer.Models;
+using E_Books.ViewModel.ToView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,25 +26,35 @@ public class OrdersController : ControllerBase
 
 
 
+    [HttpGet("get-user-orders")]
+    public async Task<IActionResult> GetUserOrder()
+    {
+       var user = await _userService.GetUser();
+       var order = await _service.Orders.GetAsync(or => or.UserId == user.Id , include : null);
+
+       var orderItems = await _service.OrderItems.GetAllAsync(or => or.OrderId == order.Id , include : inc => inc.Include(b => b.Books));
+       var response = _mapper.Map<OrderItemsVM>(orderItems);
+       return Ok(response);
+    }
+
 
 
     [Authorize(Roles ="User")]
     [HttpPost("make-order")]
-    public async Task<IActionResult> MakeOrder()
+    public async Task<IActionResult> CompleteOrder()
     {
         var user = await _userService.GetUser();
 
         var cartUser = await _service.Carts.GetAsync(predicate: c => c.UserId == user.Id, null);
 
-        var carts = await _service.CartBooks.GetAllAsync(predicate: c => c.CartId == cartUser.Id, inc => inc.Include(b => b.Books));
-
-        var result = await _orderService.StoreOrderAsync(carts, user);
+        var result = await _orderService.StoreOrderAsync(cartUser.Id, user.Id , user.Address , user.Email);
         if (!result)
             return BadRequest();
 
         await _cartService.ClearCartUserItems(cartUser.Id);
+        
         await _service.SaveAsync();
 
-        return Created(nameof(MakeOrder), "Order completed successfully");
+        return Created(nameof(CompleteOrder), "Order completed successfully");
     }
 }

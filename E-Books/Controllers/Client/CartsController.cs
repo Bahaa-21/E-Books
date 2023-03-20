@@ -42,7 +42,7 @@ namespace E_Books.Controllers.Client
 
 
         [Authorize(Roles = "User")]
-        [HttpGet("get-cart-item")]
+        [HttpGet("get-cart-items")]
         public async Task<IActionResult> GetShoppingCart()
         {
             var user = await _userService.GetUser();
@@ -54,11 +54,13 @@ namespace E_Books.Controllers.Client
                 return NotFound("You don't have a cart");
 
             var carts = await _service.CartBooks.GetAllAsync(predicate: c => c.CartId == cartUser.Id, inc => inc.Include(b => b.Books));
+            if (carts.Count == 0)
+                return NotFound("You don't have prudoct in your cart");
 
             double totalPrice = _cartService.GetCartTotal(cartUser.Id);
 
             var response = _mapper.Map<IList<CartsVM>>(carts);
-
+            
             return Ok(new { response, totalPrice });
         }
 

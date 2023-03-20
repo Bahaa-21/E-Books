@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using E_Books.BusinessLogicLayer.Abstract;
 using E_Books.DataAccessLayer;
 using E_Books.DataAccessLayer.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_Books.BusinessLogicLayer.Concrete
 {
@@ -17,27 +18,26 @@ namespace E_Books.BusinessLogicLayer.Concrete
             _context = context;
         }
 
-        public async Task<bool> StoreOrderAsync(IList<CartBook> cartBooks, UsersApp user)
+        public async Task<bool> StoreOrderAsync(int cartId,string userId , string userAddress , string userEmail)
         {
+            var cartBooks = await _context.CartBooks.Where(c => c.CartId == cartId).Include(b => b.Books).ToListAsync();
             var order = new Order()
             {
-                UserId = user.Id,
-                Address = user.Address,
-                Email = user.Email,
+                UserId = userId,
+                Address = userAddress,
+                Email = userEmail,
             };
             await _context.Orders.AddAsync(order);
-            await _context.SaveChangesAsync();
 
             foreach (var item in cartBooks)
             {
                 OrderItem orderItem = new()
                 {
-                    OrderId = order.Id,
                     BookId = item.BookId,
                     Amount = item.Amount,
-                    Price = item.Books.Price
+                    Price = item.Books.Price,
                 };
-                await _context.OrderItems.AddAsync(orderItem);
+                order.OrderItems.Add(orderItem);
             }
             return true;
         }
