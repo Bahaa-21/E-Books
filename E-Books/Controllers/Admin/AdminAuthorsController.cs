@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace E_Books.Controllers.Admin;
 
 [ApiController]
-[Route("api/[controller]/[action]")]
+[Route("api/[controller]")]
 [Authorize(Roles = "Admin")]
 public class AdminAuthorsController : ControllerBase
 {
@@ -44,7 +44,7 @@ public class AdminAuthorsController : ControllerBase
         if (author is null)
             return NotFound();
 
-        var response = _mapper.Map<ReadAuthorVM>(author);
+        var response = _mapper.Map<KeyResource>(author);
 
         return Ok(response);
     }
@@ -81,14 +81,14 @@ public class AdminAuthorsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> AddAuthor([FromBody] AuthorVM authorVM)
+    public async Task<IActionResult> AddAuthor([FromBody] KeyResource model)
     {
-        var author = _mapper.Map<AuthorVM, Author>(authorVM);
+        var author = _mapper.Map<KeyResource, Author>(model);
 
         await _service.Author.AddAsync(author);
         await _service.SaveAsync();
 
-        var response = _mapper.Map<AuthorVM>(author);
+        var response = _mapper.Map<KeyResource>(author);
 
         return Created(nameof(AddAuthor), new { response, status = StatusCodes.Status201Created });
     }
@@ -98,7 +98,7 @@ public class AdminAuthorsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateAuthor(int id, [FromBody] AuthorVM authorVM)
+    public async Task<IActionResult> UpdateAuthor(int id, [FromBody] KeyResource model)
     {
         if (!ModelState.IsValid)
             return BadRequest($"Submitted data is invalid ,{ModelState}");
@@ -107,7 +107,7 @@ public class AdminAuthorsController : ControllerBase
         if (author is null)
             return NotFound();
 
-        _mapper.Map(authorVM, author);
+        _mapper.Map(model, author);
         _service.Author.Update(author);
 
         await _service.SaveAsync();

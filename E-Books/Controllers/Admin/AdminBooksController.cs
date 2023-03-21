@@ -31,13 +31,7 @@ public class AdminBooksController : ControllerBase
 
 
 
-    [HttpGet("get-publishers")]
-    public async Task<IActionResult> GetAllPublishers()
-    {
-        var publishers = await _service.Publisher.GetAllAsync(predicate: null);
-        var response = _mapper.Map<IEnumerable<PublisherVM>>(publishers);
-        return Ok(response);
-    }
+    
 
 
 

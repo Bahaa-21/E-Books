@@ -9,8 +9,3 @@ public class BooksAuthorVM
 
     public IList<object> BookTitle { get; set; }
 }
-public class ReadAuthorVM
-{
-    public int Id { get; set; }
-    public string AuthorName { get; set; }
-}

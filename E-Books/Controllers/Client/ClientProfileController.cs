@@ -12,13 +12,13 @@ namespace E_Books.Controllers.Client;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ClientBooksController : ControllerBase
+public class ClientProfileController : ControllerBase
 {
     private readonly IUnitOfWork _service;
     private readonly UserManager<UsersApp> _userManager;
     private readonly IUserService _userService;
     private readonly IMapper _mapper;
-    public ClientBooksController(IUnitOfWork service,
+    public ClientProfileController(IUnitOfWork service,
                                  IMapper mapper,
                                  UserManager<UsersApp> userManager,
                                  IUserService userService

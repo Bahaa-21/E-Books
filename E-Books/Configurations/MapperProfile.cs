@@ -11,7 +11,8 @@ public class MapperProfile : Profile
     public MapperProfile()
     {
         #region Publisher Map
-        CreateMap<Publisher, PublisherVM>();
+        CreateMap<Publisher, KeyResource>()
+        .ForMember(d => d.Name, act => act.MapFrom(sec => sec.Name)).ReverseMap();
         #endregion
 
 
@@ -21,14 +22,9 @@ public class MapperProfile : Profile
 
 
         #region Author Map
-        CreateMap<Author, AuthorVM>()
-        .ForMember(d => d.AuthorName , act => act.MapFrom(sec => sec.Name))
+        CreateMap<Author, KeyResource>()
+        .ForMember(d => d.Name , act => act.MapFrom(sec => sec.Name))
         .ReverseMap();
-
-        CreateMap<Author, ReadAuthorVM>()
-        .ForMember(d => d.AuthorName , act => act.MapFrom(sec => sec.Name))
-        .ReverseMap();
-
 
         CreateMap<Author, BooksAuthorVM>()
         .ForMember(d => d.BookTitle, opt => opt.MapFrom(sec => sec.Books))
