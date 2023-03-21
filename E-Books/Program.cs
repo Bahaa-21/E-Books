@@ -97,7 +97,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 //Seed Data
-// AppDbInitializer.Seed(app);
+AppDbInitializer.Seed(app);
 
 app.UseHttpsRedirection();
 
