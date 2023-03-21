@@ -81,7 +81,7 @@ public class AppDbInitializer
             #region Langauge Table
             if (!context.BooksLanguages.Any())
             {
-                await context.AddRangeAsync(
+                await context.BooksLanguages.AddRangeAsync(
                     new BookLanguage()
                     {
                         LanguageName = "English"
@@ -101,7 +101,7 @@ public class AppDbInitializer
             #region Author Table
             if (!context.Authors.Any())
             {
-                await context.AddRangeAsync(
+                await context.Authors.AddRangeAsync(
                     new Author()
                     {
                         Name = "Author1"
@@ -131,150 +131,6 @@ public class AppDbInitializer
             }
             #endregion
 
-            #region Book Table
-            if (!context.Books.Any())
-            {
-                await context.AddRangeAsync(
-                    new Book()
-                    {
-                        Title = "Book1",
-                        Description = "Text ....",
-                        Quantity = 100,
-                        NumberPages = 377,
-                        Image = "String.......",
-                        Price = 15000,
-                        PublicationDate = DateTime.UtcNow.AddMonths(4),
-                        PublisherId = 1,
-                        LanguagesId = 2,
-                        GenreId = 1,
-                    },
-                    new Book()
-                    {
-                        Title = "Alkhemyaee",
-                        Description = "Text ....",
-                        Quantity = 100,
-                        NumberPages = 150,
-                        Image = "String.......",
-                        Price = 22000,
-                        PublicationDate = DateTime.UtcNow.AddMonths(1),
-                        PublisherId = 2,
-                        LanguagesId = 1,
-                        GenreId = 2
-                    },
-                    new Book()
-                    {
-                        Title = "The Grapes of wrath",
-                        Description = "Text ....",
-                        Quantity = 100,
-                        NumberPages = 189,
-                        Price = 20000,
-                        PublicationDate = DateTime.UtcNow.AddDays(1),
-                        PublisherId = 3,
-                        LanguagesId = 1,
-                        GenreId = 3
-                    },
-                      new Book()
-                      {
-                          Title = "Book4",
-                          Description = "Text ....",
-                          Quantity = 100,
-                          NumberPages = 189,
-                          Image = "String.......",
-                          Price = 20000,
-                          PublicationDate = DateTime.UtcNow.AddDays(2),
-                          PublisherId = 3,
-                          LanguagesId = 1,
-                          GenreId = 3
-                      },
-                      new Book()
-                      {
-                          Title = "Book5",
-                          Description = "Text ....",
-                          Quantity = 100,
-                          NumberPages = 189,
-                          Image = "String.......",
-                          Price = 20000,
-                          PublicationDate = DateTime.UtcNow.AddDays(2),
-                          PublisherId = 7,
-                          LanguagesId = 1,
-                          GenreId = 2
-                      },
-                      new Book()
-                      {
-                          Title = "Book6",
-                          Description = "Text ....",
-                          Quantity = 100,
-                          NumberPages = 189,
-                          Image = "String.......",
-                          Price = 20000,
-                          PublicationDate = DateTime.UtcNow.AddDays(3),
-                          PublisherId = 3,
-                          LanguagesId = 1,
-                          GenreId = 5
-                      }, new Book()
-                      {
-                          Title = "Book7",
-                          Description = "Text ....",
-                          Quantity = 100,
-                          NumberPages = 189,
-                          Image = "String.......",
-                          Price = 20000,
-                          PublicationDate = DateTime.UtcNow.AddDays(4),
-                          PublisherId = 3,
-                          LanguagesId = 1,
-                          GenreId = 3
-                      }
-
-                    );
-
-                await context.SaveChangesAsync();
-            }
-            #endregion
-
-            #region Book_Author Table
-            if (!context.BooksAuthors.Any())
-            {
-                await context.AddRangeAsync(
-                    new Book_Author()
-                    {
-                        BookId = 1,
-                        AuthorId = 1,
-                    },
-                    new Book_Author()
-                    {
-                        BookId = 2,
-                        AuthorId = 2,
-                    },
-                    new Book_Author()
-                    {
-                        BookId = 3,
-                        AuthorId = 3,
-                    },
-                    new Book_Author()
-                    {
-                        BookId = 4,
-                        AuthorId = 4,
-                    },
-                    new Book_Author()
-                    {
-                        BookId = 5,
-                        AuthorId = 5,
-                    },
-                    new Book_Author()
-                    {
-                        BookId = 6,
-                        AuthorId = 5,
-                    },
-                     new Book_Author()
-                     {
-                         BookId = 7,
-                         AuthorId = 6,
-                     });
-
-                await context.SaveChangesAsync();
-            }
-            #endregion
-
             #region Role Table
             if (!context.Roles.Any())
             {
@@ -285,27 +141,6 @@ public class AppDbInitializer
                     );
                 await context.SaveChangesAsync();
             }
-            #endregion
-
-            #region User Table
-            // if(!context.Users.Any())
-            // {
-            //     await context.Users.AddRangeAsync
-            //     (
-            //         new UsersApp() 
-            //         {
-            //             UserName = "BahaaAtk",
-            //             NormalizedUserName = "BahaaAtk".ToUpper(),
-            //             FirstName = "Bahaa",
-            //             LastName = "Atekah",
-            //             Email = "bahaa@gmail.com",
-            //             NormalizedEmail = "Bahaa@gmail.com".ToUpper(),
-            //             EmailConfirmed =true,
-            //             Gender = 0,
-            //             PhoneNumber = "+963 951584338",
-            //         }
-            //      );
-            // }
             #endregion
         }
     }

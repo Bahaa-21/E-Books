@@ -97,7 +97,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 //Seed Data
-AppDbInitializer.Seed(app);
 
 app.UseHttpsRedirection();
 
@@ -119,5 +118,6 @@ app.ConfigureExceptionHandler();
 
 app.MapControllers();
 
+AppDbInitializer.Seed(app);
 
 app.Run();
