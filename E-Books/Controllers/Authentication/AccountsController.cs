@@ -53,6 +53,7 @@ public class AccountsController : ControllerBase
         return Accepted(new
         {
             token = result.Token,
+            role = result.Roles,
             status = StatusCodes.Status202Accepted
         });
     }
