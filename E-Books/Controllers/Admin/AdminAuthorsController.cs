@@ -28,7 +28,7 @@ public class AdminAuthorsController : ControllerBase
     public async Task<IActionResult> GetAllAuthors()
     {
         var authors = await _service.Author.GetAllAsync(predicate: null, include => include.Include(book => book.Books).ThenInclude(bookAuthor => bookAuthor.Books));
-
+        
         return Ok(_mapper.Map<IEnumerable<BooksAuthorVM>>(authors));
     }
 

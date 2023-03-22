@@ -12,19 +12,24 @@ public class MapperProfile : Profile
     {
         #region Publisher Map
         CreateMap<Publisher, KeyResource>()
-        .ForMember(d => d.Name, act => act.MapFrom(sec => sec.Name)).ReverseMap();
+        .ForMember(d => d.Id , opt => opt.MapFrom(sec => sec.Id))
+        .ForMember(d => d.Name, act => act.MapFrom(sec => sec.Name))
+        .ReverseMap();
         #endregion
 
 
         #region Genre Map
-        CreateMap<Genre, GenreVM>().ReverseMap();
+        CreateMap<Genre, KeyResource>()
+        .ForMember(d => d.Id , opt => opt.MapFrom(sec => sec.Id))
+        .ForMember(d => d.Name, act => act.MapFrom(sec => sec.Name))
+        .ReverseMap();
         #endregion
 
 
         #region Author Map
         CreateMap<Author, KeyResource>()
-        .ForMember(d => d.Name , act => act.MapFrom(sec => sec.Name))
-        .ReverseMap();
+        .ForMember(d => d.Id , opt => opt.MapFrom(sec => sec.Id))
+        .ForMember(d => d.Name, act => act.MapFrom(sec => sec.Name)).ReverseMap();
 
         CreateMap<Author, BooksAuthorVM>()
         .ForMember(d => d.BookTitle, opt => opt.MapFrom(sec => sec.Books))
@@ -39,7 +44,9 @@ public class MapperProfile : Profile
 
 
         #region Language Map
-        CreateMap<BookLanguage, LanguageVM>().ReverseMap();
+        CreateMap<BookLanguage, KeyResource>()
+        .ForMember(d => d.Name , opt => opt.MapFrom(sec => sec.LanguageName))
+        .ReverseMap();
         #endregion
 
 

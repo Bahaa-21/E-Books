@@ -27,9 +27,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         IQueryable<T> query = _context.Set<T>();
         if (predicate is not null)
-        {
             query = query.Where(predicate);
-        }
 
         if (include is not null)
         {
@@ -41,28 +39,32 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     public async Task<IPagedList<T>> GetAllAsync(RequestParams requestParams = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
     {
         IQueryable<T> query = _context.Set<T>();
+        
+            if (include is not null)
+            {
+                query = include(query);
+            }
 
-        if (include is not null)
-        {
-            query = include(query);
-        }
-
-        return await query.AsNoTracking().ToPagedListAsync(requestParams.PageNumber, requestParams.PageSize);
-
+            return await query.AsNoTracking().ToPagedListAsync(requestParams.PageNumber, requestParams.PageSize);
     }
 
     public async Task<T> GetAsync(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
     {
         IQueryable<T> query = _context.Set<T>();
 
-        if (include is not null)
+        if (predicate is not null)
         {
-            query = include(query);
-        }
+            if (include is not null)
+            {
+                query = include(query);
+            }
 
-        return await query.AsNoTracking().FirstAsync(predicate);
+            return await query.AsNoTracking().FirstAsync(predicate);
+        }
+        return null;
     }
     public void Delete(T entity) => _context.Remove(entity);
+
 
 
     public void Update(T entity)
@@ -93,6 +95,10 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
             return await query.AsNoTracking().FirstAsync();
     }
+
+
+
+
     public async Task<T> Include(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
     {
         IQueryable<T> query = _context.Set<T>();
@@ -105,6 +111,9 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
         return await query.AsNoTracking().SingleAsync();
     }
+
+
+
 
     public CountsVM GetCount()
     {
@@ -119,19 +128,23 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return counts;
     }
 
+
+
+
     public Task<IPagedList<T>> Search(RequestParams requestParams = null, Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
     {
         IQueryable<T> query = _context.Set<T>();
 
-        if (include is not null)
-        {
-            query = include(query);
-        }
-
         if (predicate is not null)
         {
             query = query.Where(predicate);
+
+            if (include is not null)
+            {
+                query = include(query);
+            }
+            return query.AsNoTracking().ToPagedListAsync(pageNumber: requestParams.PageNumber, pageSize: requestParams.PageSize);
         }
-        return query.AsNoTracking().ToPagedListAsync(pageNumber: requestParams.PageNumber, pageSize: requestParams.PageSize);
+        return null;
     }
 }

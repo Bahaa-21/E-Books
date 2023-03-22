@@ -39,7 +39,7 @@ public class AdminBooksController : ControllerBase
     public async Task<IActionResult> GetAllLanguages()
     {
         var languages = await _service.Language.GetAllAsync(predicate: null);
-        var response = _mapper.Map<IEnumerable<LanguageVM>>(languages);
+        var response = _mapper.Map<IEnumerable<KeyResource>>(languages);
         return Ok(response);
     }
 
@@ -49,7 +49,7 @@ public class AdminBooksController : ControllerBase
     public async Task<IActionResult> GetAllGenres()
     {
         var genres = await _service.Genre.GetAllAsync(predicate: null);
-        var response = _mapper.Map<IEnumerable<GenreVM>>(genres);
+        var response = _mapper.Map<IEnumerable<KeyResource>>(genres);
 
         return Ok(response);
     }

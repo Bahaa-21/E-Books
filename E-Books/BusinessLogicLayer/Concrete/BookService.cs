@@ -36,14 +36,16 @@ namespace E_Books.BusinessLogicLayer.Concrete
         {
             if (!includes)
                 return await _context.Books.FindAsync(bookId);
-
             var book = await _context.Books.Include(a => a.Authors).ThenInclude(a => a.Authors).SingleAsync(bi => bi.Id == bookId);
-            _context.Entry(book).Reference(g => g.Genres).Load();
-            _context.Entry(book).Reference(p => p.Publishers).Load();
-            _context.Entry(book).Reference(l => l.Languages).Load();
+            if (book is not null)
+            {
+                _context.Entry(book).Reference(g => g.Genres).Load();
+                _context.Entry(book).Reference(p => p.Publishers).Load();
+                _context.Entry(book).Reference(l => l.Languages).Load();
 
-            return book;
-
+                return book;
+            }
+            return null;
         }
 
         public async Task<IPagedList<Book>> GetBookGenre(int genreId , RequestParams param) => await _context.Books.Where(genre => genre.GenreId == genreId)
