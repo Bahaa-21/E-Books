@@ -50,13 +50,15 @@ public class ApplicationDbContext : IdentityDbContext<UsersApp>
         builder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
         builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
         builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
-        builder.Entity<IdentityUserToken<string>>().ToTable("tUserTokens");
+        builder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
         #endregion
+
+        builder.Entity<CartBook>().Property(p => p.AddedOn).HasDefaultValue(DateTime.UtcNow);
     }
 
     public DbSet<Book> Books { get; set; }
     public DbSet<Author> Authors { get; set; }
-
+    public DbSet<Photo> Photos {get; set;}
     public DbSet<BookLanguage> BooksLanguages { get; set; }
     public DbSet<Publisher> Publishers { get; set; }
     public DbSet<Book_Author> BooksAuthors { get; set; }

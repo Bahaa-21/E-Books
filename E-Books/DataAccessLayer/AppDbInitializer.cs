@@ -11,6 +11,7 @@ public class AppDbInitializer
         using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
         {
             var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+            var UserManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<UsersApp>>();
 
             #region Genre Table
             if (!context.Genres.Any())
@@ -140,6 +141,38 @@ public class AppDbInitializer
                      new IdentityRole() { Name = "Adminsitrator", NormalizedName = "adminsitrator".ToUpper() }
                     );
                 await context.SaveChangesAsync();
+            }
+            #endregion
+
+            #region User Table
+            if (!context.Users.Any())
+            {
+                UsersApp admin = new()
+                {
+                    FirstName = "Admin",
+                    LastName = "Admin",
+                    Email = "admin@safa7at.com",
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    UserName = "admin@safa7at.com",
+                    Gender = Enum.Gender.Male,
+                    Address = "Damascuse,Syria",
+                    PhoneNumber = "0951584338",
+                };
+                await UserManager.CreateAsync(admin, "@dmin123");
+                await UserManager.AddToRoleAsync(admin, "Admin");
+
+                UsersApp user = new()
+                {
+                    FirstName = "Bahaa",
+                    LastName = "Atekah",
+                    Email = "bahaa@safa7at.com",
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    UserName = "bahaa@safa7at.com",
+                    Gender = Enum.Gender.Male,
+                    Address = "Damascuse,Syria",
+                    PhoneNumber = "0951584338",
+                };
+                await UserManager.CreateAsync(user, "P@ssword123");
             }
             #endregion
         }

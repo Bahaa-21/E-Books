@@ -10,9 +10,4 @@ public class CartBook
 
     public DateTime AddedOn {get; set;}
     public int Amount {get; set;}
-
-    public CartBook()
-    {
-        AddedOn = DateTime.UtcNow;
-    }
 }
