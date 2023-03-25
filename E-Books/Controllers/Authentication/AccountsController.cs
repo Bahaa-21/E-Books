@@ -53,11 +53,13 @@ public class AccountsController : ControllerBase
         return Accepted(new
         {
             token = result.Token,
+            FisrtName = result.FirstName,
+            LastName = result.LastName,
+            PhotoProfile = result.PhotoPicture,
             role = result.Roles,
             status = StatusCodes.Status202Accepted
         });
     }
-
 
     [Authorize(Roles = "Adminsitrator")]
     [HttpPost("addrole")]

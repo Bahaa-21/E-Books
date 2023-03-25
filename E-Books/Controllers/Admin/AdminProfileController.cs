@@ -94,7 +94,7 @@ public class AdminProfileController : ControllerBase
 
 
 
-    [HttpPut("update-profile")]
+    [HttpPatch("update-profile")]
     public async Task<IActionResult> Update([FromBody] UpdateProfileVM adminProfileVM)
     {
         if (!ModelState.IsValid)
