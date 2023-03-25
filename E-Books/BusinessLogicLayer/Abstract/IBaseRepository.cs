@@ -26,7 +26,7 @@ public interface IBaseRepository<T> where T : class
 
     void Update(T entity);
     void Delete(T entity);
-    Task<IPagedList<T>> Search(RequestParams requestParams = null, Expression<Func<T, bool>> predicate  = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null);
+    Task<IPagedList<T>> Search(RequestParams requestParams = null,Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,Expression<Func<T, bool>> predicate  = null);
 
     CountsVM GetCount();
 }

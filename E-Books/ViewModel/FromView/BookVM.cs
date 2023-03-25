@@ -16,8 +16,7 @@ public class BookVM
     public string Image { get; set; }
     [Required]
     public double Price { get; set; }
-    [Required]
-    public DateTime PublicationDate { get; set; }
+
     [Required]
     public int PublisherId { get; set; }
     [Required]

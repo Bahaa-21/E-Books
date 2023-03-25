@@ -131,7 +131,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
 
 
-    public Task<IPagedList<T>> Search(RequestParams requestParams = null, Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
+    public Task<IPagedList<T>> Search(RequestParams requestParams = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null, Expression<Func<T, bool>> predicate = null)
     {
         IQueryable<T> query = _context.Set<T>();
 

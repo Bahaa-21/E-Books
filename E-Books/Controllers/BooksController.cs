@@ -67,8 +67,8 @@ public class BooksController : ControllerBase
     [HttpGet("search-of-books")]
     public async Task<IActionResult> SearchAsync(string title, [FromQuery] RequestParams requestParams)
     {
-        var book = await _service.Book.Search(requestParams, predicate: book => book.Title.Contains(title),
-                                                                include: inc => inc.Include(author => author.Authors).ThenInclude(bookAuthor => bookAuthor.Authors));
+        var book = await _service.Book.Search(requestParams, include: inc => inc.Include(author => author.Authors).ThenInclude(bookAuthor => bookAuthor.Authors),
+        predicate: book => book.Title.Contains(title));
         if (book.Count == 0)
             return NotFound($"Sorry, this title : {title}, does't exist, Please try agin");
 

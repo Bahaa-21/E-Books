@@ -41,6 +41,7 @@ public class Book
 
     public Book()
     {
+        PublicationDate = DateTime.Today;
         Authors = new Collection<Book_Author>();
         CartBooks = new Collection<CartBook>();
         OrderItems = new List<OrderItem>();
