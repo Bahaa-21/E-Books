@@ -41,7 +41,7 @@ public class Book
 
     public Book()
     {
-        PublicationDate = DateTime.Today;
+        PublicationDate = DateTime.UtcNow;
         Authors = new Collection<Book_Author>();
         CartBooks = new Collection<CartBook>();
         OrderItems = new List<OrderItem>();

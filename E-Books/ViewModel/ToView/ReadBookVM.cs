@@ -9,11 +9,13 @@ public class ReadBookVM
 
     public string Description { get; set; }
 
+    public int Quantity { get; set; }
+    
     public int NumberPages { get; set; }
 
     public double Price { get; set; }
     public string Image { get; set; }
-    public DateTime PublicationDate { get; set; }
+    public string PublicationDate { get; set; }
 
     public string Publishers { get; set; }
 

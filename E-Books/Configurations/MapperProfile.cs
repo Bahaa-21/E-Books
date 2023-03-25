@@ -78,6 +78,7 @@ public class MapperProfile : Profile
 
         CreateMap<Book, ReadBookVM>()
         .ForMember(d => d.Publishers, opt => opt.MapFrom(sec => sec.Publishers.Name))
+        .ForMember(d => d.PublicationDate, opt => opt.MapFrom(sec => sec.PublicationDate.ToString("D")))
         .ForMember(d => d.Language , opt => opt.MapFrom(sec => sec.Languages.LanguageName))
         .ForMember(d => d.GenreType , opt => opt.MapFrom(sec => sec.Genres.Name))
         .ForMember(d => d.Authors , opt => opt.MapFrom(sec => sec.Authors))
