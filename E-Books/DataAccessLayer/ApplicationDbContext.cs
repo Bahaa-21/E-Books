@@ -52,8 +52,6 @@ public class ApplicationDbContext : IdentityDbContext<UsersApp>
         builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
         builder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
         #endregion
-
-        builder.Entity<CartBook>().Property(p => p.AddedOn).HasDefaultValue(DateTime.UtcNow);
     }
 
     public DbSet<Book> Books { get; set; }

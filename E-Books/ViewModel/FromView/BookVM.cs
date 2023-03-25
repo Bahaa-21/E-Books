@@ -6,7 +6,7 @@ public class BookVM
 {
     [Required, StringLength(50)]
     public string Title { get; set; }
-    [Required, StringLength(150)]
+    [Required, StringLength(1000)]
     public string Description { get; set; }
     [Required]
     public int NumberPages { get; set; }
