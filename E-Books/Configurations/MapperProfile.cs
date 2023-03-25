@@ -29,7 +29,9 @@ public class MapperProfile : Profile
         #region Author Map
         CreateMap<Author, KeyResource>()
         .ForMember(d => d.Id , opt => opt.MapFrom(sec => sec.Id))
-        .ForMember(d => d.Name, act => act.MapFrom(sec => sec.Name)).ReverseMap();
+        .ForMember(d => d.Name, act => act.MapFrom(sec => sec.Name))
+        .ReverseMap()
+        .ForMember(d => d.Id , opt => opt.Ignore());
 
         CreateMap<Author, BooksAuthorVM>()
         .ForMember(d => d.BookTitle, opt => opt.MapFrom(sec => sec.Books))
