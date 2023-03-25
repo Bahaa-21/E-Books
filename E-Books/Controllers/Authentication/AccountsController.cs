@@ -55,7 +55,6 @@ public class AccountsController : ControllerBase
             token = result.Token,
             FisrtName = result.FirstName,
             LastName = result.LastName,
-            PhotoProfile = result.PhotoPicture,
             role = result.Roles,
             status = StatusCodes.Status202Accepted
         });

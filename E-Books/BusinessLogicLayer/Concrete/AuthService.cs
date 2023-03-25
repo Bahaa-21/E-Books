@@ -78,7 +78,7 @@ public class AuthService : IAuthService
     public async Task<AuthModel> GetTokenAsync(TokenRequestModel model)
     {
         var authModel = new AuthModel();
-        var user = await _userManager.Users.Include(p => p.Photos).SingleAsync(e => e.Email == model.Email);
+        var user = await _userManager.FindByEmailAsync(model.Email);
         if (user is null || !await _userManager.CheckPasswordAsync(user, model.Password))
         {
             authModel.Masseage = "Email or Password is incorrect";
@@ -93,7 +93,6 @@ public class AuthService : IAuthService
         authModel.Email = user.Email;
         authModel.FirstName = user.FirstName;
         authModel.LastName = user.LastName;
-         authModel.PhotoPicture = user.Photos.Image;
         authModel.Roles = roleList.ToList();
 
         if (user.RefreshTokens.Any(t => t.IsActive))

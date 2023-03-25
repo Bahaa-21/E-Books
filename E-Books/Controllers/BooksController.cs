@@ -2,6 +2,7 @@ using AutoMapper;
 using E_Books.BusinessLogicLayer.Abstract;
 using E_Books.DataAccessLayer.Models;
 using E_Books.ViewModel.ToView;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +22,7 @@ public class BooksController : ControllerBase
         this._bookService = bookService;
     }
     
+    [Authorize]
     [HttpGet("get-all-books")]
     public async Task<IActionResult> GetAllBookAsync([FromQuery] RequestParams requestParams)
     {
