@@ -32,10 +32,14 @@ public class OrdersController : ControllerBase
        var user = await _userService.GetUser();
        var order = await _service.Orders.GetAsync(or => or.UserId == user.Id , include : null);
 
-       var orderItems = await _service.OrderItems.GetAllAsync(or => or.OrderId == order.Id , include : inc => inc.Include(b => b.Books));
-       double totatPrice = orderItems.Select(s => s.Books.Price * s.Amount).Sum();
-       var response = _mapper.Map<IEnumerable<OrderItemsVM>>(orderItems);
-       return Ok(new{response , totatPrice });
+        var orderItems = await _service.OrderItems.GetAllAsync(or => or.OrderId == order.Id, include: inc => inc.Include(b => b.Books));
+        if (orderItems.Count == 0)
+            return NotFound("Your order list is empty");
+
+        double totatPrice = orderItems.Select(s => s.Books.Price * s.Amount).Sum();
+        var response = _mapper.Map<IEnumerable<OrderItemsVM>>(orderItems);
+        
+        return Ok(new { response, totatPrice });
     }
 
 

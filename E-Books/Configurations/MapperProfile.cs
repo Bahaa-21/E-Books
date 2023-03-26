@@ -17,6 +17,12 @@ public class MapperProfile : Profile
         .ReverseMap();
         #endregion
 
+        #region Photo Map
+        CreateMap<Photo , DisplayPhotoVM>()
+        .ForMember(d => d.ProfilePhoto , opt => opt.MapFrom(sec => sec.Image))
+        .ForMember(d => d.AddedOn , opt => opt.MapFrom(sec => sec.CreatedOn))
+        .ReverseMap();
+        #endregion
 
         #region Genre Map
         CreateMap<Genre, KeyResource>()
@@ -92,7 +98,7 @@ public class MapperProfile : Profile
         #endregion 
 
 
-        #region Admin Map
+        #region User Map
         CreateMap<UsersApp , UserProfileVM>()
         .ForMember(des => des.ProfilePhoto , opt => opt.MapFrom(sec => sec.Photos.Image))
         .ReverseMap();
@@ -105,16 +111,16 @@ public class MapperProfile : Profile
         CreateMap<CartBook , CartsVM>()
         .ForMember(d => d.BookId , opt => opt.MapFrom(sec => sec.Books.Id))
         .ForMember(d => d.BookName , opt => opt.MapFrom(sec => sec.Books.Title))
-        .ForMember(d => d.Price , opt => opt.MapFrom(sec => sec.Books.Price))
+        .ForMember(d => d.Price , opt => opt.MapFrom(sec => sec.Books.Price.ToString("c")))
         .ForMember(d => d.Amount , opt => opt.MapFrom(sec => sec.Amount))
-        .ForMember(d => d.AddedOn , opt => opt.MapFrom(sec => sec.AddedOn));
+        .ForMember(d => d.AddedOn , opt => opt.MapFrom(sec => sec.AddedOn.ToShortDateString()));
         #endregion
 
         #region Order Map
         CreateMap<OrderItem , OrderItemsVM>()
         .ForMember(d => d.Qty , opt => opt.MapFrom(sec => sec.Amount))
         .ForMember(d => d.BookName , opt => opt.MapFrom(sec => sec.Books.Title))
-        .ForMember(d => d.Price , opt => opt.MapFrom(sec => sec.Books.Price));
+        .ForMember(d => d.Price , opt => opt.MapFrom(sec => sec.Books.Price.ToString("c")));
         #endregion
     }
 }

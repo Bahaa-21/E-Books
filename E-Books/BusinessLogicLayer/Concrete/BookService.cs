@@ -36,7 +36,8 @@ namespace E_Books.BusinessLogicLayer.Concrete
         {
             if (!includes)
                 return await _context.Books.FindAsync(bookId);
-            var book = await _context.Books.Include(a => a.Authors).ThenInclude(a => a.Authors).SingleAsync(bi => bi.Id == bookId);
+
+            var book = await _context.Books.Include(a => a.Authors).ThenInclude(a => a.Authors).SingleOrDefaultAsync(bi => bi.Id == bookId);
             if (book is not null)
             {
                 _context.Entry(book).Reference(g => g.Genres).Load();
@@ -55,6 +56,6 @@ namespace E_Books.BusinessLogicLayer.Concrete
                                             .Include(language => language.Languages)
                                             .ToPagedListAsync(pageNumber : param.PageNumber , pageSize:param.PageSize);
 
-        public async Task<Book> GetBookWithAuthor(int bookId) => await _context.Books.Include(book => book.Authors).ThenInclude(bookAuthor => bookAuthor.Authors).SingleAsync(book => book.Id == bookId);
+        public async Task<Book> GetBookWithAuthor(int bookId) => await _context.Books.Include(book => book.Authors).ThenInclude(bookAuthor => bookAuthor.Authors).SingleOrDefaultAsync(book => book.Id == bookId);
     }
 }

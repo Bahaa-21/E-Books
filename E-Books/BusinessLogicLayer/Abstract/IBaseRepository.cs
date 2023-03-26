@@ -10,7 +10,7 @@ namespace E_Books.BusinessLogicLayer.Abstract;
 
 public interface IBaseRepository<T> where T : class
 {
-    Task<IList<T>> GetAllAsync(Expression<Func<T, bool>> predicate  = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null);
+    Task<IList<T>> GetAllAsync(Expression<Func<T, bool>> predicate , Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null);
 
     Task<IPagedList<T>> GetAllAsync(RequestParams requestParams = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null);
 

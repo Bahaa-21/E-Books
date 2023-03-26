@@ -23,7 +23,10 @@ public class AdminPublishersController : ControllerBase
     [HttpGet("get-publishers")]
     public async Task<IActionResult> GetAllPublishers()
     {
-        var publishers = await _service.Publisher.GetAllAsync(predicate: null);
+        var publishers = await _service.Publisher.GetAllAsync(p => p.Id > 0);
+        if (publishers.Count == 0)
+            return NotFound("There are no publishers yet");
+            
         var response = _mapper.Map<IEnumerable<KeyResource>>(publishers);
         return Ok(response);
     }

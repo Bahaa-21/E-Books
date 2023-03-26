@@ -23,18 +23,21 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     public async Task AddRangeAsync(List<T> entity) => await _context.AddRangeAsync(entity);
 
 
-    public async Task<IList<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
+    public async Task<IList<T>> GetAllAsync(Expression<Func<T, bool>> predicate , Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
     {
         IQueryable<T> query = _context.Set<T>();
         if (predicate is not null)
+        {
             query = query.Where(predicate);
 
-        if (include is not null)
-        {
-            query = include(query);
-        }
+            if (include is not null)
+            {
+                query = include(query);
+            }
 
-        return await query.AsNoTracking().ToListAsync();
+            return await query.AsNoTracking().ToListAsync();
+        }
+           return null;
     }
     public async Task<IPagedList<T>> GetAllAsync(RequestParams requestParams = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
     {
@@ -63,7 +66,12 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         }
         return null;
     }
-    public void Delete(T entity) => _context.Remove(entity);
+    public void Delete(T entity) 
+    {
+        _context.Attach(entity);
+        _context.Entry(entity).State = EntityState.Deleted;
+
+    }
 
 
 
@@ -147,4 +155,6 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         }
         return null;
     }
+
+   
 }

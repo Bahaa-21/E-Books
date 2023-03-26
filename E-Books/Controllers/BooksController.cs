@@ -56,7 +56,7 @@ public class BooksController : ControllerBase
     {
         var books = await _bookService.GetBookGenre(id, param: requestParams);
 
-        if (books is null)
+        if (books.Count == 0)
             return NotFound();
 
         var metaData = new MetaData(books.PageCount, books.PageNumber);

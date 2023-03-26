@@ -70,7 +70,7 @@ public class AdminProfileController : ControllerBase
         await _service.Photo.AddAsync(photo);
         await _service.SaveAsync();
 
-        return Created(nameof(UploadImage), new { photo.Id, photo.Image });
+        return Created(nameof(UploadImage), _mapper.Map<DisplayPhotoVM>(photo));
     }
 
 
@@ -78,14 +78,12 @@ public class AdminProfileController : ControllerBase
     public async Task<IActionResult> RemoveImageAsync()
     {
 
-       var user = await _userService.GetUser();
+        var user = await _userService.GetUser();
 
-        if (user is null)
-            return BadRequest();
+        if (user.Photos is null)
+            return NotFound();
 
-        var img = await _service.Photo.GetAsync(ph => ph.UserId == user.Id , null);
-
-        _service.Photo.Delete(img);
+        _service.Photo.Delete(user.Photos);
 
         await _service.SaveAsync();
         return NoContent();
@@ -107,11 +105,10 @@ public class AdminProfileController : ControllerBase
 
         _mapper.Map(adminProfileVM, user);
 
-        var result = await _userService.UpdateProfile(user);
-
+        _service.Users.Update(user);
+        
+        await _service.SaveAsync();
         var response = _mapper.Map<UserProfileVM>(user);
-        if (!result)
-            return BadRequest(user);
 
         return Ok(response);
     }

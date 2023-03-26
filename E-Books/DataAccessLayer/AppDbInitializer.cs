@@ -173,6 +173,7 @@ public class AppDbInitializer
                     PhoneNumber = "0951584338",
                 };
                 await UserManager.CreateAsync(user, "P@ssword123");
+                await UserManager.AddToRoleAsync(admin, "User");
             }
             #endregion
         }

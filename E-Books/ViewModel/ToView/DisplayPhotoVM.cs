@@ -4,5 +4,4 @@ public class DisplayPhotoVM
 {
     public string ProfilePhoto { get; set; }
     public DateTime AddedOn {get;set;}
-    public string UsersAppId{get; set;}
 }

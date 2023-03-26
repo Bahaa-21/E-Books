@@ -53,7 +53,7 @@ public class AccountsController : ControllerBase
         return Accepted(new
         {
             token = result.Token,
-            FisrtName = result.FirstName,
+            FirstName = result.FirstName,
             LastName = result.LastName,
             role = result.Roles,
             status = StatusCodes.Status202Accepted
@@ -90,7 +90,13 @@ public class AccountsController : ControllerBase
 
         SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
 
-        return Ok(result);
+        return Ok(new
+        {
+            result.Token,
+            result.FirstName,
+            result.LastName,
+            result.Roles,
+        });
     }
 
 

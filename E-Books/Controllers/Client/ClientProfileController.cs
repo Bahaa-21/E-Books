@@ -12,6 +12,7 @@ namespace E_Books.Controllers.Client;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(Roles ="User")]
 public class ClientProfileController : ControllerBase
 {
     private readonly IUnitOfWork _service;
@@ -27,7 +28,7 @@ public class ClientProfileController : ControllerBase
 
 
 
-    [Authorize(Roles ="User")]
+    
     [HttpGet("get-user-profile")]
     public async Task<IActionResult> GetUserProfle()
     {
@@ -80,6 +81,7 @@ public class ClientProfileController : ControllerBase
         _mapper.Map(model, user);
 
         _service.Users.Update(user);
+        
        await _service.SaveAsync();
 
         var response = _mapper.Map<UpdateProfileVM>(user); 
@@ -93,14 +95,12 @@ public class ClientProfileController : ControllerBase
     public async Task<IActionResult> RemoveImageAsync()
     {
 
-       var user = await _userService.GetUser();
+        var user = await _userService.GetUser();
 
-        if (user is null)
-            return BadRequest();
+        if (user.Photos is null)
+            return NotFound();
 
-        var img = await _service.Photo.GetAsync(ph => ph.UserId == user.Id , null);
-
-        _service.Photo.Delete(img);
+        _service.Photo.Delete(user.Photos);
 
         await _service.SaveAsync();
         return NoContent();

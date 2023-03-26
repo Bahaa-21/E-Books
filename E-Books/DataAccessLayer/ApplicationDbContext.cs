@@ -39,7 +39,6 @@ public class ApplicationDbContext : IdentityDbContext<UsersApp>
         .WithMany(carts => carts.CartBooks)
         .HasForeignKey(fr => fr.CartId);
 
-        builder.Entity<CartBook>().Property(p => p.AddedOn).HasDefaultValue(DateTime.Now);
         builder.Entity<CartBook>().Property(p => p.Amount).HasDefaultValue(1);
         #endregion    
 
@@ -52,6 +51,8 @@ public class ApplicationDbContext : IdentityDbContext<UsersApp>
         builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
         builder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
         #endregion
+
+        
     }
 
     public DbSet<Book> Books { get; set; }
