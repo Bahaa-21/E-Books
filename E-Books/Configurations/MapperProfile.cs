@@ -20,7 +20,7 @@ public class MapperProfile : Profile
         #region Photo Map
         CreateMap<Photo , DisplayPhotoVM>()
         .ForMember(d => d.ProfilePhoto , opt => opt.MapFrom(sec => sec.Image))
-        .ForMember(d => d.AddedOn , opt => opt.MapFrom(sec => sec.CreatedOn))
+        .ForMember(d => d.AddedOn , opt => opt.MapFrom(sec => sec.CreatedOn.ToString("f")))
         .ReverseMap();
         #endregion
 
@@ -85,7 +85,7 @@ public class MapperProfile : Profile
         CreateMap<Book, ReadBookVM>()
         .ForMember(d => d.Publishers, opt => opt.MapFrom(sec => sec.Publishers.Name))
         .ForMember(d => d.Price, opt => opt.MapFrom(sec => sec.Price.ToString("c")))
-        .ForMember(d => d.PublicationDate, opt => opt.MapFrom(sec => sec.PublicationDate.ToString("D")))
+        .ForMember(d => d.PublicationDate, opt => opt.MapFrom(sec => sec.PublicationDate.ToString("f")))
         .ForMember(d => d.Language , opt => opt.MapFrom(sec => sec.Languages.LanguageName))
         .ForMember(d => d.GenreType , opt => opt.MapFrom(sec => sec.Genres.Name))
         .ForMember(d => d.Authors , opt => opt.MapFrom(sec => sec.Authors))
@@ -113,7 +113,7 @@ public class MapperProfile : Profile
         .ForMember(d => d.BookName , opt => opt.MapFrom(sec => sec.Books.Title))
         .ForMember(d => d.Price , opt => opt.MapFrom(sec => sec.Books.Price.ToString("c")))
         .ForMember(d => d.Amount , opt => opt.MapFrom(sec => sec.Amount))
-        .ForMember(d => d.AddedOn , opt => opt.MapFrom(sec => sec.AddedOn.ToShortDateString()));
+        .ForMember(d => d.AddedOn , opt => opt.MapFrom(sec => sec.AddedOn.ToString("f")));
         #endregion
 
         #region Order Map

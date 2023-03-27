@@ -47,8 +47,9 @@ public class AdminProfileController : ControllerBase
     }
 
 
-    [HttpPost("upload-image")]
 
+
+    [HttpPost("upload-image")]
     public async Task<IActionResult> UploadImage([FromBody] PhotoVM photoVM)
     {
         if (!ModelState.IsValid)
@@ -57,8 +58,8 @@ public class AdminProfileController : ControllerBase
 
         var user = await _userService.GetUser();
 
-        if (user is null)
-            return NotFound($"This user not exiset");
+        if (user.Photos is not null)
+            _service.Photo.Delete(user.Photos);
 
 
         var photo = new Photo()

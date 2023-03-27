@@ -85,11 +85,11 @@ public class AppDbInitializer
                 await context.BooksLanguages.AddRangeAsync(
                     new BookLanguage()
                     {
-                        LanguageName = "English"
+                        LanguageName = "Arabic"
                     },
                     new BookLanguage()
                     {
-                        LanguageName = "Arabic"
+                        LanguageName = "English"
                     },
                     new BookLanguage()
                     {

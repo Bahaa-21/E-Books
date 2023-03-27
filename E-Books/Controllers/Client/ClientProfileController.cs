@@ -51,8 +51,8 @@ public class ClientProfileController : ControllerBase
 
         var user = await _userService.GetUser();
 
-        if (user is null)
-            return NotFound($"This user not exists");
+        if (user.Photos is not null)
+            _service.Photo.Delete(user.Photos);
         
         var photo = new Photo()
         {
@@ -63,7 +63,7 @@ public class ClientProfileController : ControllerBase
         await _service.Photo.AddAsync(photo);
         await _service.SaveAsync();
 
-        return Created(nameof(UploadImage), new { photo.Id, photo.Image });
+        return Created(nameof(UploadImage), _mapper.Map<DisplayPhotoVM>(photo));
     }
 
 
