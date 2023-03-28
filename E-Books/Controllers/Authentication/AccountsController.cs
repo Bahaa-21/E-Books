@@ -92,10 +92,10 @@ public class AccountsController : ControllerBase
 
         return Ok(new
         {
-            result.Token,
-            result.FirstName,
-            result.LastName,
-            result.Roles,
+            token = result.Token,
+            FirstName = result.FirstName,
+            LastName = result.LastName,
+            role = result.Roles,
         });
     }
 

@@ -12,8 +12,6 @@ public class MapperProfile : Profile
     {
         #region Publisher Map
         CreateMap<Publisher, KeyResource>()
-        .ForMember(d => d.Id , opt => opt.MapFrom(sec => sec.Id))
-        .ForMember(d => d.Name, act => act.MapFrom(sec => sec.Name))
         .ReverseMap();
         #endregion
 

@@ -39,6 +39,7 @@ public class AdminPublishersController : ControllerBase
 
         await _service.Publisher.AddAsync(publisher);
         await _service.SaveAsync();
-        return Created(nameof(AddPublisher),"Added successfully");
+        
+        return Created(nameof(AddPublisher),_mapper.Map<KeyResource>(publisher));
     } 
 }
