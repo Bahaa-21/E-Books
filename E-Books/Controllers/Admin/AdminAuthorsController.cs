@@ -31,7 +31,7 @@ public class AdminAuthorsController : ControllerBase
         if(authors.Count == 0)
         return NotFound("There are no authors yet");
 
-        return Ok(_mapper.Map<IEnumerable<BooksAuthorVM>>(authors));
+        return Ok(_mapper.Map<IEnumerable<AuthorBooksVM>>(authors));
     }
 
 
@@ -63,7 +63,7 @@ public class AdminAuthorsController : ControllerBase
         if (author is null)
             return NotFound();
 
-        return Ok(_mapper.Map<Author, BooksAuthorVM>(author));
+        return Ok(_mapper.Map<Author, AuthorBooksVM>(author));
     }
 
 
@@ -75,7 +75,7 @@ public class AdminAuthorsController : ControllerBase
     {
         var authors = await _service.Author.GetAllAsync(predicate: a => a.Id > 0, include: inc => inc.Include(b => b.Books).ThenInclude(ba => ba.Books));
 
-        return Ok(_mapper.Map<IEnumerable<BooksAuthorVM>>(authors));
+        return Ok(_mapper.Map<IEnumerable<AuthorBooksVM>>(authors));
     }
 
 

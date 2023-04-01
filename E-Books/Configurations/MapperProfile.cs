@@ -13,6 +13,10 @@ public class MapperProfile : Profile
         #region Publisher Map
         CreateMap<Publisher, KeyResource>()
         .ReverseMap();
+
+        CreateMap<Publisher, PublisherBooksVM>()
+        .ForMember(d => d.BookTitle, opt => opt.MapFrom(sec => sec.Books.Select(t => t.Title)))
+       .ReverseMap();
         #endregion
 
         #region Photo Map
@@ -23,21 +27,14 @@ public class MapperProfile : Profile
         #endregion
 
         #region Genre Map
-        CreateMap<Genre, KeyResource>()
-        .ForMember(d => d.Id , opt => opt.MapFrom(sec => sec.Id))
-        .ForMember(d => d.Name, act => act.MapFrom(sec => sec.Name))
-        .ReverseMap();
+        CreateMap<Genre, KeyResource>().ReverseMap();
         #endregion
 
 
         #region Author Map
-        CreateMap<Author, KeyResource>()
-        .ForMember(d => d.Id , opt => opt.MapFrom(sec => sec.Id))
-        .ForMember(d => d.Name, act => act.MapFrom(sec => sec.Name))
-        .ReverseMap()
-        .ForMember(d => d.Id , opt => opt.Ignore());
+        CreateMap<Author, KeyResource>().ReverseMap();
 
-        CreateMap<Author, BooksAuthorVM>()
+        CreateMap<Author, AuthorBooksVM>()
         .ForMember(d => d.BookTitle, opt => opt.MapFrom(sec => sec.Books))
         .ForMember(d => d.BookTitle, opt => opt.MapFrom(sec => sec.Books.Select(b => new
         {

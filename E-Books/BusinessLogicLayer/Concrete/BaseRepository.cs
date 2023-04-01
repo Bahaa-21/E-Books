@@ -42,13 +42,16 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     public async Task<IPagedList<T>> GetAllAsync(RequestParams requestParams = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
     {
         IQueryable<T> query = _context.Set<T>();
-        
+        if (requestParams is not null)
+        {
             if (include is not null)
             {
                 query = include(query);
             }
 
             return await query.AsNoTracking().ToPagedListAsync(requestParams.PageNumber, requestParams.PageSize);
+        }
+        return null;
     }
 
     public async Task<T> GetAsync(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)

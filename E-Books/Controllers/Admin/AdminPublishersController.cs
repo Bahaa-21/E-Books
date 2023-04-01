@@ -5,12 +5,13 @@ using E_Books.ViewModel.FromView;
 using E_Books.ViewModel.ToView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_Books.Controllers.Admin;
 
 [ApiController]
-[Authorize(Roles = "Admin")]
 [Route("api/[controller]")]
+[Authorize(Roles = "Admin")]
 public class AdminPublishersController : ControllerBase
 {
      private readonly IUnitOfWork _service;
@@ -32,6 +33,18 @@ public class AdminPublishersController : ControllerBase
     }
 
 
+    [HttpGet("get-publisher-books")]
+    public async Task<IActionResult> GetPublisherBooks()
+    {
+       var publishers = await _service.Publisher.GetAllAsync(predicate: p => p.Id > 0, include: inc => inc.Include(b => b.Books));
+        if (publishers is null)
+            return NotFound();
+
+        return Ok(_mapper.Map<IEnumerable<PublisherBooksVM>>(publishers));  
+    }
+
+
+
     [HttpPost("add-publisher")]
     public async Task<IActionResult> AddPublisher([FromBody] KeyResource model)
     {
@@ -41,5 +54,5 @@ public class AdminPublishersController : ControllerBase
         await _service.SaveAsync();
         
         return Created(nameof(AddPublisher),_mapper.Map<KeyResource>(publisher));
-    } 
+    }
 }

@@ -16,20 +16,15 @@ namespace E_Books.Controllers.Admin;
 [Authorize(Roles = "Admin")]
 public class AdminProfileController : ControllerBase
 {
-    private readonly UserManager<UsersApp> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IUnitOfWork _service;
-    private readonly IAuthService _authService;
     private readonly IUserService _userService;
 
     private readonly IMapper _mapper;
-    public AdminProfileController(UserManager<UsersApp> userManager,
-                                  RoleManager<IdentityRole> roleManager,
-                                  IUnitOfWork service,
+    public AdminProfileController(IUnitOfWork service,
                                   IAuthService authService,
                                   IUserService userService,
                                   IMapper mapper) =>
-    (_userManager, _roleManager, _service, _authService ,_userService , _mapper) = (userManager, roleManager, service, authService , userService, mapper);
+    (_service ,_userService , _mapper) = (service, userService, mapper);
 
 
 

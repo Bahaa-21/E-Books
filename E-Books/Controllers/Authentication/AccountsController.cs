@@ -60,20 +60,6 @@ public class AccountsController : ControllerBase
         });
     }
 
-    [Authorize(Roles = "Adminsitrator")]
-    [HttpPost("addrole")]
-    public async Task<IActionResult> AddRoleAsync([FromBody] AddRoleModel model)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        var result = await _authService.AddRoleAsync(model);
-
-        if (!string.IsNullOrEmpty(result))
-            return BadRequest(result);
-
-        return Ok(result);
-    }
 
 
 
@@ -93,8 +79,7 @@ public class AccountsController : ControllerBase
         return Ok(new
         {
             token = result.Token,
-            FirstName = result.FirstName,
-            LastName = result.LastName,
+            UserName = result.UserName,
             role = result.Roles,
         });
     }
