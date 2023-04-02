@@ -12,7 +12,7 @@ namespace E_Books.Controllers.Admin;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Admin")]
+
 public class AdminBooksController : ControllerBase
 {
     private readonly IUnitOfWork _service;
@@ -25,7 +25,7 @@ public class AdminBooksController : ControllerBase
                                 (_service, _mapper, _bookService) = (service, mapper, bookService);
 
 
-
+    [Authorize(Roles = "Admin")]
     [HttpGet("get-webApp-info")]
     public IActionResult GetCounts() => Ok(_service.Book.GetCount());
 
@@ -34,7 +34,7 @@ public class AdminBooksController : ControllerBase
     
 
 
-
+    [Authorize(Roles = "Admin")]
     [HttpGet("get-languages")]
     public async Task<IActionResult> GetAllLanguages()
     {
@@ -44,7 +44,7 @@ public class AdminBooksController : ControllerBase
     }
 
 
-
+    [Authorize]
     [HttpGet("get-genres")]
     public async Task<IActionResult> GetAllGenres()
     {
@@ -56,7 +56,7 @@ public class AdminBooksController : ControllerBase
 
 
 
-    
+    [Authorize(Roles = "Admin")]
     [HttpPost("add-book")]
     public async Task<IActionResult> AddBookAsync([FromBody] BookVM bookVM)
     {
@@ -84,7 +84,7 @@ public class AdminBooksController : ControllerBase
 
 
 
-    
+    [Authorize(Roles = "Admin")]
     [HttpPut("update-book/{id}")]
     public async Task<IActionResult> UpdateBookAsync(int id, [FromBody] BookVM updateBook)
     {
@@ -108,7 +108,7 @@ public class AdminBooksController : ControllerBase
 
 
 
-    
+    [Authorize(Roles = "Admin")]
     [HttpDelete("delete-book/{id}")]
     public async Task<IActionResult> DeleteBookAsync(int id)
     {

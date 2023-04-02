@@ -10,6 +10,8 @@ namespace E_Books.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
+
 public class BooksController : ControllerBase
 {
     private readonly IBookService _bookService;
@@ -22,7 +24,7 @@ public class BooksController : ControllerBase
         this._bookService = bookService;
     }
     
-    [Authorize]
+
     [HttpGet("get-all-books")]
     public async Task<IActionResult> GetAllBookAsync([FromQuery] RequestParams requestParams)
     {

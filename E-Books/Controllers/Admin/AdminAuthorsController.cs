@@ -11,7 +11,7 @@ namespace E_Books.Controllers.Admin;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Admin")]
+
 public class AdminAuthorsController : ControllerBase
 {
     private readonly IUnitOfWork _service;
@@ -21,6 +21,9 @@ public class AdminAuthorsController : ControllerBase
                                   IMapper mapper) => (_service, _mapper) = (service, mapper);
 
 
+
+
+    [Authorize]
     [HttpGet("get-all-authors")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -34,7 +37,7 @@ public class AdminAuthorsController : ControllerBase
         return Ok(_mapper.Map<IEnumerable<AuthorBooksVM>>(authors));
     }
 
-
+    [Authorize]
     [HttpGet("get-author-by-id/{authorId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -52,6 +55,7 @@ public class AdminAuthorsController : ControllerBase
     }
 
 
+    [Authorize]
     [HttpGet("get-author-with-books/{authorId:int}", Name = "GetAuthorWithBooks")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -66,7 +70,7 @@ public class AdminAuthorsController : ControllerBase
         return Ok(_mapper.Map<Author, AuthorBooksVM>(author));
     }
 
-
+    [Authorize]
     [HttpGet("get-all-authors-with-books")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -79,6 +83,8 @@ public class AdminAuthorsController : ControllerBase
     }
 
 
+
+    [Authorize(Roles = "Admin")]
     [HttpPost("add-author")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -96,6 +102,9 @@ public class AdminAuthorsController : ControllerBase
     }
 
 
+
+
+    [Authorize(Roles = "Admin")]
     [HttpPut("update-author/{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -118,6 +127,8 @@ public class AdminAuthorsController : ControllerBase
     }
 
 
+
+    [Authorize(Roles = "Admin")]
     [HttpDelete("delete-author/{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
