@@ -19,12 +19,6 @@ namespace E_Books.BusinessLogicLayer.Concrete
             _context = context;
         }
 
-        public async Task<List<OrderItemsVM>> GetAllOrderDetails(string userId)
-        {
-            throw new NotImplementedException();
-            
-        }
-
 
         public async Task<bool> StoreOrderAsync(int cartId, string userId, string userAddress, string userEmail)
         {
