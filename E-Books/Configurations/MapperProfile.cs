@@ -106,16 +106,25 @@ public class MapperProfile : Profile
         CreateMap<CartBook , CartsVM>()
         .ForMember(d => d.BookId , opt => opt.MapFrom(sec => sec.Books.Id))
         .ForMember(d => d.BookName , opt => opt.MapFrom(sec => sec.Books.Title))
+        .ForMember(d => d.BookPhoto , opt => opt.MapFrom(sec => sec.Books.Image))
         .ForMember(d => d.Price , opt => opt.MapFrom(sec => sec.Books.Price.ToString("c")))
         .ForMember(d => d.Amount , opt => opt.MapFrom(sec => sec.Amount))
         .ForMember(d => d.AddedOn , opt => opt.MapFrom(sec => sec.AddedOn.ToString("f")));
         #endregion
 
         #region Order Map
-        CreateMap<OrderItem , OrderItemsVM>()
-        .ForMember(d => d.Qty , opt => opt.MapFrom(sec => sec.Amount))
-        .ForMember(d => d.BookName , opt => opt.MapFrom(sec => sec.Books.Title))
-        .ForMember(d => d.Price , opt => opt.MapFrom(sec => sec.Books.Price.ToString("c")));
+        CreateMap<Order , OrderItemsVM>()
+        .ForMember(d => d.Id , opt => opt.MapFrom(sec => sec.Id))
+        .ForMember(d => d.Created , opt => opt.MapFrom(sec => sec.Created.ToString("f")))
+        .ForMember(d => d.Book , opt => opt.MapFrom(sec => sec.OrderItems))
+        .ForMember(d => d.Book , opt => opt.MapFrom(sec => sec.OrderItems.Select(s => new
+        {
+            title = s.Books.Title,
+            price = s.Books.Price.ToString("c"),
+            qty = s.Amount,
+            totalPrice = (s.Price * s.Amount).ToString("c")
+        })))
+        .ForMember(d => d.TotalPice , opt => opt.MapFrom(sec => sec.OrderItems.Select(s => s.Amount * s.Price).Sum().ToString("C")));
         #endregion
     }
 }

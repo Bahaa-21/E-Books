@@ -1,8 +1,8 @@
 namespace E_Books.ViewModel.ToView;
 public class OrderItemsVM
 {
-    public int Id { get; set; }
-    public int Qty { get; set; }
-    public string Price { get; set; }
-    public string BookName {get; set;}
+    public string Id { get; set; }
+    public List<object> Book { get; set; }
+    public string Created { get; set; }
+    public string TotalPice { get; set; }
 }

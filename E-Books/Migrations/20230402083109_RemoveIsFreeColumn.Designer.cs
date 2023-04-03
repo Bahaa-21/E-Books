@@ -4,6 +4,7 @@ using E_Books.DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_Books.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230402083109_RemoveIsFreeColumn")]
+    partial class RemoveIsFreeColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +38,7 @@ namespace E_Books.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors", (string)null);
+                    b.ToTable("Authors");
                 });
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.Book", b =>
@@ -90,7 +92,7 @@ namespace E_Books.Migrations
 
                     b.HasIndex("PublisherId");
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.Book_Author", b =>
@@ -105,7 +107,7 @@ namespace E_Books.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("BooksAuthors", (string)null);
+                    b.ToTable("BooksAuthors");
                 });
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.BookLanguage", b =>
@@ -123,7 +125,7 @@ namespace E_Books.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BooksLanguages", (string)null);
+                    b.ToTable("BooksLanguages");
                 });
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.CartBook", b =>
@@ -146,7 +148,7 @@ namespace E_Books.Migrations
 
                     b.HasIndex("CartId");
 
-                    b.ToTable("CartBooks", (string)null);
+                    b.ToTable("CartBooks");
                 });
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.Carts", b =>
@@ -166,7 +168,7 @@ namespace E_Books.Migrations
                         .IsUnique()
                         .HasFilter("[UserId] IS NOT NULL");
 
-                    b.ToTable("Carts", (string)null);
+                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.Genre", b =>
@@ -182,7 +184,7 @@ namespace E_Books.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres", (string)null);
+                    b.ToTable("Genres");
                 });
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.Order", b =>
@@ -212,7 +214,7 @@ namespace E_Books.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.OrderItem", b =>
@@ -241,7 +243,7 @@ namespace E_Books.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderItems", (string)null);
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.Photo", b =>
@@ -267,7 +269,7 @@ namespace E_Books.Migrations
                         .IsUnique()
                         .HasFilter("[UserId] IS NOT NULL");
 
-                    b.ToTable("Photos", (string)null);
+                    b.ToTable("Photos");
                 });
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.Publisher", b =>
@@ -285,7 +287,7 @@ namespace E_Books.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Publishers", (string)null);
+                    b.ToTable("Publishers");
                 });
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.UsersApp", b =>
@@ -617,7 +619,7 @@ namespace E_Books.Migrations
 
             modelBuilder.Entity("E_Books.DataAccessLayer.Models.UsersApp", b =>
                 {
-                    b.OwnsMany("E_Books.DataAccessLayer.Models.UsersApp.RefreshTokens#E_Books.DataAccessLayer.Models.RefreshToken", "RefreshTokens", b1 =>
+                    b.OwnsMany("E_Books.DataAccessLayer.Models.RefreshToken", "RefreshTokens", b1 =>
                         {
                             b1.Property<string>("UsersAppId")
                                 .HasColumnType("nvarchar(450)");
@@ -642,7 +644,7 @@ namespace E_Books.Migrations
 
                             b1.HasKey("UsersAppId", "Id");
 
-                            b1.ToTable("RefreshToken", (string)null);
+                            b1.ToTable("RefreshToken");
 
                             b1.WithOwner()
                                 .HasForeignKey("UsersAppId");
