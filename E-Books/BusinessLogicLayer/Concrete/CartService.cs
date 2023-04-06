@@ -13,7 +13,7 @@ public class CartService : ICartService
 
 
 
-    public async Task<bool> AddItemToCart(string userId, int bookId, int amount = 1)
+    public async Task<Carts> AddItemToCart(string userId, int bookId, int amount = 1)
     {
         var cartUser = _context.Carts.Where(c => c.UserId == userId).Include(cb => cb.CartBooks).SingleOrDefault();
 
@@ -27,12 +27,12 @@ public class CartService : ICartService
         {
             var cartBook = new CartBook() { BookId = bookId, Amount = amount };
             cartUser.CartBooks.Add(cartBook);
-            return true;
+            return cartUser;
         }
 
         var addAmount = cartUser.CartBooks.Where(b => b.BookId == bookId).SingleOrDefault();
         addAmount.Amount = amount;
-        return true;
+        return cartUser;
     }
 
 

@@ -1,7 +1,9 @@
 ﻿using E_Books.BusinessLogicLayer.Abstract;
+using E_Books.DataAccessLayer.Models;
 using E_Books.ViewModel.FromView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Books.Controllers.Authentication;
@@ -61,14 +63,14 @@ public class AccountsController : ControllerBase
     }
 
     
-    // Get api/Accounts/SigningGoolge/signing-google/5
-    [HttpGet("signing-google/{id}")]
-    [Authorize]
-    public  IActionResult SigningGoolge(int id)
-    {
-        var user =  this.User.Identity.Name;
-        return Ok(user);
-    }
+    // Get api/Accounts/SigningGoolge
+    // [HttpGet]
+    // [Authorize]
+    // public  IActionResult SigningGoolge()
+    // {
+    //     var user =  this.User.Identity.Name;
+    //     return Ok(user);
+    // }
 
 
     [HttpGet("refreshToken")]

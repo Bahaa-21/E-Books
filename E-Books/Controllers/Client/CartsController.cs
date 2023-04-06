@@ -10,7 +10,7 @@ namespace E_Books.Controllers.Client
 {
     [ApiController]
     [Route("api/[controller]")]
-    
+    [Authorize]
     public class CartsController : ControllerBase
     {
         private readonly IUnitOfWork _service;
@@ -25,7 +25,7 @@ namespace E_Books.Controllers.Client
         (_cartService, _service, _userService, _mapper) = (cartService, service, userService, mapper);
 
 
-        [Authorize(Roles = "User")]
+        
         [HttpPost("add-to-cart")]
         public async Task<IActionResult> AddToCart([FromQuery] ParamsVM param)
         {
@@ -33,16 +33,14 @@ namespace E_Books.Controllers.Client
             if (user is null)
                 return Unauthorized();
 
-            var result = await _cartService.AddItemToCart(user.Id, param.BookId, param.Amount);
-            if (!result)
-                return BadRequest();
-
+            var cart = await _cartService.AddItemToCart(user.Id, param.BookId, param.Amount);
+            var response = _mapper.Map<CartsVM>(cart);
             await _service.SaveAsync();
-            return Created(nameof(AddToCart), StatusCodes.Status201Created);
+            return Created(nameof(AddToCart), new{message = "Added successfully" , response ,statusCode = StatusCodes.Status201Created});
         }
 
 
-        [Authorize(Roles = "User")]
+        
         [HttpGet("get-cart-items")]
         public async Task<IActionResult> GetShoppingCart()
         {
@@ -65,7 +63,7 @@ namespace E_Books.Controllers.Client
             return Ok(new { response, totalPrice });
         }
 
-        [Authorize(Roles = "User")]
+        
         [HttpDelete("remove-item-from-cart/{bookId:int}")]
         public async Task<IActionResult> RemoveItemFromCart(int bookId)
         {

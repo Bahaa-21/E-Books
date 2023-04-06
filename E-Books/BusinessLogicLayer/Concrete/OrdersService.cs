@@ -20,7 +20,7 @@ namespace E_Books.BusinessLogicLayer.Concrete
         }
 
 
-        public async Task<bool> StoreOrderAsync(int cartId, string userId, string userAddress, string userEmail)
+        public async Task<Order> StoreOrderAsync(int cartId, string userId, string userAddress, string userEmail)
         {
             var cartBooks = await _context.CartBooks.Where(c => c.CartId == cartId).Include(b => b.Books).ToListAsync();
             var order = new Order()
@@ -30,7 +30,7 @@ namespace E_Books.BusinessLogicLayer.Concrete
                 Email = userEmail,
             };
             await _context.Orders.AddAsync(order);
-            await _context.SaveChangesAsync();
+            
             foreach (var item in cartBooks)
             {
                 OrderItem orderItem = new()
@@ -40,9 +40,9 @@ namespace E_Books.BusinessLogicLayer.Concrete
                     Amount = item.Amount,
                     Price = item.Books.Price,
                 };
-                await _context.OrderItems.AddAsync(orderItem);
+                order.OrderItems.Add(orderItem);
             }
-            return true;
+            return order;
         }
     }
 }

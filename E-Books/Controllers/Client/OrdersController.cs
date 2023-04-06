@@ -9,7 +9,8 @@ using Microsoft.EntityFrameworkCore;
 namespace E_Books.Controllers.Client;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/")]
+[Authorize]
 public class OrdersController : ControllerBase
 {
     private readonly IUnitOfWork _service;
@@ -37,7 +38,6 @@ public class OrdersController : ControllerBase
 
 
 
-    [Authorize(Roles ="User")]
     [HttpPost("make-order")]
     public async Task<IActionResult> CompleteOrder()
     {
@@ -45,14 +45,14 @@ public class OrdersController : ControllerBase
 
         var cartUser = await _service.Carts.GetAsync(predicate: c => c.UserId == user.Id, null);
 
-        var result = await _orderService.StoreOrderAsync(cartUser.Id, user.Id , user.Address , user.Email);
-        if (!result)
-            return BadRequest();
+        var order = await _orderService.StoreOrderAsync(cartUser.Id, user.Id, user.Address, user.Email);
 
         await _cartService.ClearCartUserItems(cartUser.Id);
-        
+
+        var response = _mapper.Map<OrderItemsVM>(order);
+
         await _service.SaveAsync();
 
-        return Created(nameof(CompleteOrder), "Order completed successfully");
+        return Created(nameof(CompleteOrder), new { message = "Order completed successfully" , response , statusCode = StatusCodes.Status201Created});
     }
 }

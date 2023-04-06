@@ -44,17 +44,17 @@ builder.Services.ConfigrureIdentity();
 builder.Services.ConfigureJWT(builder.Configuration);
 
 //Confiure Google Authentication
-builder.Services.AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = GoogleDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-                })
-                .AddGoogle(option =>
-                {
-                    IConfigurationSection googleAuth = builder.Configuration.GetSection("Authentication:Google");
-                    option.ClientId = googleAuth["ClientId"];
-                    option.ClientSecret = googleAuth["ClientSecret"];
-                });
+// builder.Services.AddAuthentication(options =>
+//                 {
+//                     options.DefaultAuthenticateScheme = GoogleDefaults.AuthenticationScheme;
+//                     options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+//                 })
+//                 .AddGoogle(option =>
+//                 {
+//                     IConfigurationSection googleAuth = builder.Configuration.GetSection("Authentication:Google");
+//                     option.ClientId = googleAuth["ClientId"];
+//                     option.ClientSecret = googleAuth["ClientSecret"];
+//                 });
 
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 
