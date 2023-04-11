@@ -49,10 +49,8 @@ public class OrdersController : ControllerBase
 
         await _cartService.ClearCartUserItems(cartUser.Id);
 
-        var response = _mapper.Map<OrderItemsVM>(order);
-
         await _service.SaveAsync();
 
-        return Created(nameof(CompleteOrder), new { message = "Order completed successfully" , response , statusCode = StatusCodes.Status201Created});
+        return Created(nameof(CompleteOrder), new { message = "Order completed successfully" , statusCode = StatusCodes.Status201Created});
     }
 }

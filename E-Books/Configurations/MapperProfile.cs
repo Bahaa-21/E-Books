@@ -116,12 +116,12 @@ public class MapperProfile : Profile
         CreateMap<Order , OrderItemsVM>()
         .ForMember(d => d.Id , opt => opt.MapFrom(sec => sec.Id))
         .ForMember(d => d.Created , opt => opt.MapFrom(sec => sec.Created.ToString("f")))
-        .ForMember(d => d.Book , opt => opt.MapFrom(sec => sec.OrderItems))
-        .ForMember(d => d.Book , opt => opt.MapFrom(sec => sec.OrderItems.Select(s => new
+        .ForMember(d => d.Books , opt => opt.MapFrom(sec => sec.OrderItems))
+        .ForMember(d => d.Books , opt => opt.MapFrom(sec => sec.OrderItems.Select(s => new
         {
-            title = s.Books.Title,
-            price = s.Books.Price.ToString("c"),
-            qty = s.Amount,
+            Title = s.Books.Title,
+            Price = s.Books.Price.ToString("c"),
+            Quantity = s.Amount,
             totalPrice = (s.Price * s.Amount).ToString("c")
         })))
         .ForMember(d => d.TotalPice , opt => opt.MapFrom(sec => sec.OrderItems.Select(s => s.Amount * s.Price).Sum().ToString("C")));

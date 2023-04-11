@@ -58,4 +58,19 @@ public class CartService : ICartService
         var cartItems =await _context.CartBooks.Where(c => c.CartId == cartId).ToListAsync();
         _context.CartBooks.RemoveRange(cartItems);
     }
+
+    public string AddToCartValidation(int bookId, int bookQty)
+    {
+        string message = "success";
+        var book = _context.Books.Include(c => c.CartBooks).SingleOrDefault(b => b.Id == bookId);
+        if(book != null)
+        {
+            if(book.Quantity == 0) message = "This product is out of stock!";
+            else if(book.Quantity < bookQty) message = "The quantity of this product less than your request!";
+        }
+        else{
+            message = "Product is not found";
+        }
+        return message;
+    }
 }

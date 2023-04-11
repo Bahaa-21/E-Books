@@ -30,13 +30,16 @@ namespace E_Books.Controllers.Client
         public async Task<IActionResult> AddToCart([FromQuery] ParamsVM param)
         {
             var user = await _userService.GetUser();
-            if (user is null)
-                return Unauthorized();
+
+            string check = _cartService.AddToCartValidation(param.BookId, param.Amount);
+            if (check != "success")
+                return BadRequest(check); 
 
             var cart = await _cartService.AddItemToCart(user.Id, param.BookId, param.Amount);
             var response = _mapper.Map<CartsVM>(cart);
             await _service.SaveAsync();
-            return Created(nameof(AddToCart), new{message = "Added successfully" , response ,statusCode = StatusCodes.Status201Created});
+
+            return Created(nameof(AddToCart), new {response, statusCode = StatusCodes.Status201Created });
         }
 
 
@@ -54,7 +57,7 @@ namespace E_Books.Controllers.Client
 
             var carts = await _service.CartBooks.GetAllAsync(predicate: c => c.CartId == cartUser.Id, inc => inc.Include(b => b.Books));
             if (carts.Count == 0)
-                return NotFound("You don't have prudoct in your cart");
+                return NotFound("You don't have prudocts in your cart");
 
             double totalPrice = carts.Select(c => c.Books.Price * c.Amount).Sum();
 
@@ -68,8 +71,7 @@ namespace E_Books.Controllers.Client
         public async Task<IActionResult> RemoveItemFromCart(int bookId)
         {
             var user = await _userService.GetUser();
-            if (user is null)
-                return Unauthorized();
+            
 
             var cartUser = await _service.Carts.GetAsync(predicate: c => c.UserId == user.Id, null);
             if (cartUser is null)
