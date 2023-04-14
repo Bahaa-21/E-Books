@@ -29,7 +29,7 @@ public class AccountsController : ControllerBase
 
         if (!result.IsAuthenticated)
             return BadRequest(result.Masseage);
-
+        
         return Accepted(new
         {
             token = result.Token,

@@ -11,19 +11,21 @@ using E_Books.ViewModel.FromView;
 using E_Books.ViewModel.ToView;
 using E_Books.BusinessLogicLayer.Abstract;
 using E_Books.DataAccessLayer.Models;
+using E_Books.DataAccessLayer;
 
 namespace E_Books.BusinessLogicLayer.Concrete;
 
 public class AuthService : IAuthService
 {
+    public readonly ApplicationDbContext _context;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly UserManager<UsersApp> _userManager;
     private readonly IHttpContextAccessor _httpContext;
     private readonly JWT _jwt;
 
-    public AuthService(IHttpContextAccessor httpContext, UserManager<UsersApp> userManager, IOptions<JWT> jwt, RoleManager<IdentityRole> roleManager)
+    public AuthService(IHttpContextAccessor httpContext, UserManager<UsersApp> userManager, IOptions<JWT> jwt, RoleManager<IdentityRole> roleManager, ApplicationDbContext context)
     {
-        (_httpContext, _userManager, _roleManager, _jwt) = (httpContext, userManager, roleManager, jwt.Value);
+        (_httpContext, _userManager, _roleManager, _jwt ,_context) = (httpContext, userManager, roleManager, jwt.Value ,context);
     }
 
     public async Task<AuthModel> RegisterAsync(RegisterModel model)
@@ -171,6 +173,28 @@ public class AuthService : IAuthService
         return authModel;
     }
 
+    public async Task<string> DeleteRoleAsync(string roleId)
+    {
+        var role = await _roleManager.FindByIdAsync(roleId);
+        if (role is null)
+            return "This role not existe";
+        var result = await _roleManager.DeleteAsync(role);
+        return result.Succeeded ? string.Empty : "Something went wrong";
+    }
+
+
+    public async Task<string> UpdateRoleAsync(IdentityRole role)
+    {
+        var result = await _roleManager.UpdateAsync(role);
+        return result.Succeeded ? string.Empty : "Somthing want wrong";
+    }
+
+
+    public async Task<List<IdentityRole>> GetAllRolesAsync() => await _roleManager.Roles.ToListAsync();
+
+    public async Task<IdentityRole> GetRoleAsync(string roleId) =>
+        await _roleManager.FindByIdAsync(roleId);
+    
 
     #region Create JWT Token
     private async Task<JwtSecurityToken> CreateJwtToken(UsersApp user)
