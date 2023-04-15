@@ -20,12 +20,14 @@ public class MapperProfile : Profile
        .ReverseMap();
         #endregion
 
+
         #region Photo Map
         CreateMap<Photo, DisplayPhotoVM>()
         .ForMember(d => d.ProfilePhoto, opt => opt.MapFrom(sec => sec.Image))
         .ForMember(d => d.AddedOn, opt => opt.MapFrom(sec => sec.CreatedOn.ToString("f")))
         .ReverseMap();
         #endregion
+
 
         #region Genre Map
         CreateMap<Genre, KeyResource>().ReverseMap();
@@ -102,21 +104,31 @@ public class MapperProfile : Profile
         CreateMap<UsersApp, UpdateProfileVM>().ReverseMap();
         #endregion
 
+
         #region Role Map
         CreateMap<IdentityRole, RolesVM>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(sec => sec.Id))
             .ReverseMap();
         #endregion
 
+
         #region Cart Map
-        CreateMap<CartBook, CartsVM>()
+        CreateMap<CartBook, CartsDetailsVM>()
         .ForMember(d => d.BookId, opt => opt.MapFrom(sec => sec.Books.Id))
         .ForMember(d => d.BookName, opt => opt.MapFrom(sec => sec.Books.Title))
         .ForMember(d => d.BookPhoto, opt => opt.MapFrom(sec => sec.Books.Image))
         .ForMember(d => d.Price, opt => opt.MapFrom(sec => sec.Books.Price.ToString("c")))
         .ForMember(d => d.Amount, opt => opt.MapFrom(sec => sec.Amount))
         .ForMember(d => d.AddedOn, opt => opt.MapFrom(sec => sec.AddedOn.ToString("f")));
+
+        CreateMap<Carts, CartsVM>()
+            .ForMember(dest => dest.CartId , opt => opt.MapFrom(sec => sec.Id))
+            .ForMember(dest => dest.UserName, opt => opt.MapFrom(sec => sec.Users.UserName))
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(sec => sec.Users.Email))
+            .ForMember(dest => dest.Address, opt => opt.MapFrom(sec => sec.Users.Address))
+            .ReverseMap();
         #endregion
+
 
         #region Order Map
         CreateMap<Order, OrderItemsVM>()

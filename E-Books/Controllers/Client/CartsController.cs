@@ -1,5 +1,6 @@
 using AutoMapper;
 using E_Books.BusinessLogicLayer.Abstract;
+using E_Books.DataAccessLayer.Models;
 using E_Books.ViewModel.FromView;
 using E_Books.ViewModel.ToView;
 using Microsoft.AspNetCore.Authorization;
@@ -25,7 +26,7 @@ namespace E_Books.Controllers.Client
         (_cartService, _service, _userService, _mapper) = (cartService, service, userService, mapper);
 
 
-        
+
         [HttpPost("add-to-cart")]
         public async Task<IActionResult> AddToCart([FromQuery] ParamsVM param)
         {
@@ -33,17 +34,18 @@ namespace E_Books.Controllers.Client
 
             string check = _cartService.AddToCartValidation(param.BookId, param.Amount);
             if (check != "success")
-                return BadRequest(check); 
+                return BadRequest(check);
 
             var cart = await _cartService.AddItemToCart(user.Id, param.BookId, param.Amount);
-            var response = _mapper.Map<CartsVM>(cart);
-            await _service.SaveAsync();
 
-            return Created(nameof(AddToCart), new {response, statusCode = StatusCodes.Status201Created });
+            await _service.SaveAsync();
+            var result = _mapper.Map<CartsVM>(cart);
+
+            return Created(nameof(AddToCart), new {result, statusCode = StatusCodes.Status201Created});
         }
 
 
-        
+
         [HttpGet("get-cart-items")]
         public async Task<IActionResult> GetShoppingCart()
         {
@@ -61,17 +63,17 @@ namespace E_Books.Controllers.Client
 
             double totalPrice = carts.Select(c => c.Books.Price * c.Amount).Sum();
 
-            var response = _mapper.Map<IEnumerable<CartsVM>>(carts);
-            
+            var response = _mapper.Map<IEnumerable<CartsDetailsVM>>(carts);
+
             return Ok(new { response, totalPrice });
         }
 
-        
+
         [HttpDelete("remove-item-from-cart/{bookId:int}")]
         public async Task<IActionResult> RemoveItemFromCart(int bookId)
         {
             var user = await _userService.GetUser();
-            
+
 
             var cartUser = await _service.Carts.GetAsync(predicate: c => c.UserId == user.Id, null);
             if (cartUser is null)
