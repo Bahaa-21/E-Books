@@ -15,5 +15,5 @@ public interface IAuthService
     Task<List<IdentityRole>> GetAllRolesAsync();
     Task<IdentityRole> GetRoleAsync(string roleId);
     Task<AuthModel> RefreshTokenAsync(string token);
-    // Task<bool> RevokeTokenAsync(string token);
+    Task<bool> RevokeTokenAsync(string token);
 }

@@ -9,12 +9,12 @@ using Microsoft.EntityFrameworkCore;
 namespace E_Books.Controllers.Admin;
 
 [ApiController]
-[Authorize(Roles ="Super Admin")]
+[Authorize(Roles = "Super Admin")]
 public class AdminsitratorController : ControllerBase
 {
     private readonly IUnitOfWork _service;
     private readonly IUserService _userService;
-    
+
 
     private readonly IMapper _mapper;
     private readonly IAuthService _authService;
@@ -37,7 +37,7 @@ public class AdminsitratorController : ControllerBase
             return BadRequest();
         var response = _mapper.Map<IEnumerable<UserProfileVM>>(users);
 
-        return Ok( new { response , PageCount = users.PageCount});
+        return Ok(new { response, PageCount = users.PageCount });
     }
 
 
@@ -68,25 +68,25 @@ public class AdminsitratorController : ControllerBase
     [Route("api/update-role/{id}")]
     public async Task<IActionResult> UpdateRoleAsync(string id, [FromBody] RolesVM model)
     {
-       if (!ModelState.IsValid)
-           return BadRequest(ModelState);
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
         var role = await _authService.GetRoleAsync(id);
-        
-        if(role is null)
-        return NotFound();
+
+        if (role is null)
+            return NotFound();
 
         _mapper.Map(model, role);
 
         var result = await _authService.UpdateRoleAsync(role);
         if (!string.IsNullOrEmpty(result))
             return BadRequest(result);
-        
-        return Ok(_mapper.Map(role , model));
+
+        return Ok(_mapper.Map(role, model));
     }
 
 
     [HttpDelete]
-    [Route("api/update-role/{id}")]
+    [Route("api/delete-role/{id}")]
     public async Task<IActionResult> DeleteRoleAsync(string id)
     {
         var result = await _authService.DeleteRoleAsync(id);

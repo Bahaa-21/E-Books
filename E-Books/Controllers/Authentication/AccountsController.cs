@@ -29,7 +29,9 @@ public class AccountsController : ControllerBase
 
         if (!result.IsAuthenticated)
             return BadRequest(result.Masseage);
-        
+
+        SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
+
         return Accepted(new
         {
             token = result.Token,
@@ -62,7 +64,7 @@ public class AccountsController : ControllerBase
         });
     }
 
-    
+
     // Get api/Accounts/SigningGoolge
     // [HttpGet]
     // [Authorize]
@@ -93,6 +95,20 @@ public class AccountsController : ControllerBase
         });
     }
 
+    [HttpPost("revokeToken")]
+    public async Task<IActionResult> RevokeToken([FromBody] RevokeTokenVM revokeToken)
+    {
+        var token = revokeToken.Token ?? Request.Cookies["refreshToken"];
+
+        if (token is null)
+            return BadRequest("Token is required!");
+
+        var result = await _authService.RevokeTokenAsync(token);
+        if (!result)
+            return BadRequest("Token is invalid!");
+
+        return Ok();
+    }
 
     private void SetRefreshTokenInCookie(string refreshToken, DateTime expires)
     {
