@@ -127,6 +127,11 @@ public class MapperProfile : Profile
             .ForMember(dest => dest.Email, opt => opt.MapFrom(sec => sec.Users.Email))
             .ForMember(dest => dest.Address, opt => opt.MapFrom(sec => sec.Users.Address))
             .ReverseMap();
+
+
+        CreateMap<CartBook, RemoveItemCartVM>()
+            .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(sec => sec.Books.Title))
+            .ReverseMap();
         #endregion
 
 

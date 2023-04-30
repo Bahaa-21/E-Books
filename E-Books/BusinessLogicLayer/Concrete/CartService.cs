@@ -40,11 +40,11 @@ public class CartService : ICartService
      _context.CartBooks.Where(c => c.CartId == cartId).Select(c => c.Books.Price * c.Amount).Sum();
     
 
-    public async Task<bool> RemoveItemFromCart(int bookId , int cartId)
+    public async Task<CartBook> RemoveItemFromCart(int bookId , int cartId)
     {
-        var removeItem = await _context.CartBooks.SingleOrDefaultAsync(c => c.CartId == cartId && c.BookId == bookId);
+        var removeItem = await _context.CartBooks.Include(b => b.Books).SingleOrDefaultAsync(c => c.CartId == cartId && c.BookId == bookId);
          _context.CartBooks.Remove(removeItem);
-        return true;
+        return removeItem;
     }
 
     public void Dispose()

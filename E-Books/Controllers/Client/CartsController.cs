@@ -41,7 +41,7 @@ namespace E_Books.Controllers.Client
             await _service.SaveAsync();
             var result = _mapper.Map<CartsVM>(cart);
 
-            return Created(nameof(AddToCart), new {result, statusCode = StatusCodes.Status201Created});
+            return Created(nameof(AddToCart), new { result, statusCode = StatusCodes.Status201Created });
         }
 
 
@@ -55,7 +55,7 @@ namespace E_Books.Controllers.Client
 
             var cartUser = await _service.Carts.GetAsync(predicate: c => c.UserId == user.Id, null);
             if (cartUser is null)
-                return NotFound("You don't have a cart");
+                return BadRequest("You don't have a cart");
 
             var carts = await _service.CartBooks.GetAllAsync(predicate: c => c.CartId == cartUser.Id, inc => inc.Include(b => b.Books));
             if (carts.Count == 0)
@@ -79,13 +79,12 @@ namespace E_Books.Controllers.Client
             if (cartUser is null)
                 return NotFound();
 
-            var result = await _cartService.RemoveItemFromCart(bookId, cartUser.Id);
-
-            if (!result)
-                return BadRequest();
-
+            var cartItem = await _cartService.RemoveItemFromCart(bookId, cartUser.Id);
             await _service.SaveAsync();
-            return NoContent();
+            
+            var responce = _mapper.Map<RemoveItemCartVM>(cartItem);
+
+            return Ok(responce);
         }
     }
 }
