@@ -13,11 +13,9 @@ namespace E_Books.Controllers.Authentication;
 public class AccountsController : ControllerBase
 {
     private readonly IAuthService _authService;
-
     public AccountsController(IAuthService authService)
-    {
-        _authService = authService;
-    }
+    => _authService = authService;
+
 
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterModel model)
@@ -95,8 +93,9 @@ public class AccountsController : ControllerBase
         });
     }
 
+    [Authorize]
     [HttpPost("revokeToken")]
-    public async Task<IActionResult> RevokeToken([FromBody] RevokeTokenVM revokeToken)
+    public async Task<IActionResult> RevokeToken([FromQuery] RevokeTokenVM revokeToken)
     {
         var token = revokeToken.Token ?? Request.Cookies["refreshToken"];
 
@@ -109,6 +108,7 @@ public class AccountsController : ControllerBase
 
         return Ok();
     }
+
 
     private void SetRefreshTokenInCookie(string refreshToken, DateTime expires)
     {

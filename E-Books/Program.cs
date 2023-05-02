@@ -25,13 +25,13 @@ builder.Services.AddControllers().AddNewtonsoftJson(op =>
 builder.Services.AddCors();
 
 builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
-    
-builder.Services.AddIdentity<UsersApp , IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddIdentity<UsersApp, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 
 
 //Adding a ConnectionStrings
-builder.Services.AddDbContext<ApplicationDbContext>(option => 
-option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") , 
+builder.Services.AddDbContext<ApplicationDbContext>(option =>
+option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
 o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
 
@@ -56,14 +56,14 @@ builder.Services.ConfigureJWT(builder.Configuration);
 //                     option.ClientSecret = googleAuth["ClientSecret"];
 //                 });
 
-builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
-builder.Services.AddScoped<IAuthService , AuthService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
-builder.Services.AddScoped<ICartService , CartService>();
+builder.Services.AddScoped<ICartService, CartService>();
 
-builder.Services.AddScoped<IBookService,BookService>();
+builder.Services.AddScoped<IBookService, BookService>();
 
 builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddScoped<IOrdersService,OrdersService>();

@@ -44,7 +44,7 @@ public class BooksController : ControllerBase
         var book = await _bookService.GetBookAsync(id, true);
 
         if (book is null)
-            return NotFound();
+            return BadRequest();
 
         var response = _mapper.Map<Book, ReadBookVM>(book);
 
@@ -59,7 +59,7 @@ public class BooksController : ControllerBase
         var books = await _bookService.GetBookGenre(id, param: requestParams);
 
         if (books.Count == 0)
-            return NotFound();
+            return BadRequest();
 
         var metaData = new MetaData(books.PageCount, books.PageNumber);
 

@@ -240,7 +240,7 @@ public class AuthService : IAuthService
         var jwtSecurrityToken = new JwtSecurityToken(
             issuer: _jwt.Issuer,
             audience: _jwt.Audinece,
-            expires: DateTime.UtcNow.AddHours(_jwt.DurationInHours),
+            expires: DateTime.UtcNow.AddMinutes(_jwt.DurationInMinutes),
             claims: claim,
             signingCredentials: signingCredentials
             );
