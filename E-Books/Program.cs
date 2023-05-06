@@ -110,7 +110,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-//Seed Data
 
 app.UseHttpsRedirection();
 

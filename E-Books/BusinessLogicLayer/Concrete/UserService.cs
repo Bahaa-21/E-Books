@@ -25,7 +25,7 @@ public class UserService : IUserService
 
         if (!string.IsNullOrEmpty(email))
         {
-            var userProfile = await _userManager.Users.Include(ph => ph.Photos).SingleOrDefaultAsync(user => user.Email == email);
+            var userProfile = await _userManager.Users.Include(ph => ph.Photo).SingleOrDefaultAsync(user => user.Email == email);
             return userProfile;
         }
         return null;

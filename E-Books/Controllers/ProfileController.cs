@@ -15,17 +15,18 @@ namespace E_Books.Controllers;
 public class ProfileController : ControllerBase
 {
     private readonly IUnitOfWork _service;
+    private readonly IMapper _mapper;
     private readonly UserManager<UsersApp> _userManager;
     private readonly IUserService _userService;
-    private readonly IMapper _mapper;
+    private List<string> _allowedExtenstions = new List<string> { ".jpg", ".png", ".jpeg" };
+    private long _maxAllowedPosterSize = 1048576;
+
     public ProfileController(IUnitOfWork service,
                                  IMapper mapper,
                                  UserManager<UsersApp> userManager,
                                  IUserService userService
-                                ) =>
-    (_service, _mapper, _userManager, _userService) = (service, mapper, userManager, userService);
-
-
+                                )
+       => (_service, _mapper, _userManager, _userService) = (service, mapper, userManager, userService);
 
 
     [HttpGet("get-user-profile")]
@@ -42,27 +43,39 @@ public class ProfileController : ControllerBase
 
 
     [HttpPost("upload-image")]
-    public async Task<IActionResult> UploadImage([FromBody] PhotoVM photoVM)
+    public async Task<IActionResult> UploadImage([FromForm] PhotoVM img)
     {
+        var user = await _userService.GetUser();
+
         if (!ModelState.IsValid)
             return BadRequest($"Submitted data is invalid ,{ModelState}");
 
+        if (img.Image.Length > _maxAllowedPosterSize)
+            return BadRequest("Image cannot be more than 1 MB!");
 
-        var user = await _userService.GetUser();
+        if (!_allowedExtenstions.Contains(Path.GetExtension(img.Image.FileName).ToLower()))
+            return BadRequest("Only .PNG, .JPG and .JPEG images are allowed!");
 
-        if (user.Photos is not null)
-            _service.Photo.Delete(user.Photos);
-
-        var photo = new Photo()
+        if (user.Photo != null)
         {
-            Image = photoVM.ProfilePhoto,
-            UserId = user.Id
-        };
+            _service.Photo.Delete(user.Photo);
+            await _service.SaveAsync();
+        }
+
+        using var dataStream = new MemoryStream();
+        await img.Image.CopyToAsync(dataStream);
+
+        var photo = new Photo() { Image = dataStream.ToArray(), UserId = user.Id };
 
         await _service.Photo.AddAsync(photo);
         await _service.SaveAsync();
 
-        return Created(nameof(UploadImage), _mapper.Map<DisplayPhotoVM>(photo));
+        var image = new DisplayPhotoVM()
+        {
+            ProfilePhoto = "data:image/png;base64," + Convert.ToBase64String(photo.Image)
+        };
+
+        return Ok(image);
     }
 
 
@@ -70,12 +83,10 @@ public class ProfileController : ControllerBase
     public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileVM model)
     {
         if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+            return BadRequest($"Submitted data is invalid ,{ModelState}");
 
         var user = await _userService.GetUser();
 
-        if (user is null)
-            return Unauthorized();
 
         _mapper.Map(model, user);
 
@@ -96,10 +107,10 @@ public class ProfileController : ControllerBase
 
         var user = await _userService.GetUser();
 
-        if (user.Photos is null)
+        if (user.Photo is null)
             return NotFound();
 
-        _service.Photo.Delete(user.Photos);
+        _service.Photo.Delete(user.Photo);
 
         await _service.SaveAsync();
         return NoContent();

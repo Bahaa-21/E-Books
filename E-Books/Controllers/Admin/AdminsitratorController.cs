@@ -31,7 +31,7 @@ public class AdminsitratorController : ControllerBase
     [Route("api/get-users")]
     public async Task<IActionResult> GetAllUsers([FromQuery] RequestParams requestParams)
     {
-        var users = await _service.Users.GetAllAsync(requestParams, include: inc => inc.Include(p => p.Photos));
+        var users = await _service.Users.GetAllAsync(requestParams, include: inc => inc.Include(p => p.Photo));
 
         if (users is null)
             return BadRequest();

@@ -21,14 +21,6 @@ public class MapperProfile : Profile
         #endregion
 
 
-        #region Photo Map
-        CreateMap<Photo, DisplayPhotoVM>()
-        .ForMember(d => d.ProfilePhoto, opt => opt.MapFrom(sec => sec.Image))
-        .ForMember(d => d.AddedOn, opt => opt.MapFrom(sec => sec.CreatedOn.ToString("f")))
-        .ReverseMap();
-        #endregion
-
-
         #region Genre Map
         CreateMap<Genre, KeyResource>().ReverseMap();
         #endregion
@@ -91,6 +83,8 @@ public class MapperProfile : Profile
         .ReverseMap();
 
         CreateMap<Book, SearchBookVM>()
+        .ForMember(d => d.BookImage, opt => opt.MapFrom(sec => sec.Image))
+        .ForMember(d => d.Price, opt => opt.MapFrom(sec => sec.Price.ToString("c")))
         .ForMember(d => d.Authors, opt => opt.MapFrom(sec => sec.Authors.Select(a => a.Authors.Name).ToList()))
         .ReverseMap();
         #endregion 
@@ -98,8 +92,13 @@ public class MapperProfile : Profile
 
         #region User Map
         CreateMap<UsersApp, UserProfileVM>()
-        .ForMember(des => des.ProfilePhoto, opt => opt.MapFrom(sec => sec.Photos.Image))
+        .ForMember(des => des.ProfilePhoto, opt => opt.MapFrom(sec => sec.Photo))
+        .AfterMap((user, userVM) =>
+        {
+            userVM.ProfilePhoto = "data:image/png;base64," + Convert.ToBase64String(user.Photo.Image);
+        })
         .ReverseMap();
+
 
         CreateMap<UsersApp, UpdateProfileVM>().ReverseMap();
         #endregion
@@ -122,7 +121,7 @@ public class MapperProfile : Profile
         .ForMember(d => d.AddedOn, opt => opt.MapFrom(sec => sec.AddedOn.ToString("f")));
 
         CreateMap<Carts, CartsVM>()
-            .ForMember(dest => dest.CartId , opt => opt.MapFrom(sec => sec.Id))
+            .ForMember(dest => dest.CartId, opt => opt.MapFrom(sec => sec.Id))
             .ForMember(dest => dest.UserName, opt => opt.MapFrom(sec => sec.Users.UserName))
             .ForMember(dest => dest.Email, opt => opt.MapFrom(sec => sec.Users.Email))
             .ForMember(dest => dest.Address, opt => opt.MapFrom(sec => sec.Users.Address))

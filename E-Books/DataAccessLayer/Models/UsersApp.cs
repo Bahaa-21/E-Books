@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using E_Books.DataAccessLayer.Enum;
 using Microsoft.AspNetCore.Identity;
 
@@ -16,7 +17,7 @@ public class UsersApp : IdentityUser
     public Gender Gender { get; set; }
     [Required , MaxLength(50)]
     public string Address {get; set;}
-    public Photo Photos { get; set; }
+    public Photo Photo { get; set; }
     public List<RefreshToken> RefreshTokens { get; set; }
     public Carts Carts {get; set;}
     public ICollection<Order> Orders {get; set;}

@@ -4,5 +4,5 @@ namespace E_Books.ViewModel.FromView;
 public class PhotoVM
 {
    [Required]
-   public string ProfilePhoto {get; set;}
+   public IFormFile Image {get; set;}
 }
