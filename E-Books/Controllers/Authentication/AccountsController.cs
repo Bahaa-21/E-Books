@@ -1,5 +1,6 @@
 ﻿using E_Books.BusinessLogicLayer.Abstract;
 using E_Books.DataAccessLayer.Models;
+using E_Books.Helper;
 using E_Books.ViewModel.FromView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -24,17 +25,18 @@ public class AccountsController : ControllerBase
             return BadRequest(ModelState);
 
         var result = await _authService.RegisterAsync(model);
-
+        
         if (!result.IsAuthenticated)
             return BadRequest(result.Masseage);
 
+        
         SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
 
-        return Accepted(new
+        return Ok(new
         {
             token = result.Token,
             role = result.Roles,
-            status = StatusCodes.Status202Accepted
+            status = StatusCodes.Status200OK
         });
     }
 
@@ -52,25 +54,27 @@ public class AccountsController : ControllerBase
         if (!string.IsNullOrEmpty(result.RefreshToken))
             SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
 
-        return Accepted(new
+        return Ok(new
         {
             token = result.Token,
             FirstName = result.FirstName,
             LastName = result.LastName,
             role = result.Roles,
-            status = StatusCodes.Status202Accepted
+            status = StatusCodes.Status200OK
         });
     }
 
+    [HttpGet("ConfirmEmail")]
+    public async Task<IActionResult> ConfirmEmail(string userId, string code)
+    {
+        var result = await _authService.ConfirmEmailAsync(userId, code);
 
-    // Get api/Accounts/SigningGoolge
-    // [HttpGet]
-    // [Authorize]
-    // public  IActionResult SigningGoolge()
-    // {
-    //     var user =  this.User.Identity.Name;
-    //     return Ok(user);
-    // }
+        if(!string.IsNullOrEmpty(result))
+            return BadRequest(result);
+
+        return Ok("Thank you for confirming your email");
+    }
+
 
 
     [HttpGet("refreshToken")]

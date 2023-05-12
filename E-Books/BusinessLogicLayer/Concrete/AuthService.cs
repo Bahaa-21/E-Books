@@ -1,7 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using E_Books.Settings;
+using E_Books.Helper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -12,6 +12,9 @@ using E_Books.ViewModel.ToView;
 using E_Books.BusinessLogicLayer.Abstract;
 using E_Books.DataAccessLayer.Models;
 using E_Books.DataAccessLayer;
+using Org.BouncyCastle.Asn1.Ocsp;
+using System.Net.Http.Headers;
+using RestSharp;
 
 namespace E_Books.BusinessLogicLayer.Concrete;
 
@@ -22,10 +25,11 @@ public class AuthService : IAuthService
     private readonly UserManager<UsersApp> _userManager;
     private readonly IHttpContextAccessor _httpContext;
     private readonly JWT _jwt;
+    private readonly EmailConfirm _emailConfirm;
 
-    public AuthService(IHttpContextAccessor httpContext, UserManager<UsersApp> userManager, IOptions<JWT> jwt, RoleManager<IdentityRole> roleManager, ApplicationDbContext context)
+    public AuthService(IHttpContextAccessor httpContext, UserManager<UsersApp> userManager, IOptions<JWT> jwt, RoleManager<IdentityRole> roleManager, ApplicationDbContext context,IOptions<EmailConfirm> emailConfirm)
     {
-        (_httpContext, _userManager, _roleManager, _jwt ,_context) = (httpContext, userManager, roleManager, jwt.Value ,context);
+        (_httpContext, _userManager, _roleManager, _jwt, _context,_emailConfirm) = (httpContext, userManager, roleManager, jwt.Value, context, emailConfirm.Value);
     }
 
     public async Task<AuthModel> RegisterAsync(RegisterModel model)
@@ -36,7 +40,7 @@ public class AuthService : IAuthService
         var user = new UsersApp()
         {
             Email = model.Email,
-            UserName = string.Concat(model.FirstName, model.LastName.Substring(0 , 4)),
+            UserName = string.Concat(model.FirstName, model.LastName.Substring(0, 4)),
             FirstName = model.FirstName,
             LastName = model.LastName,
             PhoneNumber = model.PhoneNumber,
@@ -62,6 +66,16 @@ public class AuthService : IAuthService
         var refreshToken = GenerateRefreshToken();
         user.RefreshTokens?.Add(refreshToken);
         await _userManager.UpdateAsync(user);
+
+        // var _code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        // var callBackUrl = urlHelper.Action("ConfirmEmail",
+        //                                     "Accounts",
+        //                                     new { userId = user.Id, code = _code },
+        //                                     protocol: controller.HttpContext.Request.Scheme);
+ 
+        // string emailBody = $"Confirm your registration via this link: <a href=''>link</a>";
+
+        // SendEmailAsync(emailBody , _code);
 
         return new AuthModel
         {
@@ -113,6 +127,26 @@ public class AuthService : IAuthService
         }
 
         return authModel;
+    }
+
+    public async Task<string> ConfirmEmailAsync(string userId, string code)
+    {
+        
+        if (userId is null || code is null)
+            return "Invalid email confirmation url";
+
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user is null)
+            return "Invalid email parameter";
+        
+
+        // code = Encoding.UTF8.GetString(Convert.FromBase64String(code));
+
+        var result = await _userManager.ConfirmEmailAsync(user, code);
+
+        var status = result.Succeeded ? string.Empty : "Your email is not confirmed , Please try again later";
+
+        return status;
     }
 
     public async Task<string> AddRoleAsync(AddRoleModel model)
@@ -240,7 +274,7 @@ public class AuthService : IAuthService
         var jwtSecurrityToken = new JwtSecurityToken(
             issuer: _jwt.Issuer,
             audience: _jwt.Audinece,
-            expires: DateTime.UtcNow.AddMinutes(_jwt.DurationInMinutes),
+            expires: DateTime.UtcNow.AddHours(_jwt.DurationInHours),
             claims: claim,
             signingCredentials: signingCredentials
             );
@@ -260,10 +294,36 @@ public class AuthService : IAuthService
         return new RefreshToken
         {
             Token = Convert.ToBase64String(randomNumber),
-            ExpiresOn = DateTime.UtcNow.AddDays(5), 
+            ExpiresOn = DateTime.UtcNow.AddDays(5),
             CreatedOn = DateTime.UtcNow
         };
 
+    }
+    #endregion
+
+
+
+    #region Send Email
+    private void SendEmailAsync(string body, string email)
+    {
+        var authToken = Encoding.ASCII.GetBytes($"api:{_emailConfirm.ApiKey}");
+
+        using var httpClient = new HttpClient();
+
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authToken));
+
+        var client = new RestClient(httpClient);
+
+        var request = new RestRequest("", Method.Post);
+        request.AddParameter("domain", "sandbox50cdb4c47e5347cf84751316e18127ef.mailgun.org");
+        request.Resource = "{domain}/messages";
+        request.AddParameter("from", "Admin <postmaster@sandbox50cdb4c47e5347cf84751316e18127ef.mailgun.org>");
+        request.AddParameter("to", email);
+        request.AddParameter("subject", "Email Verification");
+        request.AddParameter("text", body);
+        request.Method = Method.Post;
+
+        client.Execute(request);
     }
     #endregion
 }

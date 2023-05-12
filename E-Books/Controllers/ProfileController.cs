@@ -18,8 +18,8 @@ public class ProfileController : ControllerBase
     private readonly IMapper _mapper;
     private readonly UserManager<UsersApp> _userManager;
     private readonly IUserService _userService;
-    private List<string> _allowedExtenstions = new List<string> { ".jpg", ".png", ".jpeg" };
-    private long _maxAllowedPosterSize = 1048576;
+    private string[] _allowedExtenstions = new string[] { ".jpg", ".png", ".jpeg" };
+    private long _maxAllowedSize = 1048576;
 
     public ProfileController(IUnitOfWork service,
                                  IMapper mapper,
@@ -50,7 +50,7 @@ public class ProfileController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest($"Submitted data is invalid ,{ModelState}");
 
-        if (img.Image.Length > _maxAllowedPosterSize)
+        if (img.Image.Length > _maxAllowedSize)
             return BadRequest("Image cannot be more than 1 MB!");
 
         if (!_allowedExtenstions.Contains(Path.GetExtension(img.Image.FileName).ToLower()))

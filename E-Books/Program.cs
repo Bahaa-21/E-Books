@@ -1,9 +1,8 @@
 using E_Books.BusinessLogicLayer.Abstract;
 using E_Books.BusinessLogicLayer.Concrete;
-using E_Books.Configurations;
+using E_Books.Helper;
 using E_Books.DataAccessLayer;
 using E_Books.DataAccessLayer.Models;
-using E_Books.Settings;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +24,7 @@ builder.Services.AddControllers().AddNewtonsoftJson(op =>
 builder.Services.AddCors();
 
 builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
+builder.Services.Configure<EmailConfirm>(builder.Configuration.GetSection("EmailConfig"));
 
 builder.Services.AddIdentity<UsersApp, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 

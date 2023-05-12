@@ -1,17 +1,19 @@
-﻿using E_Books.DataAccessLayer;
+﻿using E_Books.BusinessLogicLayer.Abstract;
+using E_Books.DataAccessLayer;
 using E_Books.DataAccessLayer.Models;
 using E_Books.ViewModel.ToView;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Text;
 
-namespace E_Books.Settings;
+namespace E_Books.Helper;
 
 public static class ServiceExtensions
 {
@@ -24,6 +26,7 @@ public static class ServiceExtensions
             opt.Password.RequiredLength = 8;
             opt.Password.RequireUppercase = false;
             opt.Password.RequireDigit = false;
+            opt.SignIn.RequireConfirmedEmail = true;
         });
 
         builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), services);

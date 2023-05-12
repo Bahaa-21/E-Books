@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using E_Books.DataAccessLayer.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace E_Books.Configurations;
+namespace E_Books.Helper;
 
 public class MapperProfile : Profile
 {
