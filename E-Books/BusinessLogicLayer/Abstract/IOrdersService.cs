@@ -5,6 +5,6 @@ namespace E_Books.BusinessLogicLayer.Abstract
 {
     public interface IOrdersService
     {
-        Task<Order> StoreOrderAsync(int cartId , string userId , string userAddress , string userEmail);
+        Task<Order> StoreOrderAsync(int cartId , string userId , string userAddress , string userEmail ,string userName, string phoneNumber);
     }
 }

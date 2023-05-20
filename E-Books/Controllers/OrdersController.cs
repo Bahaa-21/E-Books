@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace E_Books.Controllers.Client;
+namespace E_Books.Controllers;
 
 [ApiController]
-[Route("api/")]
+[Route("api/[controller]")]
 [Authorize]
 public class OrdersController : ControllerBase
 {
@@ -27,8 +27,8 @@ public class OrdersController : ControllerBase
 
 
 
-    [HttpGet("get-user-orders")]
-    public async Task<IActionResult> GetUserOrder()
+    [HttpGet("get-order-user")]
+    public async Task<IActionResult> GetOrderUser()
     {
         var user = await _userService.GetUser();
         var orders = await _service.Orders.GetAllAsync(or => or.UserId == user.Id, include: inc => inc.Include(o => o.OrderItems).ThenInclude(b => b.Books));
@@ -43,14 +43,27 @@ public class OrdersController : ControllerBase
     {
         var user = await _userService.GetUser();
 
-        var cartUser = await _service.Carts.GetAsync(predicate: c => c.UserId == user.Id, null);
+        var cartId = await _service.Carts.GetAsync(predicate: c => c.UserId == user.Id, null);
 
-        var order = await _orderService.StoreOrderAsync(cartUser.Id, user.Id, user.Address, user.Email);
+        var order = await _orderService.StoreOrderAsync(cartId.Id, user.Id, user.Address, user.Email, user.UserName, user.PhoneNumber);
 
-        await _cartService.ClearCartUserItems(cartUser.Id);
+        await _cartService.ClearCartUserItems(cartId.Id);
 
         await _service.SaveAsync();
 
-        return Created(nameof(CompleteOrder), new { message = "Order completed successfully" , statusCode = StatusCodes.Status201Created});
+        var response = _mapper.Map<OrderItemsVM>(order);
+
+        return Created(nameof(CompleteOrder), new { response, statusCode = StatusCodes.Status201Created });
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet("get-all-orders")]
+    public async Task<IActionResult> GetAllOrders([FromQuery] RequestParams requestParams)
+    {
+        var orders = await _service.Orders.GetAllAsync(requestParams, include: inc => inc.Include(o => o.OrderItems).ThenInclude(b => b.Books));
+
+        var response = _mapper.Map<IList<OrderItemsVM>>(orders);
+
+        return Ok(response);
     }
 }

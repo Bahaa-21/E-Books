@@ -23,7 +23,7 @@ public class BooksController : ControllerBase
         this._mapper = mapper;
         this._bookService = bookService;
     }
-    
+
 
     [HttpGet("get-all-books")]
     public async Task<IActionResult> GetAllBookAsync([FromQuery] RequestParams requestParams)
@@ -32,7 +32,7 @@ public class BooksController : ControllerBase
 
         var metaData = new MetaData(books.PageCount, books.PageNumber);
 
-        var response = _mapper.Map<IEnumerable<ReadBookVM>>(books);
+        var response = _mapper.Map<IEnumerable<BookDetailsVM>>(books);
 
         return Ok(new { response, metaData });
     }
@@ -46,7 +46,7 @@ public class BooksController : ControllerBase
         if (book is null)
             return BadRequest();
 
-        var response = _mapper.Map<Book, ReadBookVM>(book);
+        var response = _mapper.Map<Book, BookDetailsVM>(book);
 
         return Ok(response);
     }
@@ -63,7 +63,7 @@ public class BooksController : ControllerBase
 
         var metaData = new MetaData(books.PageCount, books.PageNumber);
 
-        var response = _mapper.Map<IEnumerable<ReadBookVM>>(books);
+        var response = _mapper.Map<IEnumerable<BookDetailsVM>>(books);
         return Ok(new { response, metaData });
     }
 

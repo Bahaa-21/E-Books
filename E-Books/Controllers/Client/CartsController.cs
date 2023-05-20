@@ -77,7 +77,7 @@ namespace E_Books.Controllers.Client
 
             var cartUser = await _service.Carts.GetAsync(predicate: c => c.UserId == user.Id, null);
             if (cartUser is null)
-                return NotFound();
+                return BadRequest();
 
             var cartItem = await _cartService.RemoveItemFromCart(bookId, cartUser.Id);
             await _service.SaveAsync();

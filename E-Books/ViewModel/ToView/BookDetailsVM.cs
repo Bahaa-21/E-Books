@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 
 namespace E_Books.ViewModel.ToView;
-public class ReadBookVM
+public class BookDetailsVM
 {
     public int Id { get; set; }
 
@@ -19,8 +19,8 @@ public class ReadBookVM
 
     public string Publishers { get; set; }
 
-    public string GenreType {get; set;}
-    
+    public string GenreType { get; set; }
+
     public string Language { get; set; }
 
     public List<string> Authors { get; set; }

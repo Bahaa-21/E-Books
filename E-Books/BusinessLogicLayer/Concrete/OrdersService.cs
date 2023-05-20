@@ -20,14 +20,16 @@ namespace E_Books.BusinessLogicLayer.Concrete
         }
 
 
-        public async Task<Order> StoreOrderAsync(int cartId, string userId, string userAddress, string userEmail)
+        public async Task<Order> StoreOrderAsync(int cartId, string userId, string userAddress, string userEmail , string userName, string phoneNumber)
         {
             var cartBooks = await _context.CartBooks.Where(c => c.CartId == cartId).Include(b => b.Books).ToListAsync();
             var order = new Order()
             {
                 UserId = userId,
+                UserName = userName,
+                PhoneNumber = phoneNumber,
                 Address = userAddress,
-                Email = userEmail,
+                Email = userEmail
             };
             await _context.Orders.AddAsync(order);
             

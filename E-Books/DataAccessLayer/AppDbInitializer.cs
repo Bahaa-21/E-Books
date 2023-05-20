@@ -138,7 +138,7 @@ public class AppDbInitializer
                 await context.Roles.AddRangeAsync(
                      new IdentityRole() { Name = "User", NormalizedName = "user".ToUpper() },
                      new IdentityRole() { Name = "Admin", NormalizedName = "admin".ToUpper() },
-                     new IdentityRole() { Name = "Adminsitrator", NormalizedName = "adminsitrator".ToUpper() }
+                     new IdentityRole() { Name = "Super admin", NormalizedName = "super admin".ToUpper() }
                     );
                 await context.SaveChangesAsync();
             }
@@ -170,12 +170,26 @@ public class AppDbInitializer
                     UserName = "bahaa@safa7at.com",
                     Gender = Enum.Gender.Male,
                     Address = "Damascuse,Syria",
-                    PhoneNumber = "0951584338",
+                    PhoneNumber = "+963954712357",
                 };
                 await UserManager.CreateAsync(user, "P@ssword123");
-                await UserManager.AddToRoleAsync(admin, "User");
+                await UserManager.AddToRoleAsync(user, "User");
+
+                UsersApp superAdmin = new()
+                {
+                    FirstName = "Super",
+                    LastName = "Admin",
+                    Email = "SuperAdmin@safa7at.com",
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    UserName = "SuperAdmin@safa7at.com",
+                    Gender = Enum.Gender.Male,
+                    Address = "Damascuse,Syria",
+                    PhoneNumber = "+963954712358",
+                };
+                await UserManager.CreateAsync(superAdmin, "S@dmin123");
+                await UserManager.AddToRoleAsync(superAdmin, "Super admin");
             }
-            #endregion
         }
+        #endregion
     }
 }

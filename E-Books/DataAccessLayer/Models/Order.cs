@@ -9,17 +9,24 @@ public class Order
     [Required]
     public string UserId { get; set; }
     [Required]
-    public string Email {get; set;}
+    public string Email { get; set; }
     [Required]
-    public string Address {get; set;}
+    public string UserName { get; set; }
     [Required]
-    public DateTime Created {get; set;}
+    public string Address { get; set; }
+    [Required]
+    public string PhoneNumber { get; set; }
+    [Required]
+    public string Status { get; set; }
+    [Required]
+    public DateTime Created { get; set; }
     [ForeignKey("UserId")]
-    public UsersApp Users{get;set;}
+    public UsersApp Users { get; set; }
     public List<OrderItem> OrderItems { get; set; }
     public Order()
     {
         Created = DateTime.UtcNow;
         OrderItems = new List<OrderItem>();
+        Status = "Under review";
     }
 }

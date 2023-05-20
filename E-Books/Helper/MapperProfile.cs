@@ -72,7 +72,7 @@ public class MapperProfile : Profile
 
         });
 
-        CreateMap<Book, ReadBookVM>()
+        CreateMap<Book, BookDetailsVM>()
         .ForMember(d => d.Publishers, opt => opt.MapFrom(sec => sec.Publishers.Name))
         .ForMember(d => d.Price, opt => opt.MapFrom(sec => sec.Price.ToString("c")))
         .ForMember(d => d.PublicationDate, opt => opt.MapFrom(sec => sec.PublicationDate.ToString("f")))
@@ -95,7 +95,10 @@ public class MapperProfile : Profile
         .ForMember(des => des.ProfilePhoto, opt => opt.MapFrom(sec => sec.Photo))
         .AfterMap((user, userVM) =>
         {
-            userVM.ProfilePhoto = "data:image/png;base64," + Convert.ToBase64String(user.Photo.Image);
+            if (userVM.ProfilePhoto is not null)
+                userVM.ProfilePhoto = "data:image/png;base64," + Convert.ToBase64String(user.Photo.Image);
+            else
+                userVM.ProfilePhoto = null;
         })
         .ReverseMap();
 
@@ -136,7 +139,6 @@ public class MapperProfile : Profile
 
         #region Order Map
         CreateMap<Order, OrderItemsVM>()
-        .ForMember(d => d.Id, opt => opt.MapFrom(sec => sec.Id))
         .ForMember(d => d.Created, opt => opt.MapFrom(sec => sec.Created.ToString("f")))
         .ForMember(d => d.Books, opt => opt.MapFrom(sec => sec.OrderItems))
         .ForMember(d => d.Books, opt => opt.MapFrom(sec => sec.OrderItems.Select(s => new
@@ -144,7 +146,7 @@ public class MapperProfile : Profile
             Title = s.Books.Title,
             Price = s.Books.Price.ToString("c"),
             Quantity = s.Amount,
-            totalPrice = (s.Price * s.Amount).ToString("c")
+            TotalPrice = (s.Price * s.Amount).ToString("c")
         })))
         .ForMember(d => d.TotalPice, opt => opt.MapFrom(sec => sec.OrderItems.Select(s => s.Amount * s.Price).Sum().ToString("C")));
         #endregion

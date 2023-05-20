@@ -21,7 +21,7 @@ public class AdminBooksController : ControllerBase
     private long _maxSizeImage = 1048576;
     public AdminBooksController(IUnitOfWork service,
                                 IMapper mapper,
-                                IBookService bookService) => 
+                                IBookService bookService) =>
                                 (_service, _mapper, _bookService) = (service, mapper, bookService);
 
 
@@ -31,7 +31,7 @@ public class AdminBooksController : ControllerBase
 
 
 
-    
+
 
 
     [Authorize(Roles = "Admin")]
@@ -76,7 +76,7 @@ public class AdminBooksController : ControllerBase
         await _service.SaveAsync();
 
         var readBook = await _bookService.GetBookAsync(book.Id, true);
-        var response = _mapper.Map<ReadBookVM>(readBook);
+        var response = _mapper.Map<BookDetailsVM>(readBook);
 
         return Created(nameof(AddBookAsync), response);
     }
