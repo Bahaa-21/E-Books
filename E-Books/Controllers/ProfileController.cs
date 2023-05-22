@@ -56,25 +56,26 @@ public class ProfileController : ControllerBase
         if (!_allowedExtenstions.Contains(Path.GetExtension(img.Image.FileName).ToLower()))
             return BadRequest("Only .PNG, .JPG and .JPEG images are allowed!");
 
-        if (user.Photo != null)
-        {
-            _service.Photo.Delete(user.Photo);
-            await _service.SaveAsync();
-        }
-
         using var dataStream = new MemoryStream();
         await img.Image.CopyToAsync(dataStream);
 
         var photo = new Photo() { Image = dataStream.ToArray(), UserId = user.Id };
 
-        await _service.Photo.AddAsync(photo);
-        await _service.SaveAsync();
-
         var image = new DisplayPhotoVM()
         {
-            ProfilePhoto = "data:image/png;base64," + Convert.ToBase64String(photo.Image)
+            ProfilePhoto = "data:image/jpeg;base64," + Convert.ToBase64String(photo.Image)
         };
 
+        if (user.Photo is not null)
+        {
+            user.Photo.Image = dataStream.ToArray();
+            _service.Photo.Update(user.Photo);
+            await _service.SaveAsync();
+            return Ok(image);
+        }
+
+        await _service.Photo.AddAsync(photo);
+        await _service.SaveAsync();
         return Ok(image);
     }
 
