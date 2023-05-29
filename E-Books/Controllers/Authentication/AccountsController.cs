@@ -25,16 +25,17 @@ public class AccountsController : ControllerBase
             return BadRequest(ModelState);
 
         var result = await _authService.RegisterAsync(model);
-        
+
         if (!result.IsAuthenticated)
             return BadRequest(result.Masseage);
 
-        
+
         SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
 
         return Ok(new
         {
             token = result.Token,
+            refreshToken = result.RefreshToken,
             role = result.Roles,
             status = StatusCodes.Status200OK
         });
@@ -57,6 +58,7 @@ public class AccountsController : ControllerBase
         return Ok(new
         {
             token = result.Token,
+            refreshToken = result.RefreshToken,
             FirstName = result.FirstName,
             LastName = result.LastName,
             role = result.Roles,
@@ -69,7 +71,7 @@ public class AccountsController : ControllerBase
     {
         var result = await _authService.ConfirmEmailAsync(userId, code);
 
-        if(!string.IsNullOrEmpty(result))
+        if (!string.IsNullOrEmpty(result))
             return BadRequest(result);
 
         return Ok("Thank you for confirming your email");

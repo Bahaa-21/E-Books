@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace E_Books.Controllers.Admin;
 
 [ApiController]
-[Authorize(Roles = "Super Admin")]
+// [Authorize(Roles = "Super Admin")]
 public class AdminsitratorController : ControllerBase
 {
     private readonly IUnitOfWork _service;

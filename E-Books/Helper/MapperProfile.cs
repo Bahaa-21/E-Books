@@ -96,7 +96,7 @@ public class MapperProfile : Profile
         .AfterMap((user, userVM) =>
         {
             if (userVM.ProfilePhoto is not null)
-                userVM.ProfilePhoto = "data:image/png;base64," + Convert.ToBase64String(user.Photo.Image);
+                userVM.ProfilePhoto = "data:image/jpeg;base64," + Convert.ToBase64String(user.Photo.Image);
             else
                 userVM.ProfilePhoto = null;
         })
