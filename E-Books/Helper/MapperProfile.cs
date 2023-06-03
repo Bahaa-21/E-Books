@@ -102,6 +102,8 @@ public class MapperProfile : Profile
         })
         .ReverseMap();
 
+        CreateMap<UsersApp, UserDetailsVM>().ReverseMap();
+
 
         CreateMap<UsersApp, UpdateProfileVM>().ReverseMap();
         #endregion

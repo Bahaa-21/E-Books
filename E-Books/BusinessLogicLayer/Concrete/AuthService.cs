@@ -27,9 +27,9 @@ public class AuthService : IAuthService
     private readonly JWT _jwt;
     private readonly EmailConfirm _emailConfirm;
 
-    public AuthService(IHttpContextAccessor httpContext, UserManager<UsersApp> userManager, IOptions<JWT> jwt, RoleManager<IdentityRole> roleManager, ApplicationDbContext context,IOptions<EmailConfirm> emailConfirm)
+    public AuthService(IHttpContextAccessor httpContext, UserManager<UsersApp> userManager, IOptions<JWT> jwt, RoleManager<IdentityRole> roleManager, ApplicationDbContext context, IOptions<EmailConfirm> emailConfirm)
     {
-        (_httpContext, _userManager, _roleManager, _jwt, _context,_emailConfirm) = (httpContext, userManager, roleManager, jwt.Value, context, emailConfirm.Value);
+        (_httpContext, _userManager, _roleManager, _jwt, _context, _emailConfirm) = (httpContext, userManager, roleManager, jwt.Value, context, emailConfirm.Value);
     }
 
     public async Task<AuthModel> RegisterAsync(RegisterModel model)
@@ -72,7 +72,7 @@ public class AuthService : IAuthService
         //                                     "Accounts",
         //                                     new { userId = user.Id, code = _code },
         //                                     protocol: controller.HttpContext.Request.Scheme);
- 
+
         // string emailBody = $"Confirm your registration via this link: <a href=''>link</a>";
 
         // SendEmailAsync(emailBody , _code);
@@ -131,14 +131,14 @@ public class AuthService : IAuthService
 
     public async Task<string> ConfirmEmailAsync(string userId, string code)
     {
-        
+
         if (userId is null || code is null)
             return "Invalid email confirmation url";
 
         var user = await _userManager.FindByIdAsync(userId);
         if (user is null)
             return "Invalid email parameter";
-        
+
 
         // code = Encoding.UTF8.GetString(Convert.FromBase64String(code));
 
@@ -151,7 +151,7 @@ public class AuthService : IAuthService
 
     public async Task<string> AddRoleAsync(AddRoleModel model)
     {
-        var user = await _userManager.FindByIdAsync(model.UserId);
+        var user = await _userManager.FindByEmailAsync(model.UserId);
 
         if (user is null || !await _roleManager.RoleExistsAsync(model.Role))
             return "User or role is invalid";
@@ -247,7 +247,14 @@ public class AuthService : IAuthService
 
     public async Task<IdentityRole> GetRoleAsync(string roleId) =>
         await _roleManager.FindByIdAsync(roleId);
-    
+
+    public async Task<IList<UsersApp>> GetAllAdmins() =>
+    await _userManager.GetUsersInRoleAsync("Admin");
+
+
+
+
+
 
     #region Create JWT Token
     private async Task<JwtSecurityToken> CreateJwtToken(UsersApp user)

@@ -4,7 +4,6 @@ namespace E_Books.ViewModel.ToView
 {
     public class UserProfileVM
     {
-        public string Id { get; set; }
         public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

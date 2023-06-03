@@ -51,8 +51,6 @@ public class ApplicationDbContext : IdentityDbContext<UsersApp>
         builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
         builder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
         #endregion
-
-        
     }
 
     public DbSet<Book> Books { get; set; }

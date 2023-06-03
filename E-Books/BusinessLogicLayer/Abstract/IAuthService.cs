@@ -9,10 +9,11 @@ public interface IAuthService
 {
     Task<AuthModel> RegisterAsync(RegisterModel model);
     Task<AuthModel> GetTokenAsync(TokenRequestModel model);
-    Task<string> ConfirmEmailAsync(string userId , string code);
+    Task<string> ConfirmEmailAsync(string userId, string code);
     Task<string> AddRoleAsync(AddRoleModel model);
     Task<string> DeleteRoleAsync(string roleId);
     Task<string> UpdateRoleAsync(IdentityRole role);
+    Task<IList<UsersApp>> GetAllAdmins();
     Task<List<IdentityRole>> GetAllRolesAsync();
     Task<IdentityRole> GetRoleAsync(string roleId);
     Task<AuthModel> RefreshTokenAsync(string token);

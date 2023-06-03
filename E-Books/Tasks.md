@@ -4,7 +4,6 @@
 
 - ### Uploading a file of the book and Downloading it
 - ### life time toke 3 mounth
-- ### Get All admins
 - ### delete admin
 - ### add addmin with role
 - ### Chenge pass
@@ -14,6 +13,7 @@
 #
 
 ## Tasks Completed :
+- ### Get All admins
 
 - ### Set refresh token to login and sign up
 - ### Modify adding image

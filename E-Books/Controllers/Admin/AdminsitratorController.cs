@@ -35,9 +35,22 @@ public class AdminsitratorController : ControllerBase
 
         if (users is null)
             return BadRequest();
-        var response = _mapper.Map<IEnumerable<UserProfileVM>>(users);
+        var response = _mapper.Map<IEnumerable<UserDetailsVM>>(users);
 
         return Ok(new { response, PageCount = users.PageCount });
+    }
+
+    [HttpGet]
+    [Route("api/get-all-admins")]
+    public async Task<IActionResult> GetAllAdmins()
+    {
+        var admins = await _authService.GetAllAdmins();
+
+        if (admins is null)
+            return BadRequest();
+
+        var response = _mapper.Map<IEnumerable<UserDetailsVM>>(admins);
+        return Ok(response);
     }
 
 
