@@ -10,7 +10,7 @@ namespace E_Books.Controllers.Admin;
 
 [ApiController]
 // [Authorize(Roles = "Super Admin")]
-public class AdminsitratorController : ControllerBase
+public class SuperAdminController : ControllerBase
 {
     private readonly IUnitOfWork _service;
     private readonly IUserService _userService;
@@ -19,7 +19,7 @@ public class AdminsitratorController : ControllerBase
     private readonly IMapper _mapper;
     private readonly IAuthService _authService;
 
-    public AdminsitratorController(IUnitOfWork service,
+    public SuperAdminController(IUnitOfWork service,
                                   IAuthService authService,
                                   IUserService userService,
                                   IAuthService authService1,
@@ -63,18 +63,18 @@ public class AdminsitratorController : ControllerBase
     }
 
     [HttpPost]
-    [Route("api/add-role")]
-    public async Task<IActionResult> AddRoleAsync([FromBody] AddRoleModel model)
+    [Route("api/create-admin-account")]
+    public async Task<IActionResult> CreateAdmin([FromBody] CreateAdminVM model)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var result = await _authService.AddRoleAsync(model);
+        var result = await _authService.CreateAdminAccountAsync(model);
 
         if (!string.IsNullOrEmpty(result))
             return BadRequest(result);
 
-        return Ok(result);
+        return Ok("Successfully created");
     }
 
     [HttpPut]

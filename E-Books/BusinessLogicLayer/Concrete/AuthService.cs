@@ -149,19 +149,32 @@ public class AuthService : IAuthService
         return status;
     }
 
-    public async Task<string> AddRoleAsync(AddRoleModel model)
+    public async Task<string> CreateAdminAccountAsync(CreateAdminVM model)
     {
-        var user = await _userManager.FindByEmailAsync(model.UserId);
+        if (!await _roleManager.RoleExistsAsync(model.Role))
+            return  "role is invalid";
 
-        if (user is null || !await _roleManager.RoleExistsAsync(model.Role))
-            return "User or role is invalid";
-        if (await _userManager.IsInRoleAsync(user, model.Role))
-            return "User is already assigned to this role";
+        if (!model.Email.Contains("@safa7at"))
+            return "The email must contain @safa7at";
 
-        var result = await _userManager.AddToRoleAsync(user, model.Role);
+        UsersApp user = new()
+        {
+            UserName = string.Concat(model.FirstName, model.LastName.Substring(0, 5)),
+            FirstName = model.FirstName,
+            LastName = model.LastName,
+            Email = model.Email,
+            Address = model.Address,
+            PhoneNumber = model.PhoneNumber,
+            Gender = model.Gender,
+        };
 
-        return result.Succeeded ? string.Empty : "Something went wrong";
+        var createAccount = await _userManager.CreateAsync(user, model.Password);
+        var addToRole = await _userManager.AddToRoleAsync(user, model.Role);
 
+        if (!createAccount.Succeeded && !addToRole.Succeeded)
+            return "Somthing went wrong";
+
+        return string.Empty;
     }
 
 
@@ -239,7 +252,7 @@ public class AuthService : IAuthService
     public async Task<string> UpdateRoleAsync(IdentityRole role)
     {
         var result = await _roleManager.UpdateAsync(role);
-        return result.Succeeded ? string.Empty : "Somthing want wrong";
+        return result.Succeeded ? string.Empty : "Somthing went wrong";
     }
 
 

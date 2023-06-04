@@ -5,16 +5,17 @@
 - ### Uploading a file of the book and Downloading it
 - ### life time toke 3 mounth
 - ### delete admin
-- ### add addmin with role
 - ### Chenge pass
 - ### (for search How to diactive account)
 - ### (SSE)
+- ### (push the project on a somee)
 
 #
 
 ## Tasks Completed :
-- ### Get All admins
 
+- ### add addmin with role
+- ### Get All admins
 - ### Set refresh token to login and sign up
 - ### Modify adding image
 - ### Revoke token api
