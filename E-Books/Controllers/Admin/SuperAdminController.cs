@@ -69,12 +69,16 @@ public class SuperAdminController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var result = await _authService.CreateAdminAccountAsync(model);
+        var result = await _authService.CreateAdminAccountValidate(model.Role, model.Email);
 
         if (!string.IsNullOrEmpty(result))
             return BadRequest(result);
 
-        return Ok("Successfully created");
+        var create_admin = await _authService.CreateAdminAccountAsync(model);
+
+        var response = _mapper.Map<UserDetailsVM>(create_admin);
+
+        return Created(nameof(CreateAdmin), response);
     }
 
     [HttpPut]
@@ -99,13 +103,14 @@ public class SuperAdminController : ControllerBase
 
 
     [HttpDelete]
-    [Route("api/delete-role/{id}")]
-    public async Task<IActionResult> DeleteRoleAsync(string id)
+    [Route("api/delete-admin/{adminId}")]
+    public async Task<IActionResult> DeleteAdminAsync(string adminId)
     {
-        var result = await _authService.DeleteRoleAsync(id);
+        var result = await _authService.DeleteAdminAsync(adminId);
 
         if (!string.IsNullOrEmpty(result))
             return BadRequest(result);
+
         return Ok();
     }
 }

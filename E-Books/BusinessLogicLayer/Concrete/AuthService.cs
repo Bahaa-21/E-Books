@@ -149,13 +149,9 @@ public class AuthService : IAuthService
         return status;
     }
 
-    public async Task<string> CreateAdminAccountAsync(CreateAdminVM model)
+    public async Task<UsersApp> CreateAdminAccountAsync(CreateAdminVM model)
     {
-        if (!await _roleManager.RoleExistsAsync(model.Role))
-            return  "role is invalid";
-
-        if (!model.Email.Contains("@safa7at"))
-            return "The email must contain @safa7at";
+       
 
         UsersApp user = new()
         {
@@ -171,12 +167,17 @@ public class AuthService : IAuthService
         var createAccount = await _userManager.CreateAsync(user, model.Password);
         var addToRole = await _userManager.AddToRoleAsync(user, model.Role);
 
-        if (!createAccount.Succeeded && !addToRole.Succeeded)
-            return "Somthing went wrong";
-
-        return string.Empty;
+        return user;
     }
+    public async Task<string> CreateAdminAccountValidate(string role, string email)
+    {
+        if (!await _roleManager.RoleExistsAsync(role))
+            return "role is invalid";
 
+        if (!email.Contains("@safa7at"))
+            return $"The Email ({email}) is wrong , must contain @safa7at";
+        return string.Empty;    
+    }
 
     public async Task<AuthModel> RefreshTokenAsync(string token)
     {
@@ -239,12 +240,12 @@ public class AuthService : IAuthService
         return true;
     }
 
-    public async Task<string> DeleteRoleAsync(string roleId)
+    public async Task<string> DeleteAdminAsync(string adminId)
     {
-        var role = await _roleManager.FindByIdAsync(roleId);
-        if (role is null)
+        var admin = await _userManager.FindByIdAsync(adminId);
+        if (admin is null)
             return "This role not existe";
-        var result = await _roleManager.DeleteAsync(role);
+        var result = await _userManager.DeleteAsync(admin);
         return result.Succeeded ? string.Empty : "Something went wrong";
     }
 
@@ -263,9 +264,6 @@ public class AuthService : IAuthService
 
     public async Task<IList<UsersApp>> GetAllAdmins() =>
     await _userManager.GetUsersInRoleAsync("Admin");
-
-
-
 
 
 
@@ -320,7 +318,6 @@ public class AuthService : IAuthService
 
     }
     #endregion
-
 
 
     #region Send Email
