@@ -10,7 +10,6 @@ namespace E_Books.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 
 public class BooksController : ControllerBase
 {

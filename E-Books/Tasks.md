@@ -1,24 +1,15 @@
-# Note
 
-## Tasks :
+# Tasks :
 
-- ### Uploading a file of the book and Downloading it
-- ### life time toke 3 mounth
-- ### delete admin
-- ### Chenge pass
-- ### (for search How to diactive account)
-- ### (SSE)
-- ### (push the project on a somee)
-
-#
-
-## Tasks Completed :
-
-- ### add addmin with role
-- ### Get All admins
-- ### Set refresh token to login and sign up
-- ### Modify adding image
-- ### Revoke token api
-- ### Modify remove cart
-- ### Management Roles and admins
-- ### AddCartValited Method
+1. #### [ ] Uploading a file of the book and Downloading it
+2. #### [ ] Chenge pass
+3. #### [ ] Forget pass with MailKit service
+4. #### [ ] **(for search How to diactive account)**
+6. #### [x] Add addmin with role
+7. #### [x] Get All admins
+8. #### [x] Set refresh token to login and sign up
+9. #### [x] Modify adding image
+10. #### [x] Revoke token api
+11. #### [x] Modify remove cart
+12. #### [x] Management Roles and admins
+13. #### [x] AddCartValited Method.

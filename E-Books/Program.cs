@@ -56,6 +56,8 @@ builder.Services.ConfigureJWT(builder.Configuration);
 //                     option.ClientSecret = googleAuth["ClientSecret"];
 //                 });
 
+builder.Services.AddAuthorization(opt => opt.AddPolicy("AdminOnly" , policy => policy.RequireRole("Admin")));
+
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
@@ -67,6 +69,7 @@ builder.Services.AddScoped<IBookService, BookService>();
 
 builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddScoped<IOrdersService,OrdersService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddHttpContextAccessor();
 

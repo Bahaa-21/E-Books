@@ -14,8 +14,9 @@ namespace E_Books.Controllers.Authentication;
 public class AccountsController : ControllerBase
 {
     private readonly IAuthService _authService;
-    public AccountsController(IAuthService authService)
-    => _authService = authService;
+    private readonly IEmailService _emailService;
+    public AccountsController(IAuthService authService, IEmailService emailService)
+    => (_authService, _emailService) = (authService, emailService);
 
 
     [HttpPost("register")]
@@ -99,7 +100,7 @@ public class AccountsController : ControllerBase
         });
     }
 
-    [Authorize]
+
     [HttpPost("revokeToken")]
     public async Task<IActionResult> RevokeToken([FromQuery] RevokeTokenVM revokeToken)
     {
@@ -112,6 +113,15 @@ public class AccountsController : ControllerBase
         if (!result)
             return BadRequest("Token is invalid!");
 
+        return Ok();
+    }
+
+
+
+    [HttpPost("sendEmail")]
+    public IActionResult SendEmai([FromBody] EmailDto requset)
+    {
+        _emailService.SendEmail(requset);
         return Ok();
     }
 
